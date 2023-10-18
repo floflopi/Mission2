@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import javax.xml.crypto.Data;
+import java.util.Date;
 public class User {
     private String email;
     private String name;
@@ -18,6 +21,38 @@ public class User {
     }
     public int get_userid(){
         return user_id;
+    }
+    public void send_message(String users,String message,DatabaseUsers users_db,DatabaseDiscussion discussion_db){
+        String[] users_array = users.split(",");
+        ArrayList<Integer> users_id = new ArrayList<>();
+        //check si on peut message ces utilisateurs
+        for (String username : users_array){
+            User friend = users_db.get_user(false,username);
+            if (friend == null){
+                System.out.println(username + " is not present in the users database");
+                return;
+            }
+            if (!liste_contact.contains(friend.get_userid())){
+                System.out.println(friend.get_username() + " is not your friend so you can't message him");
+                return;
+            }
+            users_id.add(friend.get_userid());
+        }
+        users_id.add(get_userid());
+        Collections.sort(users_id); // we sort the array so that we can easily find discussion in discussions_id;
+        // cherche si une discussion existe deja entre les utiliseurs
+        Discussion current_discussion;
+        Message current_message = new Message(message,new Date(),get_userid());
+        if (discussion_db.discussion_exist(users_id)){
+            current_discussion = discussion_db.get_discussion(users_id);
+        }
+        else{
+            current_discussion = new Discussion(users_id);
+            discussion_db.add_discussions(current_discussion);
+        }
+        current_discussion.add_message(current_message);
+
+        System.out.println("message sent !");
     }
     // add friend if user is in database else print error
     public boolean add_friend(String user,DatabaseUsers db){
