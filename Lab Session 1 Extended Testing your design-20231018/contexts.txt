@@ -1,0 +1,5 @@
+Context/Mandatory/Age-Environnement-Materiel
+Context/Optional/Relation-Insecurite
+Age/Optional/Adulte
+Environnement/Alternative/Calme-Defaut
+Materiel/Optional/Camera-Micro

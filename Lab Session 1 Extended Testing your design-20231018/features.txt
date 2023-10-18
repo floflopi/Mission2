@@ -1,0 +1,13 @@
+Feature/Mandatory/Contact-Conversation
+Feature/Optional/Signaler-Notifications-Status
+Contact/Mandatory/Supprimer
+Contact/Optional/Ajoutercontact-Bloquer
+Conversation/Mandatory/Message-Prive
+Conversation/Optional/Groupe-Appel-Sourdine
+Groupe/Mandatory/Ajoutermembre-Quitter
+Groupe/Optional/Exclure
+Message/Mandatory/Texte
+Message/Optional/Media-Reponse-Reaction-Video-Audio
+Media/or/Image-FichierVideo-Gif-Vocaux-Autresfichiers
+Appel/Optional/Video-Audio
+Status/Alternative/Enligne-Deconnecte-Nepasderanger
