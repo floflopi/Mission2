@@ -11,15 +11,6 @@ public class DatabaseDiscussion {
     public ArrayList<Discussion> getusers_discussions(){
         return users_discussions;
     }
-    // retourne true si pour les users_id une discussion existe 
-    public boolean discussion_exist(ArrayList<Integer> users_id){
-        for (Discussion discussion:users_discussions){
-            if (discussion.getmembers_id().equals(users_id)){
-                return true;
-            }
-        }
-        return false;
-    }
     //atm retourne le premier message qu on trouve. apres peut etre extend a find all ? 
     public String find_message(String message,DatabaseUsers users_db){
         for (Discussion discussion:users_discussions){
@@ -32,6 +23,7 @@ public class DatabaseDiscussion {
         return "No message found !";
     }
     // retourne la discussion qui concerne tout les users_id
+    // discussion == null signifie qu aucune discussion existe pour ces utilisateurs
     public Discussion get_discussion(ArrayList<Integer> users_id){
         for (Discussion discussion:users_discussions){
             if (discussion.getmembers_id().equals(users_id)){

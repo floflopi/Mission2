@@ -1,29 +1,19 @@
 import java.util.ArrayList;
 public class DatabaseUsers{
-    public int id_user; 
+    private int id_user; 
     private ArrayList<User> users;
     // simulate users
-    public DatabaseUsers(){
+    public DatabaseUsers(String[] users_emails){
         users = new ArrayList<User>();
         id_user = 0;
-        users.add(new User("flo@gmail.com","flo",id_user));
-        id_user++;
-        users.add(new User("louis@gmail.com","louis",id_user));
-        id_user++;
+        for (String email:users_emails){
+            users.add(new User(email,email.split("@")[0],id_user));
+            id_user++;
+        }
     }
     // if email -> check email
     // if not email-> check username
-    public boolean user_in_db(boolean isemail,String email){
-        for (User user: users){
-            if (user.get_email().equals(email) && isemail){
-                return true;
-            }
-            if (user.get_username().equals(email) && !isemail){
-                return true;
-            }
-        }
-        return false;
-    }
+    // get_user == null signifie que user n est pas dans la db
     public User get_user(boolean isemail,String email){
         for (User user:users){
             if (user.get_email().equals(email) && isemail){
@@ -37,8 +27,5 @@ public class DatabaseUsers{
     }
     public ArrayList<User> get_all_users(){
         return users;
-    }
-    public void add_user_db(){
-
     }
 }

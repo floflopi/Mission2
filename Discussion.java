@@ -1,5 +1,9 @@
 import java.util.ArrayList;
 
+/*
+ * une discussion peut avoir lieu entre deux membres mais aussi des discussions de groupe
+ *
+ */
 public class Discussion {
     public Discussion(ArrayList<Integer> members_id){
         messages = new ArrayList<>();
@@ -16,14 +20,5 @@ public class Discussion {
     }
     public void add_message(Message message){
         messages.add(message);
-    }
-    public static void find_message(String message){
-        return;
-    }
-    public static void send_message(Message message,int from_user_id){
-        return;
-    }
-    public static void receive(){
-        return;
     }
 }

@@ -1,12 +1,13 @@
 import java.util.ArrayList;
 import java.util.Collections;
-import javax.xml.crypto.Data;
 import java.util.Date;
 public class User {
+
     private String email;
     private String name;
     private int user_id; // id unique pour chaque user
     private ArrayList<Integer> liste_contact; // contient les user_id des autres
+
     public User(String email,String name,int user_id){
         this.email = email;
         this.name = name;
@@ -22,6 +23,7 @@ public class User {
     public int get_userid(){
         return user_id;
     }
+
     public void send_message(String users,String message,DatabaseUsers users_db,DatabaseDiscussion discussion_db){
         String[] users_array = users.split(",");
         ArrayList<Integer> users_id = new ArrayList<>();
@@ -32,6 +34,10 @@ public class User {
                 System.out.println(username + " is not present in the users database");
                 return;
             }
+            if (friend.get_username().equals(get_username())){
+                System.out.println("you can't send message to yourself");
+                return;
+            }
             if (!liste_contact.contains(friend.get_userid())){
                 System.out.println(friend.get_username() + " is not your friend so you can't message him");
                 return;
@@ -40,23 +46,23 @@ public class User {
         }
         users_id.add(get_userid());
         Collections.sort(users_id); // we sort the array so that we can easily find discussion in discussions_id;
-        // cherche si une discussion existe deja entre les utiliseurs
-        Discussion current_discussion;
         Message current_message = new Message(message,new Date(),get_userid());
-        if (discussion_db.discussion_exist(users_id)){
-            current_discussion = discussion_db.get_discussion(users_id);
-        }
-        else{
+        // cherche si une discussion existe deja entre les utiliseurs
+        Discussion current_discussion = discussion_db.get_discussion(users_id);        
+        if(current_discussion == null){
             current_discussion = new Discussion(users_id);
             discussion_db.add_discussions(current_discussion);
-        }
+        } 
         current_discussion.add_message(current_message);
-
         System.out.println("message sent !");
     }
     // add friend if user is in database else print error
     public boolean add_friend(String user,DatabaseUsers db){
-        if (!db.user_in_db(false,user)){
+        if (user == get_username()){
+            System.out.println("you can't add yourself as a friend");
+            return false;
+        }
+        if (db.get_user(false,user) == null){
             System.out.println(user + " is not in the userdatabase");
             return false;
         }
@@ -73,7 +79,11 @@ public class User {
         return true;
     }
     public void remove_friend(String user,DatabaseUsers db){
-        if (!db.user_in_db(false,user)){
+        if (user == get_username()){
+            System.out.println("you can't remove yourself as a friend");
+            return;
+        }
+        if (db.get_user(false,user) == null){
             System.out.println(user + " is not in the Userdatabase");
             return;
         }
