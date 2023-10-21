@@ -15,9 +15,15 @@ public class Message {
     public Date get_date(){
         return date;
     }
+    public int get_from_user_id(){
+        return from_user_id;
+    }
     public String see_details(DatabaseUsers db){
         String details = "contenu : " + get_contenu() + "\nDate : " + get_date() + "\nFrom " 
-        + db.get_all_users().get(Integer.valueOf(from_user_id)).get_username();
+        + db.get_all_users().get(Integer.valueOf(get_from_user_id())).get_username();
         return details;
+    }
+    public void send(){
+        System.out.println("message sent !");
     }
 }

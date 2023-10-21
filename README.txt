@@ -22,4 +22,5 @@ ATTENTION : user_id ne veut pas dire que la liste d users dans usersdb sera sort
 
 TODO : faire les autres features
 
-
+Probleme : addfriend devrait etre changer en sendfriendrequest : en effet si jamais un utilisateur est bloqué par un autre, l utilisateur qui l a bloqué
+ne doit pas recevoir de demande d amis de cette personne 

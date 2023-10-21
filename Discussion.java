@@ -21,4 +21,7 @@ public class Discussion {
     public void add_message(Message message){
         messages.add(message);
     }
+    public void remove_member(int id){
+        this.members_id.remove(Integer.valueOf(id));
+    }
 }
