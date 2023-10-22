@@ -12,18 +12,31 @@ public class DatabaseUsers{
             id_user++;
         }
     }
-    // if email -> check email
-    // if not email-> check username
-    // get_user == null signifie que user n est pas dans la db
-    public User get_user(String search,String email){
-        for (User user:users){
-            if (user.get_email().equals(email) && search.equals("email")){
+    public boolean IsSameuser(String user1,String user2,String messageError){
+        boolean issame = user1 == user2;
+        if (issame){
+            System.out.println(messageError);
+        }
+        return issame;
+    }
+    public User IsUserinDb(String username,String messageError){
+        User user  = get_user("username",username);
+        if (user == null){
+            System.out.println(messageError);
+            return null;
+        }
+        return user;
+    }
+    // search_type = "email" or "username" or "id"
+    public User get_user(String searchType, String query) {
+        for (User user : users) {
+            if (searchType.equals("email") && user.get_email().equals(query)) {
                 return user;
             }
-            if (user.get_username().equals(email) && search.equals("username")){
+            if (searchType.equals("username") && user.get_username().equals(query)) {
                 return user;
             }
-            if (String.valueOf(user.get_userid()).equals(email) && search.equals("id")){
+            if (searchType.equals("id") && String.valueOf(user.get_userid()).equals(query)) {
                 return user;
             }
         }

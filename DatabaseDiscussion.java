@@ -62,18 +62,17 @@ public class DatabaseDiscussion {
             members_id.add(member_user.get_userid());
         }
         Collections.sort(members_id);
-        for (Discussion discussion:users_discussions){
-            if (discussion.getmembers_id().equals(members_id) && discussion instanceof DiscussionGroupe){ 
-                DiscussionGroupe discussionGroupe = (DiscussionGroupe) discussion;
-                if (discussionGroupe.get_admin_id() == current_user_id){
-                    discussion.remove_member(users_db.get_user("username", exclude_member).get_userid());
-                    System.out.println(exclude_member + "was successfully excluded");
-                }
-                else{
-                    System.out.println("you are not the admin of the discussion and thus cannot exclude someone");
-                }
-                return;
+        Discussion discussion = get_discussion(members_id);
+        if (discussion instanceof DiscussionGroupe){ 
+            DiscussionGroupe discussionGroupe = (DiscussionGroupe) discussion;
+            if (discussionGroupe.get_admin_id() == current_user_id){
+                discussion.remove_member(users_db.get_user("username", exclude_member).get_userid());
+                System.out.println(exclude_member + "was successfully excluded");
             }
+            else{
+                System.out.println("you are not the admin of the discussion and thus cannot exclude someone");
+            }
+            return;
         }
         System.out.println("there is no discussion available with all the members you describe");
     }
@@ -111,14 +110,11 @@ public class DatabaseDiscussion {
         } catch (ParseException e) {
             System.out.println("Date invalide");
         }
-        for (Discussion discussion:users_discussions){
-            if (discussion.getmembers_id().equals(members_id)){ // check if all members are in the discussion
-                for (Message current_message:discussion.getmessages()){
-                    if (date_equal(date, current_message.get_date())){
-                        all_messages += current_message.see_details(users_db);
-                        return current_message.see_details(users_db);
-                    }
-                }
+        Discussion discussion = get_discussion(members_id);
+        for (Message current_message:discussion.getmessages()){
+            if (date_equal(date, current_message.get_date())){
+                all_messages += current_message.see_details(users_db);
+                return current_message.see_details(users_db);
             }
         }
         if (all_messages == ""){

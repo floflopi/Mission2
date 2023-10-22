@@ -91,6 +91,7 @@ public class Actions {
             case "block":
                 reader.readinput("Write the username you want to block");
                 currentuser.block_user(reader.getinput(),users_db);
+                break;
             case "findbymessage":
                 reader.readinput("Write the username of the people you share a discussion with (each seperated by a ',') : ");
                 discussion_membres = reader.getinput()+","+currentuser.get_username();
