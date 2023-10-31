@@ -44,7 +44,7 @@ public class Actions {
                                    "acceptfriend : accept a friend request\n"+
                                    "removefriend : remove a friend from the user contact list\n"+
                                    "block : block a friend so that he can't message you or send friend request again"+
-                                   "(you will no longer see the messages from this person) \n"+
+                                  "(you will no longer see the messages from this person) \n"+
                                    "exclude : exclude someone from a discussion if you are the admin of the discussion\n"+
                                    "sendmessage : send a message in a conversation\n"+
                                    "sendimage : send an image in a conversation\n"+

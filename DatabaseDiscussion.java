@@ -8,7 +8,7 @@ import java.util.Date;
 public class DatabaseDiscussion {
     private ArrayList<Discussion> users_discussions;
 
-    private static DatabaseDiscussion singleton=null; // singleton pattern
+    private static DatabaseDiscussion db_disc_singleton=null; // singleton pattern
 
     private DatabaseDiscussion(){
         users_discussions = new ArrayList<Discussion>();
@@ -16,17 +16,14 @@ public class DatabaseDiscussion {
     //create singleton DatabaseDiscussion
     public static synchronized DatabaseDiscussion getInstance() 
     { 
-        if (singleton == null) 
-            singleton = new DatabaseDiscussion();
+        if (db_disc_singleton == null) 
+            db_disc_singleton = new DatabaseDiscussion();
     
-        return singleton;
+        return db_disc_singleton;
     } 
     
     public void add_discussions(Discussion discussion){
         users_discussions.add(discussion);
-    }
-    public ArrayList<Discussion> getusers_discussions(){
-        return users_discussions;
     }
     public String find_message(String message,DatabaseUsers users_db,String[] members_username){
         ArrayList<Integer> members_id = get_members_id(users_db, members_username);
