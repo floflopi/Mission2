@@ -8,38 +8,41 @@ public class Main{
     }
     public static void main(String[] args) {
         // test users
-        Main.init_database();
+        init_database();
         Actions actions = new Actions();
         Reader reader = new Reader();
         select_user(reader);
         // user is connected
         while (!reader.getinput().equals("quit")){
-            System.out.printf("indiquer la commande a faire (help pour plus de détails) : ");
+            System.out.printf("Specify the command to execute (use 'help' for more details):");
             reader.readinput(null);
             actions.check_action(reader,user_db,discussions_db,current_user);
         }
         reader.getScanner().close();
     }
     public static void init_database(){
-        user_db = DatabaseUsers.getInstance(Main.users_emails);
+        user_db = DatabaseUsers.getInstance(users_emails);
         discussions_db = DatabaseDiscussion.getInstance();
     }
 
     public static void print_available_email(){
-        String print = "Available emails : ";
-        for (String email:users_emails){
-            print = print + email +", ";
+        String print = "Available emails :";
+        for (int i = 0; i < users_emails.length; i++) {
+            print = print + users_emails[i];
+            if (i != users_emails.length - 1) {
+                print = print + ",";
+            }
         }
         System.out.println(print);
     }
     public static void select_user(Reader reader){
         print_available_email();
-        System.out.printf("Quel est votre email ?");
+        System.out.printf("Select an email from the list above:");
         reader.readinput(null);
         //check if user in db
         current_user = user_db.get_user("email",reader.getinput());
         while (current_user == null){
-            System.out.printf("user is not in the database, retry : ");
+            System.out.printf("this user is not in the database, retry : ");
             reader.readinput(null);
             current_user = user_db.get_user("email",reader.getinput());
         }

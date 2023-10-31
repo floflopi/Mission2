@@ -12,6 +12,7 @@ public class DatabaseUsers{
             id_user++;
         }
     }
+    //écrit un message d'erreur si les deux utilisateurs ont le même username
     public boolean IsSameuser(String user1,String user2,String messageError){
         boolean issame = user1 == user2;
         if (issame){
@@ -19,6 +20,7 @@ public class DatabaseUsers{
         }
         return issame;
     }
+    // retourne un object User si son username est dans la DatabaseUsers, sinon retourne null
     public User IsUserinDb(String username,String messageError){
         User user  = get_user("username",username);
         if (user == null){
@@ -27,7 +29,7 @@ public class DatabaseUsers{
         }
         return user;
     }
-    // search_type = "email" or "username" or "id"
+    // searchType = "email" or "username" or "id"
     public User get_user(String searchType, String query) {
         for (User user : users) {
             if (searchType.equals("email") && user.get_email().equals(query)) {

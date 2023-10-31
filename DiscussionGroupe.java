@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class DiscussionGroupe extends Discussion {
     private int admin_id;
     public DiscussionGroupe(ArrayList<Integer> members_id,int admin_id){
-        super(members_id);
+        super(members_id,false);
         this.admin_id = admin_id;
     }
     public int get_admin_id(){

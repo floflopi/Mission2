@@ -36,6 +36,9 @@ public class User {
     public ArrayList<Integer> get_blacklist(){
         return blacklist;
     }
+    public ArrayList<Integer> get_liste_contact(){
+        return liste_contact;
+    }    
     public String get_string_friendrequest(DatabaseUsers users_db){
         String all_request = "";
         for (int friend_id : friend_request){
@@ -75,11 +78,13 @@ public class User {
             System.out.println(friend_user.get_username() + " is already in your contact list");
             return false;
         }
+        if (blacklist.contains(Integer.valueOf(friend_id))){
+            blacklist.remove(Integer.valueOf(friend_id));
+        }
         if (friend_user.get_blacklist().contains(get_userid())){
             System.out.println(friend_user.get_username() + " has blocked you ! you cannot send a friendrequest.");
             return false;
         }
-        liste_contact.add(friend_id);
         friend_user.receive_friend_request(get_userid(),users_db);
         System.out.println("friend request to "+friend_user.get_username() + " sent !");
         return true;
@@ -95,6 +100,7 @@ public class User {
         int friend_id = friend_user.get_userid();
         if (liste_contact.contains(friend_id)){
             liste_contact.remove(Integer.valueOf(friend_id));
+            friend_user.get_liste_contact().remove(Integer.valueOf(user_id));
             System.out.println(friend_user.get_username() + " was deleted from your contact list !");
         }
         else{
@@ -103,36 +109,52 @@ public class User {
         return;
     }
     public void accept_friend_request(String friend_user,DatabaseUsers users_db){
-        liste_contact.add(users_db.get_user("username", friend_user).get_userid());
+        User user =  users_db.IsUserinDb(friend_user,friend_user +" is not in the userdatabase");
+        if (user == null){
+            return;
+        }
+        liste_contact.add(user.get_userid());
+        user.get_liste_contact().add(Integer.valueOf(user_id));
+        user.get_friendrequest().remove(Integer.valueOf(user_id));
         System.out.println(friend_user + " is now your friend !");
     }
 
     public void send_message(String users,Message current_message,DatabaseUsers users_db,DatabaseDiscussion discussion_db){
+        users= users + "," + get_username();
         String[] users_array = users.split(",");
-        ArrayList<Integer> users_id = new ArrayList<>();
-        //check si on peut message ces utilisateurs
-        for (String username : users_array){
-            User friend = users_db.IsUserinDb(username, username + " is not in the userdatabase");
-            if (friend == null || users_db.IsSameuser(friend.get_username(), get_username(), "you can't send message yourself")){
-                return;
-            }
-            if (!liste_contact.contains(friend.get_userid())){
-                System.out.println(friend.get_username() + " is not your friend so you can't message him");
-                return;
-            }
-            users_id.add(friend.get_userid());
+        ArrayList<Integer> users_id = discussion_db.get_members_id(users_db, users_array);
+        if (users_id == null)
+            return;
+        // si il y a 2 ou get_userid() dans users_id c que user a essayé de se message lui meme
+        if (users_id.stream().filter(x->x.equals(get_userid())).count() > 1){
+            System.out.println("you can't send message to yourself");
+            return;
         }
-        users_id.add(get_userid());
-        Collections.sort(users_id); // we sort the array so that we can easily find discussion in discussions_id;
-        // cherche si une discussion existe deja entre les utiliseurs
-        Discussion current_discussion = discussion_db.get_discussion(users_id);        
-        if(current_discussion == null && users_id.size() > 1){
-            current_discussion = new DiscussionGroupe(users_id,get_userid());
+        // try to find if a current_discussion exist
+        Discussion current_discussion = discussion_db.get_discussion(users_id);
+        if (current_discussion == null){
+            for (int user_id:users_id){
+                if (user_id == get_userid()){
+                    continue;
+                }
+                if (!liste_contact.contains(user_id)){
+                    System.out.println(users_db.get_user("id", String.valueOf(user_id)).get_username() 
+                    + " is not your friend so you can't message him");
+                    return;
+                }
+            }
+            if (users_id.size() > 2){
+                current_discussion = new DiscussionGroupe(users_id,get_userid());
+            }
+            else{
+                current_discussion = new Discussion(users_id,true);
+            }
             discussion_db.add_discussions(current_discussion);
-        } 
-        if(current_discussion == null && users_id.size() == 1){
-            current_discussion = new Discussion(users_id);
-            discussion_db.add_discussions(current_discussion);
+        }
+        // si discussion est privé alors 
+        if (current_discussion.isprivate() && !liste_contact.contains(users_db.get_user("username",users_array[0]).get_userid())){
+            System.out.println(users_array[0] + " is not your friend so you can't message him");
+            return;
         }
         current_discussion.add_message(current_message);
         current_message.send();

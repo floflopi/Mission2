@@ -9,9 +9,19 @@ public class DatabaseDiscussion {
     private ArrayList<Discussion> users_discussions;
 
     private static DatabaseDiscussion singleton=null; // singleton pattern
+
     private DatabaseDiscussion(){
         users_discussions = new ArrayList<Discussion>();
     }
+    //create singleton DatabaseDiscussion
+    public static synchronized DatabaseDiscussion getInstance() 
+    { 
+        if (singleton == null) 
+            singleton = new DatabaseDiscussion();
+    
+        return singleton;
+    } 
+    
     public void add_discussions(Discussion discussion){
         users_discussions.add(discussion);
     }
@@ -19,21 +29,12 @@ public class DatabaseDiscussion {
         return users_discussions;
     }
     public String find_message(String message,DatabaseUsers users_db,String[] members_username){
-        ArrayList<Integer> members_id = new ArrayList<Integer>();
-        for (String member:members_username){
-            User member_user = users_db.get_user("username", member);
-            if (member_user == null){
-                return member+ "is not in the database user";
-            }
-            members_id.add(member_user.get_userid());
-        }
-        Collections.sort(members_id);
-        for (Discussion discussion:users_discussions){
-            if (discussion.getmembers_id().equals(members_id)){ // check if all members are in the discussion
-                for (Message current_message:discussion.getmessages()){
-                    if (current_message.get_contenu().equals(message)){
-                        return current_message.see_details(users_db);
-                    }
+        ArrayList<Integer> members_id = get_members_id(users_db, members_username);
+        Discussion discussion = get_discussion(members_id);
+        if (discussion != null){
+            for (Message current_message:discussion.getmessages()){
+                if (current_message.get_contenu().equals(message)){
+                    return current_message.see_details(users_db);
                 }
             }
         }
@@ -46,7 +47,7 @@ public class DatabaseDiscussion {
         }
         int current_user_id = current_user.get_userid();
         if (!members_username.contains(exclude_member)){
-            System.out.println(exclude_member + "is not part of the group");
+            System.out.println(exclude_member + " is not part of the group");
             return;
         }
         if (members_username.size() == 2){
@@ -55,10 +56,7 @@ public class DatabaseDiscussion {
         }
         ArrayList<Integer> members_id = new ArrayList<Integer>();
         for (String member:members_username){
-            User member_user = users_db.get_user("username", member);
-            if (member_user == null){
-                System.out.println(member_user + "is not in the database user");
-            }
+            User member_user = users_db.IsUserinDb(member, member+" is not in the database user");
             members_id.add(member_user.get_userid());
         }
         Collections.sort(members_id);
@@ -67,10 +65,13 @@ public class DatabaseDiscussion {
             DiscussionGroupe discussionGroupe = (DiscussionGroupe) discussion;
             if (discussionGroupe.get_admin_id() == current_user_id){
                 discussion.remove_member(users_db.get_user("username", exclude_member).get_userid());
-                System.out.println(exclude_member + "was successfully excluded");
+                System.out.println(exclude_member + " was successfully excluded");
             }
             else{
                 System.out.println("you are not the admin of the discussion and thus cannot exclude someone");
+            }
+            if (discussion.getmembers_id().size() == 2){
+                users_discussions.remove(discussionGroupe);
             }
             return;
         }
@@ -89,17 +90,21 @@ public class DatabaseDiscussion {
                            cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
                            cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
     }
-    public String find_messages_date(String dateString,DatabaseUsers users_db,String[] members_username){
 
+    public ArrayList<Integer> get_members_id(DatabaseUsers users_db,String[] members_username){
         ArrayList<Integer> members_id = new ArrayList<Integer>();
         for (String member:members_username){
-            User member_user = users_db.get_user("username", member);
+            User member_user = users_db.IsUserinDb(member, member+" is not in the database user");
             if (member_user == null){
-                return member+ "is not in the database user";
+                return null;//error throwed
             }
             members_id.add(member_user.get_userid());
         }
-        Collections.sort(members_id);
+        Collections.sort(members_id); // sort the array so that we can compare with the db_discussions
+        return members_id;
+    }
+    public String find_messages_date(String dateString,DatabaseUsers users_db,String[] members_username){
+        ArrayList<Integer> members_id = get_members_id(users_db, members_username);
         String all_messages="";
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -108,13 +113,13 @@ public class DatabaseDiscussion {
         try {
             date = sdf.parse(dateString);
         } catch (ParseException e) {
-            System.out.println("Date invalide");
+            System.out.println("Invalid date");
         }
         Discussion discussion = get_discussion(members_id);
         for (Message current_message:discussion.getmessages()){
             if (date_equal(date, current_message.get_date())){
                 all_messages += current_message.see_details(users_db);
-                return current_message.see_details(users_db);
+                all_messages += "\n";
             }
         }
         if (all_messages == ""){
@@ -132,12 +137,5 @@ public class DatabaseDiscussion {
         }
         return null;
     }
-    //create singleton DatabaseDiscussion
-    public static synchronized DatabaseDiscussion getInstance() 
-    { 
-        if (singleton == null) 
-            singleton = new DatabaseDiscussion();
-    
-        return singleton;
-    } 
+
 }
