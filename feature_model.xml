@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<featureModel>
+	<properties>
+		<graphics key="autolayoutconstraints" value="false"/>
+		<graphics key="legendposition" value="411,26"/>
+		<graphics key="legendautolayout" value="false"/>
+		<graphics key="showconstraints" value="true"/>
+		<graphics key="showshortnames" value="false"/>
+		<graphics key="layout" value="vertical"/>
+		<graphics key="showcollapsedconstraints" value="true"/>
+		<graphics key="legendhidden" value="true"/>
+		<graphics key="layoutalgorithm" value="7"/>
+	</properties>
+	<struct>
+		<and mandatory="true" name="Features">
+			<and mandatory="true" name="Contact">
+				<feature name="Ajouter contact"/>
+				<feature mandatory="true" name="Supprimer"/>
+				<feature name="Bloquer"/>
+			</and>
+			<and mandatory="true" name="Conversation">
+				<graphics key="collapsed" value="false"/>
+				<feature mandatory="true" name="Privé"/>
+				<and name="Groupe">
+					<feature name="Exclure"/>
+					<feature mandatory="true" name="Ajouter membre"/>
+					<feature mandatory="true" name="Quitter"/>
+				</and>
+				<and mandatory="true" name="Message">
+					<feature mandatory="true" name="Texte"/>
+					<or name="Media">
+						<graphics key="collapsed" value="false"/>
+						<feature name="Image"/>
+						<feature name="Fichier Vidéo"/>
+						<feature name="Gif"/>
+						<feature name="Vocaux"/>
+						<feature name="Autre fichiers"/>
+					</or>
+					<feature name="Réponse"/>
+					<feature name="Réaction"/>
+				</and>
+				<and name="Appel">
+					<feature name="Vidéo"/>
+					<feature name="Audio"/>
+				</and>
+				<feature name="Sourdine"/>
+			</and>
+			<feature name="Signaler"/>
+			<feature name="Notifications"/>
+			<alt name="Statut">
+				<graphics key="collapsed" value="false"/>
+				<feature name="En ligne"/>
+				<feature name="Déconnecté"/>
+				<feature name="Ne pas déranger"/>
+			</alt>
+			<alt name="Find">
+				<feature name="FindByMessages"/>
+				<feature name="FindByDate"/>
+			</alt>
+		</and>
+	</struct>
+</featureModel>
