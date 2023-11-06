@@ -2,7 +2,7 @@ import java.util.ArrayList;
 public class DatabaseUsers{
     private int id_user; 
     private ArrayList<User> users;
-    private static DatabaseUsers singleton=null; // singleton pattern
+    private static DatabaseUsers users_db_singleton=null; // singleton pattern
     // simulate users (constructer)
     private DatabaseUsers(String[] users_emails){
         users = new ArrayList<User>();
@@ -50,9 +50,9 @@ public class DatabaseUsers{
     //create singleton DatabaseUsers
     public static synchronized DatabaseUsers getInstance(String[] users_emails) 
     { 
-        if (singleton == null) 
-            singleton = new DatabaseUsers(users_emails); 
+        if (users_db_singleton == null) 
+            users_db_singleton = new DatabaseUsers(users_emails); 
   
-        return singleton;
+        return users_db_singleton;
     } 
 }
