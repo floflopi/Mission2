@@ -18,7 +18,7 @@ $(TARGET).class: $(TARGET).java
 
 # Clean up generated files
 clean:
-	rm -f $(TARGET).class
+	rm -f *.class
 
 # This target is not a file
 .PHONY: run clean
