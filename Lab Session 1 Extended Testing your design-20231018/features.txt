@@ -1,5 +1,6 @@
 Feature/Mandatory/Contact-Conversation
-Feature/Optional/Signaler-Notifications-Status
+Feature/Optional/Signaler-Notifications-Status-Find
+Find/Alternative/FindByMessage-FindByDate
 Contact/Mandatory/Supprimer
 Contact/Optional/Ajoutercontact-Bloquer
 Conversation/Mandatory/Message-Prive
@@ -9,5 +10,5 @@ Groupe/Optional/Exclure
 Message/Mandatory/Texte
 Message/Optional/Media-Reponse-Reaction-Video-Audio
 Media/or/Image-FichierVideo-Gif-Vocaux-Autresfichiers
-Appel/Optional/Video-Audio
+Appel/or/Video-Audio
 Status/Alternative/Enligne-Deconnecte-Nepasderanger

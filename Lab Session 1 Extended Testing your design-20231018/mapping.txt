@@ -3,12 +3,6 @@ Relation-ACTIVATES-Groupe
 Camera-ACTIVATES-Video
 Micro-ACTIVATES-Audio
 Calme-ACTIVATES-Sourdine-Nepasderanger
-Defaut-ACTIVATES-Notifications
-Defaut-ACTIVATES-Appel
-Defaut-ACTIVATES-Enligne
-Defaut-ACTIVATES-Deconnecte
-Adulte-ACTIVATES-Ajoutercontact-Media-Reponse-Reaction-Image
-Adulte-ACTIVATES-FichierVideo
-Adulte-ACTIVATES-Gif
-Adulte-ACTIVATES-Vocaux
-Adulte-ACTIVATES-Autresfichiers
+Eteint-ACTIVATES-Deconnecte
+Defaut-ACTIVATES-Appel-Notifications-Enligne
+Adulte-ACTIVATES-Ajoutercontact-Media-Reponse-Reaction-Image-FichierVideo-Gif-Vocaux-Autresfichiers
