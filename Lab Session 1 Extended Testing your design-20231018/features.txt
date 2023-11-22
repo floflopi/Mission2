@@ -1,10 +1,10 @@
 Feature/Mandatory/Contact-Conversation
-Feature/Optional/Signaler-Notifications-Status-Find
-Find/Alternative/FindByMessage-FindByDate
+Feature/Optional/Signaler-Notifications-Status
 Contact/Mandatory/Supprimer
 Contact/Optional/Ajoutercontact-Bloquer
 Conversation/Mandatory/Message-Prive
-Conversation/Optional/Groupe-Appel-Sourdine
+Conversation/Optional/Groupe-Appel-Sourdine-Find
+Find/Optional/FindFromUser-FindByDate
 Groupe/Mandatory/Ajoutermembre-Quitter
 Groupe/Optional/Exclure
 Message/Mandatory/Texte
