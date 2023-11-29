@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<featureModel>
+	<properties>
+		<graphics key="autolayoutconstraints" value="false"/>
+		<graphics key="legendposition" value="863,19"/>
+		<graphics key="legendautolayout" value="false"/>
+		<graphics key="showconstraints" value="true"/>
+		<graphics key="showshortnames" value="false"/>
+		<graphics key="layout" value="vertical"/>
+		<graphics key="showcollapsedconstraints" value="true"/>
+		<graphics key="legendhidden" value="true"/>
+		<graphics key="layoutalgorithm" value="6"/>
+	</properties>
+	<struct>
+		<and mandatory="true" name="Contexts">
+			<graphics key="collapsed" value="false"/>
+			<and mandatory="true" name="Age">
+				<feature name="Adulte"/>
+			</and>
+			<alt mandatory="true" name="Environnement">
+				<feature name="Calme"/>
+				<feature name="Defaut"/>
+				<feature name="Eteint"/>
+			</alt>
+			<feature name="Relation"/>
+			<and mandatory="true" name="Matériel">
+				<feature name="Caméra"/>
+				<feature name="Micro"/>
+			</and>
+			<and name="UserInDiscussion">
+				<feature name="UserInGroupDiscussion"/>
+			</and>
+		</and>
+	</struct>
+</featureModel>

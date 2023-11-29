@@ -1,7 +1,7 @@
 public class Main{
     private static DatabaseUsers user_db;
     private static DatabaseDiscussion discussions_db;
-    private static String[] users_emails = {"flo@gmail.com","louis@gmail.com","sarah@gmail.com","nathan@gmail.com","julie@gmail.com"};
+    private static String[] users_emails = {"a@gmail.com","b@gmail.com","c@gmail.com","d@gmail.com","e@gmail.com"};
     private static User current_user;
     public static String[] get_users_emails(){
         return users_emails;

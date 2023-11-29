@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-
 /*
  * une discussion contient une liste de tout les messages envoyés 
  * ainsi qu'une liste des id de membres participant à la discussion

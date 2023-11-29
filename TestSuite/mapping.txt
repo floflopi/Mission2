@@ -1,0 +1,10 @@
+Insecurite-ACTIVATES-Signaler-Bloquer-Exclure
+Relation-ACTIVATES-Groupe
+Camera-ACTIVATES-Video
+Micro-ACTIVATES-Audio
+Calme-ACTIVATES-Sourdine-Nepasderanger
+Eteint-ACTIVATES-Deconnecte
+Defaut-ACTIVATES-Appel-Notifications-Enligne
+Adulte-ACTIVATES-Ajoutercontact-Media-Reponse-Reaction-Image-FichierVideo-Gif-Vocaux-Autresfichiers
+UserInDiscussion-ACTIVATES-FindByDate-Find
+UserInGroupDiscussion-ACTIVATES-FindFromUser
