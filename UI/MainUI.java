@@ -32,8 +32,8 @@ public class MainUI{
                 frame.dispose();
 
                 // Affichez la deuxième interface (login)
-                LoginInterface loginInterface = new LoginInterface();
-                loginInterface.createAndShowGUI2();
+                //LoginInterface loginInterface = new LoginInterface();
+                //loginInterface.createAndShowGUI2();
             }
         });
 

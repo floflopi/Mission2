@@ -5,41 +5,80 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.util.Arrays;
+import java.awt.event.KeyAdapter;
 
 public class LoginInterface extends Window {
 
     private JFrame frame;
+    private String logo_name="logo.png";
+    private String select_username="select username...";
+    private String select_password="select password...";
+    private JPanel panel;
 
-    public LoginInterface(){
-        this("Login Interface", 1100, 550);
-    }
     public LoginInterface(String framename) {
-        this(framename, 1100, 550);
-    }
-    // Constructeur avec des dimensions spécifiées
-    public LoginInterface(String framename, int frameX, int frameY) {
-        super(framename,frameX,frameY);
+        super(framename);
         this.frame = super.getFrame();
-        createAndShowGUI2();
+        //set background to pink
+        panel = new JPanel(new GridBagLayout());
+        panel.setBackground(new Color(221,149,221,255));
+        frame.getContentPane().add(panel, BorderLayout.CENTER);
+        createAndShowGUI();
     }
+    public void createAndShowGUI() {
 
-    public void createAndShowGUI2() {
-
-        JPanel panel = new JPanel(new GridBagLayout());
         //image appli
-        JLabel appImageLabel = new JLabel(new ImageIcon("discord_logo.png"));
-
+        JLabel appImageLabel = new JLabel(new ImageIcon(logo_name));
         //barre d'entree pour username/password
-        JTextField usernameField = new JTextField("select username...");
-        //usernameField.setForeground(Color.GRAY);
-        JPasswordField passwordField = new JPasswordField("select password...");
-
+        JTextField usernameField = new JTextField(select_username);
+        Dimension currentSize = usernameField.getPreferredSize();
+        currentSize = new Dimension((int) (currentSize.width * 1.5), (int) (currentSize.height * 1.5));
+        usernameField.setPreferredSize(currentSize);
+        usernameField.setForeground(Color.GRAY);
+        usernameField.setCaretPosition(0); // position curseur
+        usernameField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (usernameField.getText().equals(select_username)) {
+                    usernameField.setText("");
+                    usernameField.setForeground(Color.BLACK);
+                }
+            }
+        });
         usernameField.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                // Lorsque le champ de texte gagne le focus, effacer le texte s'il est égal à "select username..."
-                if (usernameField.getText().equals("select username...") && !e.isTemporary()) {
-                    usernameField.setText("");
+                // curseur au début si aucun mot de passe
+                if (usernameField.getText().equals(select_username)){
+                    usernameField.setCaretPosition(0);
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+            }
+        });
+        JPasswordField passwordField = new JPasswordField(select_password);
+        passwordField.setPreferredSize(currentSize);
+        passwordField.setCaretPosition(0);
+        passwordField.setForeground(Color.GRAY);
+        passwordField.setEchoChar((char)0);
+        passwordField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (Arrays.equals(passwordField.getPassword(), select_password.toCharArray())) {
+                    passwordField.setText("");
+                    passwordField.setEchoChar('*');
+                    passwordField.setForeground(Color.BLACK);
+                }
+            }
+        });
+        passwordField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                // curseur au début si aucun mot de passe
+                if (Arrays.equals(passwordField.getPassword(), select_password.toCharArray())){
+                    passwordField.setCaretPosition(0);
                 }
             }
             @Override
@@ -48,13 +87,16 @@ public class LoginInterface extends Window {
         });
         // Ajouter un bouton "Connect"
         JButton connectButton = new JButton("Connect");
+        currentSize = connectButton.getPreferredSize();
+        connectButton.setPreferredSize(new Dimension((int) (currentSize.width * 1.2), (int) (currentSize.height * 1.2)));
         connectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Action à effectuer lors de la connexion
                 String username = usernameField.getText();
                 String password = new String(passwordField.getPassword());
-                System.out.println("User connected: " + username);
+                
+                WindowError error = new WindowError("Error", "t es nul et puis user not connected sale con essaie d etre bg !");
             }
         });
 
@@ -64,18 +106,19 @@ public class LoginInterface extends Window {
         gbc.gridwidth = 2;
         gbc.insets = new Insets(10, 10, 10, 10);
         panel.add(appImageLabel, gbc);
-
+        
         gbc.gridy++;
         panel.add(usernameField, gbc);
-
+        
         gbc.gridy++;
         panel.add(passwordField, gbc);
-
+        
         gbc.gridy++;
         gbc.gridwidth = 2;  // Le bouton occupe deux colonnes
         gbc.anchor = GridBagConstraints.CENTER;  // Le bouton est centré horizontalement
+        gbc.insets = new Insets(20, 10, 10, 10); // Ajuster les marges pour déplacer le bouton vers le bas
         panel.add(connectButton, gbc);
-
-        frame.getContentPane().add(panel, BorderLayout.CENTER);
+        updateUI();
+        
     }
 }
