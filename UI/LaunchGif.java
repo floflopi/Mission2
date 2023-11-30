@@ -17,13 +17,17 @@ public class LaunchGif extends Window{
         launch_gif();
     }
     private void launch_gif() {
-        // cree un gif label  et place le au centre de la fenetre 
-        JLabel gifLabel = new JLabel(new ImageIcon(gif_name));
+ 
+
+        // Redimensionner gif 
+        Image resizedImage = new ImageIcon(gif_name).getImage().getScaledInstance(960, 720, Image.SCALE_DEFAULT);
+        JLabel gifLabel = new JLabel(new ImageIcon(resizedImage));
+
         frame.getContentPane().add(gifLabel, BorderLayout.CENTER);
         frame.setVisible(true);
         // ferme fenetre apres timer et appelle login interface 
         // 5790 de base
-        Timer timer = new Timer(3040 , new ActionListener() {
+        Timer timer = new Timer(3200 , new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();

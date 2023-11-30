@@ -11,7 +11,7 @@ public class Window{
 
     private JFrame frame;
     public Window(String framename) {
-        this(framename, 800, 600);
+        this(framename, 960, 720);
     }
     // Constructeur avec des dimensions spécifiées
     public Window(String framename, int frameX, int frameY) {
@@ -25,8 +25,7 @@ public class Window{
         return frame;
     }
     public static void main(String[] args){
-        //LaunchGif test = new LaunchGif("Application");
-        WindowError error = new WindowError("Error", "t es nul et puis user not connected sale con essaie d etre bg !");
+        LaunchGif test = new LaunchGif("Application");
     }
     public void updateUI(){
         /*

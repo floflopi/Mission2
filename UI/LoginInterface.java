@@ -32,8 +32,7 @@ public class LoginInterface extends Window {
         JLabel appImageLabel = new JLabel(new ImageIcon(logo_name));
         //barre d'entree pour username/password
         JTextField usernameField = new JTextField(select_username);
-        Dimension currentSize = usernameField.getPreferredSize();
-        currentSize = new Dimension((int) (currentSize.width * 1.5), (int) (currentSize.height * 1.5));
+        Dimension currentSize = new Dimension((int) (usernameField.getPreferredSize().width * 1.5), (int) (usernameField.getPreferredSize().height * 1.5));
         usernameField.setPreferredSize(currentSize);
         usernameField.setForeground(Color.GRAY);
         usernameField.setCaretPosition(0); // position curseur
@@ -87,6 +86,7 @@ public class LoginInterface extends Window {
         });
         // Ajouter un bouton "Connect"
         JButton connectButton = new JButton("Connect");
+        //connectButton.setBackground(Color.BLUE);
         currentSize = connectButton.getPreferredSize();
         connectButton.setPreferredSize(new Dimension((int) (currentSize.width * 1.2), (int) (currentSize.height * 1.2)));
         connectButton.addActionListener(new ActionListener() {
@@ -95,11 +95,18 @@ public class LoginInterface extends Window {
                 // Action à effectuer lors de la connexion
                 String username = usernameField.getText();
                 String password = new String(passwordField.getPassword());
-                
-                WindowError error = new WindowError("Error", "t es nul et puis user not connected sale con essaie d etre bg !");
+
+                WindowError error = new WindowError("Error", "Hello I am an error please kill me : (");
             }
         });
-
+        // Ajouter un bouton "Register"
+        JButton registerButton = new JButton("Register");
+        registerButton.setPreferredSize(new Dimension((int) (currentSize.width * 1.2), (int) (currentSize.height * 1.2)));
+        registerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -116,8 +123,10 @@ public class LoginInterface extends Window {
         gbc.gridy++;
         gbc.gridwidth = 2;  // Le bouton occupe deux colonnes
         gbc.anchor = GridBagConstraints.CENTER;  // Le bouton est centré horizontalement
-        gbc.insets = new Insets(20, 10, 10, 10); // Ajuster les marges pour déplacer le bouton vers le bas
         panel.add(connectButton, gbc);
+
+        gbc.gridy++;
+        panel.add(registerButton, gbc);
         updateUI();
         
     }
