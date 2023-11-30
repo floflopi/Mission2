@@ -1,4 +1,7 @@
+package db;
 import java.util.ArrayList;
+
+import user.User;
 public class DatabaseUsers{
     private int id_user; 
     private ArrayList<User> users;

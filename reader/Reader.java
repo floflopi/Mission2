@@ -1,3 +1,4 @@
+package reader;
 import java.util.Scanner;
 // classe indiquant les différentes actions disponible pour un utilisateur
 public class Reader {

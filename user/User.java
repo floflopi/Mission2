@@ -1,6 +1,14 @@
+package user;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+
+import db.DatabaseDiscussion;
+import db.DatabaseUsers;
+import discussion.Discussion;
+import discussion.DiscussionGroupe;
+import message.Message;
 
 public class User {
 

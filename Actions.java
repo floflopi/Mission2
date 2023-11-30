@@ -1,5 +1,13 @@
 //classe contenant toutes les actions (features) possibles dans l'app
 import java.util.HashMap;
+
+import db.DatabaseDiscussion;
+import db.DatabaseUsers;
+import message.Fichier;
+import message.Message;
+import reader.Reader;
+import user.User;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;

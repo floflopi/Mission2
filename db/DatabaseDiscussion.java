@@ -1,9 +1,15 @@
+package db;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import discussion.Discussion;
+import discussion.DiscussionGroupe;
+import message.Message;
+import user.User;
 
 public class DatabaseDiscussion {
     private ArrayList<Discussion> users_discussions;

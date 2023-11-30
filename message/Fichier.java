@@ -1,4 +1,7 @@
+package message;
 import java.util.Date;
+
+import db.DatabaseUsers;
 public class Fichier extends Message{
     private String type_fichier;
     public Fichier(String type_fichier,Date date,int from_user_id){

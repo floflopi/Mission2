@@ -1,4 +1,7 @@
+package message;
 import java.util.Date;
+
+import db.DatabaseUsers;
 
 public class Message {
     private String contenu;

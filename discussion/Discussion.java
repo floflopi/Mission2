@@ -1,4 +1,7 @@
+package discussion;
 import java.util.ArrayList;
+
+import message.Message;
 /*
  * une discussion contient une liste de tout les messages envoyés 
  * ainsi qu'une liste des id de membres participant à la discussion
