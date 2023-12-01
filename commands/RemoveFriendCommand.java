@@ -5,10 +5,10 @@ import db.DatabaseUsers;
 import reader.Reader;
 import user.User;
 
-public class AddFriendCommand implements Command{
+public class RemoveFriendCommand implements Command{
     @Override
     public void execute(Reader reader, DatabaseUsers users_db, DatabaseDiscussion discussions_db, User currentuser) {
-        reader.readinput("Write the username you want to add to your contact list :");
-        currentuser.send_friendrequest(reader.getinput(), users_db);
+        reader.readinput("Write the username you want to remove from your contact list :");
+        currentuser.remove_friend(reader.getinput(), users_db);
     }
 }
