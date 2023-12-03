@@ -9,6 +9,7 @@ import java.util.Date;
 import discussion.Discussion;
 import discussion.DiscussionGroupe;
 import message.Message;
+import ui.WindowError;
 import user.User;
 
 public class DatabaseDiscussion {
@@ -27,7 +28,14 @@ public class DatabaseDiscussion {
     
         return db_disc_singleton;
     } 
-    
+    public void create_discussion(User current_user){
+        if (current_user.get_liste_contact().isEmpty()){
+            new WindowError("Error", "you need friends if you want to create a discussion");
+            return;
+        }
+        // pop new AddDiscussion Window
+        
+    }
     public void add_discussions(Discussion discussion){
         users_discussions.add(discussion);
     }
@@ -59,7 +67,7 @@ public class DatabaseDiscussion {
         }
         ArrayList<Integer> members_id = new ArrayList<Integer>();
         for (String member:members_username){
-            User member_user = users_db.IsUserinDb(member, member+" is not in the database user");
+            User member_user = users_db.IsUserinDb(member);
             members_id.add(member_user.get_userid());
         }
         Collections.sort(members_id);
@@ -97,7 +105,7 @@ public class DatabaseDiscussion {
     public ArrayList<Integer> get_members_id(DatabaseUsers users_db,String[] members_username){
         ArrayList<Integer> members_id = new ArrayList<Integer>();
         for (String member:members_username){
-            User member_user = users_db.IsUserinDb(member, member+" is not in the database user");
+            User member_user = users_db.IsUserinDb(member);
             if (member_user == null){
                 return null;//error throwed
             }

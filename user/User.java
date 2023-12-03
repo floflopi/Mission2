@@ -1,26 +1,21 @@
 package user;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-
-import db.DatabaseDiscussion;
 import db.DatabaseUsers;
-import discussion.Discussion;
-import discussion.DiscussionGroupe;
-import message.Message;
-
 public class User {
 
     private String email;
     private String name;
+    private String password;
     private int user_id; // id unique pour chaque user
     private ArrayList<Integer> liste_contact; // contient les user_id des autres
     private ArrayList<Integer> blacklist; // blocked users
     private ArrayList<Integer> friend_request; // request from user waiting to be accepted
-    public User(String email,String name,int user_id){
+    public User(String email,String name,String password,int user_id){
         this.email = email;
         this.name = name;
+        this.password = password;
         this.user_id = user_id;
         this.liste_contact = new ArrayList<>();
         this.friend_request = new ArrayList<>();
@@ -35,6 +30,9 @@ public class User {
     }
     public String get_username(){
         return name;
+    }
+    public String get_password(){
+        return password;
     }
     public int get_userid(){
         return user_id;
@@ -61,7 +59,7 @@ public class User {
         if (users_db.IsSameuser(username_blocked, get_username(),"you can't block yourself" )){
             return;
         }
-        User user_blocked = users_db.IsUserinDb(username_blocked, username_blocked + " is not in the userdatabase");
+        User user_blocked = users_db.IsUserinDb(username_blocked);
         if (user_blocked == null){
             return;
         }
@@ -78,7 +76,7 @@ public class User {
         if (users_db.IsSameuser(user, get_username(),"you can't add yourself as a friend" )){
             return false;
         }
-        User friend_user = users_db.IsUserinDb(user, user + " is not in the userdatabase");
+        User friend_user = users_db.IsUserinDb(user);
         if (friend_user == null){
             return false;
         }
@@ -102,7 +100,7 @@ public class User {
         if (users_db.IsSameuser(user, get_username(),"you can't remove yourself as a friend" )){
             return;
         }
-        User friend_user = users_db.IsUserinDb(user, user + " is not in the userdatabase");
+        User friend_user = users_db.IsUserinDb(user);
         if (friend_user == null){
             return;
         }
@@ -118,7 +116,7 @@ public class User {
         return;
     }
     public void accept_friend_request(String friend_user,DatabaseUsers users_db){
-        User user =  users_db.IsUserinDb(friend_user,friend_user +" is not in the userdatabase");
+        User user =  users_db.IsUserinDb(friend_user);
         if (user == null){
             return;
         }
@@ -127,7 +125,7 @@ public class User {
         user.get_friendrequest().remove(Integer.valueOf(user_id));
         System.out.println(friend_user + " is now your friend !");
     }
-
+    /* 
     public void send_message(String users,Message current_message,DatabaseUsers users_db,DatabaseDiscussion discussion_db){
         users= users + "," + get_username();
         String[] users_array = users.split(",");
@@ -168,4 +166,5 @@ public class User {
         current_discussion.add_message(current_message);
         current_message.send();
     }
+    */
 }

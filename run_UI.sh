@@ -1,1 +1,1 @@
-javac UI/*.java && java UI.Window
+javac ui/*.java && java ui.MainUI

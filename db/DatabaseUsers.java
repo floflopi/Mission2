@@ -1,7 +1,7 @@
 package db;
-import java.util.ArrayList;
-
 import user.User;
+import java.util.ArrayList;
+import ui.*;
 public class DatabaseUsers{
     private int id_user; 
     private ArrayList<User> users;
@@ -11,7 +11,7 @@ public class DatabaseUsers{
         users = new ArrayList<User>();
         id_user = 0;
         for (String email:users_emails){
-            users.add(new User(email,email.split("@")[0],id_user));
+            users.add(new User(email,email.split("@")[0],email.split("@")[0],id_user));
             id_user++;
         }
     }
@@ -23,11 +23,19 @@ public class DatabaseUsers{
         }
         return issame;
     }
+    public boolean good_password(String username,String password) {
+        User user  = get_user("username",username);
+        if (!user.get_password().equals(password)){
+            new WindowError("Error","Wrong password ! please retry.");
+            return false;
+        }
+        return true;
+    }
     // retourne un object User si son username est dans la DatabaseUsers, sinon retourne null
-    public User IsUserinDb(String username,String messageError){
+    public User IsUserinDb(String username){
         User user  = get_user("username",username);
         if (user == null){
-            System.out.println(messageError);
+            new WindowError("Error",username + " is not in the UsersDatabase, please register if you don't have an account.");
             return null;
         }
         return user;
