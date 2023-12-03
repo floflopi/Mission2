@@ -5,6 +5,7 @@ import db.DatabaseUsers;
 import reader.Reader;
 import user.User;
 
+@CommandInfo(name = "acceptfriend", optionnal = false)
 public class AcceptFriendCommand implements Command{
     @Override
     public void execute(Reader reader, DatabaseUsers users_db, DatabaseDiscussion discussions_db, User currentuser) {

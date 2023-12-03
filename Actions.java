@@ -1,52 +1,94 @@
 //classe contenant toutes les actions (features) possibles dans l'app
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
-import commands.AcceptFriendCommand;
-import commands.AddFriendCommand;
-import commands.BlockCommand;
-import commands.Command;
-import commands.ExcludeCommand;
-import commands.FindByDateCommand;
-import commands.FindByMessageCommand;
-import commands.RemoveFriendCommand;
-import commands.SendImageCommand;
-import commands.SendMessageCommand;
-import commands.SendVideoCommand;
+import commands.*;
 import db.DatabaseDiscussion;
 import db.DatabaseUsers;
 import reader.Reader;
 import user.User;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 public class Actions {
     // hashmap : action-isactif
     private HashMap<String,Boolean> optional_features;
     private ArrayList<String> mandatory_features;
+    ArrayList<String> liste_features;
     private Map<String, Command> commandMap;
-    public Actions(){
-        // Design Pattern Command
-        commandMap = new HashMap<>();
-        commandMap.put("addfriend", new AddFriendCommand());
-        commandMap.put("acceptfriend", new AcceptFriendCommand());
-        commandMap.put("removefriend", new RemoveFriendCommand());
-        commandMap.put("sendmessage", new SendMessageCommand());
-        commandMap.put("sendimage", new SendImageCommand());
-        commandMap.put("sendvideo", new SendVideoCommand());
-        commandMap.put("block", new BlockCommand());
-        commandMap.put("findbymessage", new FindByMessageCommand());
-        commandMap.put("findbyDate", new FindByDateCommand());
-        commandMap.put("exclude", new ExcludeCommand());
-        //
 
-        String[] liste_features = new String[]{"block","sendimage","sendvideo","findbyDate","findbymessage","exclude"};
-        mandatory_features = new ArrayList<>(Arrays.asList(new String[]{"addfriend","changeuser","sendmessage","acceptfriend","removefriend","quit"}));
+    public Actions(){
+        commandMap = new HashMap<>();
+        mandatory_features = new ArrayList<>(Arrays.asList(new String[]{"changeuser", "quit", "help"}));
         optional_features = new HashMap<String,Boolean>();
+        command_map_initialization();
         for (String feature : liste_features){
             optional_features.put(feature, true);
         }
     }
+
+    private void command_map_initialization() {
+        String packageName = "commands";
+        
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        String path = packageName.replace('.', '/'); 
+        
+        liste_features = new ArrayList<>(Arrays.asList(new String[]{}));
+        
+        try {
+            Enumeration<URL> resources = classLoader.getResources(path);
+            
+            while (resources.hasMoreElements()) {
+                URL resource = resources.nextElement();
+                if (resource.getProtocol().equals("file")) {
+                    File file = new File(resource.toURI());
+                    
+                    File[] files = file.listFiles();
+                    if (files != null) {
+                        for (File commandFile : files) {
+                            if (commandFile.isFile() && commandFile.getName().endsWith(".class")) {
+                                String className = packageName + '.' + commandFile.getName().replace(".class", "");
+                                try {
+                                    Class<?> commandClass = Class.forName(className);
+                                    
+                                    if (Command.class.isAssignableFrom(commandClass) && !commandClass.isInterface()) {
+                                        CommandInfo commandInfo = commandClass.getAnnotation(CommandInfo.class);
+                                        
+                                        if (commandInfo != null) {
+                                            if (commandInfo.optionnal()) {
+                                                liste_features.add(commandInfo.name());
+                                            }
+                                            else {
+                                                mandatory_features.add(commandInfo.name());
+                                            }
+                                            Constructor<?> constructor = commandClass.getConstructor();
+                                            Command commandInstance = (Command) constructor.newInstance();
+                                            commandMap.put(commandInfo.name(), commandInstance);
+                                        }
+                                    }
+                                } catch (ClassNotFoundException | NoSuchMethodException 
+                                | IllegalAccessException | InstantiationException 
+                                | InvocationTargetException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public void activate_features(boolean active,String features){
         for (String feature:features.split(",")){
             if (mandatory_features.contains(feature) && !active){
@@ -61,21 +103,25 @@ public class Actions {
         }
     }
     public void check_action(Reader reader,DatabaseUsers users_db,DatabaseDiscussion discussions_db,User currentuser){
-        // Design Pattern Command
-        String input = reader.getinput();
+        String input = reader.getinput().toLowerCase();
 
         if (commandMap.containsKey(input)) {
-            commandMap.get(input).execute(reader, users_db, discussions_db, currentuser);
+            // essaie de voir si une fonctionnalité est activée ou non 
+            if (optional_features.containsKey(input) && !optional_features.get(input)){
+                System.out.println("Fonctionnalité désactivée !");
+                return;
+            }
+            else {
+                commandMap.get(input).execute(reader, users_db, discussions_db, currentuser);
+            }
         } else {
-            System.out.println("Invalid command");
+            if (!input.contains("deactivate") && !input.contains("activate")) {
+                System.out.println("Invalid command");
+            }
         }
 
-        // essaie de voir si une fonctionnalité est activée ou non 
-        if (optional_features.containsKey(reader.getinput()) && !optional_features.get(reader.getinput())){
-            System.out.println("Fonctionnalité désactivée !");
-            return;
-        }
-        switch (reader.getinput()){
+
+        switch (input){
             case "help":
                 System.out.println("Valid commands :\n"+
                                    "changeuser : change current user connected\n"+ 
@@ -101,14 +147,14 @@ public class Actions {
                 break;
             // case deactivate/activate
             default:
-                if (reader.getinput().length() < 10 || reader.getinput().length() == 10){
+                if (input.length() < 10 || input.length() == 10){
                     //System.out.println("Invalid command");
                 }
-                else if (reader.getinput().substring(0, 9).equals("activate ")){
-                    activate_features(true,reader.getinput().substring(9));
+                else if (input.substring(0, 9).equals("activate ")){
+                    activate_features(true,input.substring(9));
                 }
-                else if (reader.getinput().substring(0, 11).equals("deactivate ")){
-                    activate_features(false,reader.getinput().substring(11));
+                else if (input.substring(0, 11).equals("deactivate ")){
+                    activate_features(false,input.substring(11));
                 }
                 else{
                     //System.out.println("Invalid command");

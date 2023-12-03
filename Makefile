@@ -8,17 +8,23 @@ JAVACFLAGS =
 # Define the target (the Java program name)
 TARGET = Main
 
+# Define the source files
+SOURCES = $(wildcard *.java) $(wildcard */*.java)
+
+# Define the class files
+CLASSES = $(SOURCES:.java=.class)
+
 # Default target: compile and run the program
-run: $(TARGET).class
+run: $(CLASSES)
 	@$(JAVA) $(TARGET)
 
-# Compile the Java source file
-$(TARGET).class: $(TARGET).java
-	$(JAVAC) $(JAVACFLAGS) $(TARGET).java
+# Compile the Java source files
+%.class: %.java
+	$(JAVAC) $(JAVACFLAGS) $<
 
 # Clean up generated files
 clean:
-	rm -f *.class
+	find . -name '*.class' -exec rm -f {} +
 
 # This target is not a file
 .PHONY: run clean
