@@ -28,11 +28,14 @@ public class UserMainUI extends Window {
 
     private User current_user;
     private DatabaseDiscussion disc_db;
-    public UserMainUI(String frameName,User current_user,DatabaseDiscussion disc_db) {
+    private DatabaseUsers users_db;
+    public UserMainUI(String frameName,User current_user,DatabaseDiscussion disc_db,DatabaseUsers users_db) {
         super(frameName);
         this.frame = super.getFrame();
         this.current_user = current_user;
         this.disc_db = disc_db;
+        this.users_db = users_db;
+
         initializeUI();
         
     }
@@ -68,7 +71,7 @@ public class UserMainUI extends Window {
         friends_btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new FriendUI();
+                new FriendUI(users_db,disc_db,current_user);
             }
         });
         newdiscussion_btn = new JButton("New Discussion");

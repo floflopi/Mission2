@@ -14,8 +14,12 @@ public class WindowError extends Window{
     private JFrame frame;
     private String MessageError;
     private String error_img="images/error_cross.png";
-    public WindowError(String framename,String MessageError) {
+
+    public WindowError(String framename,String MessageError,String newimage) {
         super(framename,700,400);
+        if (newimage != null){
+            this.error_img=newimage;
+        }
         this.frame = super.getFrame();
         this.MessageError = MessageError;
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // only close the error not the app

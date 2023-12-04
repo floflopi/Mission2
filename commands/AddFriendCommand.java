@@ -9,7 +9,12 @@ import user.User;
 public class AddFriendCommand implements Command{
     @Override
     public void execute(Reader reader, DatabaseUsers users_db, DatabaseDiscussion discussions_db, User currentuser) {
-        reader.readinput("Write the username you want to add to your contact list :");
-        currentuser.send_friendrequest(reader.getinput(), users_db);
+        return;
+        //reader.readinput("Write the username you want to add to your contact list :");
+        //currentuser.send_friendrequest(reader.getinput(), users_db);
+    }
+    @Override
+    public void execute(String inputString, DatabaseUsers users_db, DatabaseDiscussion discussions_db, User currentuser) {
+        currentuser.send_friendrequest(inputString, users_db);
     }
 }

@@ -15,7 +15,7 @@ public class MainUI{
     public static void main(String[] args){
         init_database();
         //LaunchGif app = new LaunchGif("Application",users_db,disc_db);
-        new UserMainUI("app", new User("Flopi_flo@gmail.com","Flopi_flo","Louis",0),disc_db);
+        new UserMainUI("app", new User("Flopi_Flo@gmail.com","Flopi_Flo","Flopi_Flo",0),disc_db,users_db);
     }
 
     public static void init_database(){

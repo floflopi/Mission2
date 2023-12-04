@@ -30,7 +30,7 @@ public class DatabaseDiscussion {
     } 
     public void create_discussion(User current_user){
         if (current_user.get_liste_contact().isEmpty()){
-            new WindowError("Error", "you need friends if you want to create a discussion");
+            new WindowError("Error", "you need friends if you want to create a discussion",null);
             return;
         }
         // pop new AddDiscussion Window
@@ -67,7 +67,7 @@ public class DatabaseDiscussion {
         }
         ArrayList<Integer> members_id = new ArrayList<Integer>();
         for (String member:members_username){
-            User member_user = users_db.IsUserinDb(member);
+            User member_user = users_db.IsUserinDb(member,null);
             members_id.add(member_user.get_userid());
         }
         Collections.sort(members_id);
@@ -105,7 +105,7 @@ public class DatabaseDiscussion {
     public ArrayList<Integer> get_members_id(DatabaseUsers users_db,String[] members_username){
         ArrayList<Integer> members_id = new ArrayList<Integer>();
         for (String member:members_username){
-            User member_user = users_db.IsUserinDb(member);
+            User member_user = users_db.IsUserinDb(member,null);
             if (member_user == null){
                 return null;//error throwed
             }

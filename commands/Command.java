@@ -8,4 +8,5 @@ import user.User;
 // Design Pattern Command
 public interface Command {
     void execute(Reader reader, DatabaseUsers users_db, DatabaseDiscussion discussions_db, User currentuser);
+    void execute(String input, DatabaseUsers users_db, DatabaseDiscussion discussions_db, User currentuser);
 }

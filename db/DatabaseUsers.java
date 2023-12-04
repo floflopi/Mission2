@@ -17,25 +17,31 @@ public class DatabaseUsers{
     }
     //écrit un message d'erreur si les deux utilisateurs ont le même username
     public boolean IsSameuser(String user1,String user2,String messageError){
-        boolean issame = user1 == user2;
+        boolean issame = user1.equals(user2);
         if (issame){
-            System.out.println(messageError);
+            new WindowError("Error",messageError,null);
         }
         return issame;
     }
     public boolean good_password(String username,String password) {
         User user  = get_user("username",username);
         if (!user.get_password().equals(password)){
-            new WindowError("Error","Wrong password ! please retry.");
+            new WindowError("Error","Wrong password ! please retry.",null);
             return false;
         }
         return true;
     }
     // retourne un object User si son username est dans la DatabaseUsers, sinon retourne null
-    public User IsUserinDb(String username){
+    public User IsUserinDb(String username,String messageError){
         User user  = get_user("username",username);
         if (user == null){
-            new WindowError("Error",username + " is not in the UsersDatabase, please register if you don't have an account.");
+            if (messageError == null){
+                new WindowError("Error",username + " is not in the UsersDatabase.",null);
+            }
+            else{
+                new WindowError("Error",messageError,null);
+            }
+            
             return null;
         }
         return user;

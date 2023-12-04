@@ -37,9 +37,9 @@ public class LoginInterface extends Window {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
         // check if we can connect 
-        if (users_db.IsUserinDb(username) != null
+        if (users_db.IsUserinDb(username,username + " is not in the UsersDatabase, please register if you don't have an account.") != null
         && users_db.good_password(username, password)){
-            UserMainUI mainui = new UserMainUI("Main UI", users_db.get_user("username", username),disc_db);
+            UserMainUI mainui = new UserMainUI("Main UI", users_db.get_user("username", username),disc_db,users_db);
             frame.dispose(); // close current frame
         }
     }

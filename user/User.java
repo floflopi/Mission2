@@ -59,7 +59,7 @@ public class User {
         if (users_db.IsSameuser(username_blocked, get_username(),"you can't block yourself" )){
             return;
         }
-        User user_blocked = users_db.IsUserinDb(username_blocked);
+        User user_blocked = users_db.IsUserinDb(username_blocked,null);
         if (user_blocked == null){
             return;
         }
@@ -73,10 +73,12 @@ public class User {
     }
 
     public boolean send_friendrequest(String user,DatabaseUsers users_db){
+        System.out.println(user);
+        System.out.println(get_username());
         if (users_db.IsSameuser(user, get_username(),"you can't add yourself as a friend" )){
             return false;
         }
-        User friend_user = users_db.IsUserinDb(user);
+        User friend_user = users_db.IsUserinDb(user,null);
         if (friend_user == null){
             return false;
         }
@@ -93,6 +95,7 @@ public class User {
             return false;
         }
         friend_user.receive_friend_request(get_userid(),users_db);
+        // create window error sauf qu on remplace la croix par un ok ! 
         System.out.println("friend request to "+friend_user.get_username() + " sent !");
         return true;
     }
@@ -100,7 +103,7 @@ public class User {
         if (users_db.IsSameuser(user, get_username(),"you can't remove yourself as a friend" )){
             return;
         }
-        User friend_user = users_db.IsUserinDb(user);
+        User friend_user = users_db.IsUserinDb(user,null);
         if (friend_user == null){
             return;
         }
@@ -116,7 +119,7 @@ public class User {
         return;
     }
     public void accept_friend_request(String friend_user,DatabaseUsers users_db){
-        User user =  users_db.IsUserinDb(friend_user);
+        User user =  users_db.IsUserinDb(friend_user,null);
         if (user == null){
             return;
         }
