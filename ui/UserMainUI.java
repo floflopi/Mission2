@@ -25,10 +25,12 @@ public class UserMainUI extends Window {
 
     private JButton friends_btn;
     private JButton newdiscussion_btn;
+    private JButton disconnect_btn;
 
     private User current_user;
     private DatabaseDiscussion disc_db;
     private DatabaseUsers users_db;
+    private int status =0;
     public UserMainUI(String frameName,User current_user,DatabaseDiscussion disc_db,DatabaseUsers users_db) {
         super(frameName);
         this.frame = super.getFrame();
@@ -67,6 +69,14 @@ public class UserMainUI extends Window {
         buttonPanel = new JPanel(); // JPanel pour contenir les boutons
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 
+        disconnect_btn = new JButton("Disconnect");
+        disconnect_btn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                new LoginInterface("Login Interface", users_db, disc_db);
+            }
+        });       
         friends_btn = new JButton("Friends");
         friends_btn.addActionListener(new ActionListener() {
             @Override
@@ -78,17 +88,19 @@ public class UserMainUI extends Window {
         newdiscussion_btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                disc_db.create_discussion(current_user);
+                disc_db.create_discussion("New Discussion",400,300,current_user,users_db);
             }
         });
 
-        Dimension buttonSize = new Dimension(350,50);
+        Dimension buttonSize = new Dimension(350,40);
+        disconnect_btn.setMaximumSize(buttonSize);
         friends_btn.setMaximumSize(buttonSize);
         newdiscussion_btn.setMaximumSize(buttonSize);
 
+        buttonPanel.add(disconnect_btn);
         buttonPanel.add(friends_btn);
         buttonPanel.add(newdiscussion_btn);
-        buttonPanel.setPreferredSize(new Dimension(350, 100));
+        buttonPanel.setPreferredSize(new Dimension(350, 120));
     }
     private void createUserPanel() {
         userPanel = new JPanel();
@@ -104,19 +116,37 @@ public class UserMainUI extends Window {
     
         // Ajouter le label aligné à gauche
         userPanel.add(user_label,BorderLayout.WEST);
-    
         JPanel circlePanel = new JPanel() {
+            // en ligne,déconnecté,ne pas déranger
+
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 Graphics2D g2d = (Graphics2D) g;
-                int circleSize = 20; // Ajustez la taille du cercle selon vos besoins
-                g2d.setColor(Color.GREEN); // Couleur du cercle
-                g2d.fill(new Ellipse2D.Double(0, getHeight()/2 - circleSize/2, circleSize, circleSize));
+                int circleSize = 20;
+                
+                if (status == 0) {
+                    g2d.setColor(Color.GREEN);
+                } else if (status == 1){
+                    g2d.setColor(Color.ORANGE);
+                }
+                else{
+                    g2d.setColor(Color.RED);
+                }
+
+                g2d.fill(new Ellipse2D.Double(0, getHeight() / 2 - circleSize / 2, circleSize, circleSize));
             }
         };
-        circlePanel.setPreferredSize(new Dimension(20, 20)); // Ajustez la taille selon vos besoins
-        circlePanel.setBackground(new Color(64, 68, 75)); // Même couleur que le fond de userPanel
+        circlePanel.setPreferredSize(new Dimension(20, 20)); 
+        circlePanel.setBackground(new Color(64, 68, 75)); 
+        //change color when clicked
+        circlePanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                status = (status + 1) % 3;
+                ((JPanel) e.getSource()).repaint(); 
+            }
+        });
         userPanel.add(Box.createHorizontalStrut(8));
         userPanel.add(circlePanel);
 
@@ -141,7 +171,7 @@ public class UserMainUI extends Window {
         userPanel.setPreferredSize(new Dimension(350, 80));
         userPanel.setBackground(new Color(64, 68, 75));
     }
-
+    // panel for discussion
     private void createRightPanel() {
         rightPanel = new JPanel(new BorderLayout());
         JLabel noDiscussionLabel = new JLabel("No Discussion : ( try to make friends !");

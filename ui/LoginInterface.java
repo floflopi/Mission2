@@ -18,8 +18,8 @@ public class LoginInterface extends Window {
     private String select_username="select username...";
     private String select_password="select password...";
     private JPanel panel;
-    private JTextField usernameField;
-    private JPasswordField passwordField;
+    private CustomInputField usernameField;
+    private CustomInputField passwordField;
 
     private DatabaseDiscussion disc_db;
 
@@ -34,8 +34,8 @@ public class LoginInterface extends Window {
         createAndShowGUI(users_db);
     }
     public void try_connect(DatabaseUsers users_db){
-        String username = usernameField.getText();
-        String password = new String(passwordField.getPassword());
+        String username = usernameField.getinput().getText();
+        String password = new String(passwordField.getpassword().getPassword());
         // check if we can connect 
         if (users_db.IsUserinDb(username,username + " is not in the UsersDatabase, please register if you don't have an account.") != null
         && users_db.good_password(username, password)){
@@ -48,63 +48,13 @@ public class LoginInterface extends Window {
         //image appli
         JLabel appImageLabel = new JLabel(new ImageIcon(logo_name));
         //barre d'entree pour username/password
-        usernameField = new JTextField(select_username);
-        Dimension currentSize = new Dimension((int) (usernameField.getPreferredSize().width * 1.5), (int) (usernameField.getPreferredSize().height * 1.5));
-        usernameField.setPreferredSize(currentSize);
-        usernameField.setForeground(Color.GRAY);
-        usernameField.setCaretPosition(0); // position curseur
-        usernameField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (usernameField.getText().equals(select_username)) {
-                    usernameField.setText("");
-                    usernameField.setForeground(Color.BLACK);
-                }
-            }
-        });
-        usernameField.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                // curseur au début si aucun mot de passe
-                if (usernameField.getText().equals(select_username)){
-                    usernameField.setCaretPosition(0);
-                }
-            }
-            @Override
-            public void focusLost(FocusEvent e) {
-            }
-        });
-        passwordField = new JPasswordField(select_password);
-        passwordField.setPreferredSize(currentSize);
-        passwordField.setCaretPosition(0);
-        passwordField.setForeground(Color.GRAY);
-        passwordField.setEchoChar((char)0);
-        passwordField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (Arrays.equals(passwordField.getPassword(), select_password.toCharArray())) {
-                    passwordField.setText("");
-                    passwordField.setEchoChar('*');
-                    passwordField.setForeground(Color.BLACK);
-                }
-            }
-        });
-        passwordField.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                // curseur au début si aucun mot de passe
-                if (Arrays.equals(passwordField.getPassword(), select_password.toCharArray())){
-                    passwordField.setCaretPosition(0);
-                }
-            }
-            @Override
-            public void focusLost(FocusEvent e) {
-            }
-        });
+        usernameField = new CustomInputField(select_username,200,30);
+        passwordField = new CustomInputField(select_password, 200,30,true);
+        
         // Ajouter un bouton "Connect"
         JButton connectButton = new JButton("Connect");
-        //connectButton.setBackground(Color.BLUE);
-        currentSize = connectButton.getPreferredSize();
+
+        Dimension currentSize = connectButton.getPreferredSize();
         connectButton.setPreferredSize(new Dimension((int) (currentSize.width * 1.2), (int) (currentSize.height * 1.2)));
         connectButton.addActionListener(new ActionListener() {
             @Override
@@ -129,10 +79,10 @@ public class LoginInterface extends Window {
         panel.add(appImageLabel, gbc);
         
         gbc.gridy++;
-        panel.add(usernameField, gbc);
+        panel.add(usernameField.getinput(), gbc);
         
         gbc.gridy++;
-        panel.add(passwordField, gbc);
+        panel.add(passwordField.getpassword(), gbc);
         
         gbc.gridy++;
         gbc.gridwidth = 2;  // Le bouton occupe deux colonnes

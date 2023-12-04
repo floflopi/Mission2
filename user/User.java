@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import db.DatabaseUsers;
+import ui.WindowError;
 public class User {
 
     private String email;
@@ -73,8 +74,6 @@ public class User {
     }
 
     public boolean send_friendrequest(String user,DatabaseUsers users_db){
-        System.out.println(user);
-        System.out.println(get_username());
         if (users_db.IsSameuser(user, get_username(),"you can't add yourself as a friend" )){
             return false;
         }
@@ -84,19 +83,24 @@ public class User {
         }
         int friend_id = friend_user.get_userid();
         if (liste_contact.contains(friend_id)){
-            System.out.println(friend_user.get_username() + " is already in your contact list");
+            new WindowError("Error",friend_user.get_username() + " is already in your contact list",null);
             return false;
         }
+        if (friend_user.get_friendrequest().contains(Integer.valueOf(get_userid()))){
+            new WindowError("Error","you have already send a friend request to " + friend_user.get_username() + " !",null);
+            return false;
+        }
+        // remove user from blacklist if user want to be friend again
         if (blacklist.contains(Integer.valueOf(friend_id))){
             blacklist.remove(Integer.valueOf(friend_id));
         }
         if (friend_user.get_blacklist().contains(get_userid())){
-            System.out.println(friend_user.get_username() + " has blocked you ! you cannot send a friendrequest.");
+            new WindowError("Error",friend_user.get_username() + " has blocked you ! you cannot send a friendrequest.",null);
             return false;
         }
         friend_user.receive_friend_request(get_userid(),users_db);
         // create window error sauf qu on remplace la croix par un ok ! 
-        System.out.println("friend request to "+friend_user.get_username() + " sent !");
+        new WindowError("Request Succeed","friend request to "+friend_user.get_username() + " sent !" , "images/noerror.png");
         return true;
     }
     public void remove_friend(String user,DatabaseUsers users_db){
@@ -126,7 +130,6 @@ public class User {
         liste_contact.add(user.get_userid());
         user.get_liste_contact().add(Integer.valueOf(user_id));
         user.get_friendrequest().remove(Integer.valueOf(user_id));
-        System.out.println(friend_user + " is now your friend !");
     }
     /* 
     public void send_message(String users,Message current_message,DatabaseUsers users_db,DatabaseDiscussion discussion_db){

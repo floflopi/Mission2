@@ -15,7 +15,9 @@ public class MainUI{
     public static void main(String[] args){
         init_database();
         //LaunchGif app = new LaunchGif("Application",users_db,disc_db);
-        new UserMainUI("app", new User("Flopi_Flo@gmail.com","Flopi_Flo","Flopi_Flo",0),disc_db,users_db);
+        User u = new User("Flopi_Flo@gmail.com","Flopi_Flo","Flopi_Flo",0);
+        u.get_liste_contact().add(Integer.valueOf(1));
+        new UserMainUI("app",u,disc_db,users_db);
     }
 
     public static void init_database(){

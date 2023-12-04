@@ -11,7 +11,7 @@ import discussion.DiscussionGroupe;
 import message.Message;
 import ui.WindowError;
 import user.User;
-
+import ui.NewDiscussionUI;
 public class DatabaseDiscussion {
     private ArrayList<Discussion> users_discussions;
 
@@ -28,16 +28,51 @@ public class DatabaseDiscussion {
     
         return db_disc_singleton;
     } 
-    public void create_discussion(User current_user){
+    public void create_discussion(String framename,int sizex,int sizey,User current_user,DatabaseUsers users_db){
         if (current_user.get_liste_contact().isEmpty()){
             new WindowError("Error", "you need friends if you want to create a discussion",null);
             return;
         }
+        NewDiscussionUI disc_ui = new NewDiscussionUI("New Discussion",650,350,current_user,this,users_db);
         // pop new AddDiscussion Window
         
     }
-    public void add_discussions(Discussion discussion){
-        users_discussions.add(discussion);
+    //returns true if a discussion can be create
+    public boolean verify_disc_creation(String messageinitial,String list_users,User current_user,DatabaseUsers users_db){
+        if (list_users.equals(messageinitial)){
+            new WindowError("Error","Please add at least one person to the discussion",null);
+            return false;
+        }
+        String[] users_array = (list_users + ',' + current_user.get_username()).split(",");
+        ArrayList<Integer> users_id = get_members_id(users_db, users_array);
+        if (users_id == null){
+            return false;
+        }
+        // si il y a 2 ou get_userid() dans users_id c que user a essayé de se message lui meme
+        if (users_id.stream().filter(x->x.equals(current_user.get_userid())).count() > 1){
+            new WindowError("Error","you can't send message to yourself", null);
+            return false;
+        }
+        // try to find if a current_discussion exist
+        Discussion current_discussion;
+        for (int user_id:users_id){
+            if (user_id == current_user.get_userid()){
+                continue;
+            }
+            if (!current_user.get_liste_contact().contains(user_id)){
+                new WindowError("Error", users_db.get_user("id", String.valueOf(user_id)).get_username() 
+                + " is not your friend so you can't message him",null);
+                return false;
+            }
+        }
+        if (users_id.size() > 2){
+            current_discussion = new DiscussionGroupe(users_id,current_user.get_userid());
+        }
+        else{
+            current_discussion = new Discussion(users_id,true);
+        }
+        users_discussions.add(current_discussion);
+        return true;
     }
     public String find_message(String message,DatabaseUsers users_db,String[] members_username){
         ArrayList<Integer> members_id = get_members_id(users_db, members_username);

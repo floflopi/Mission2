@@ -21,16 +21,18 @@ public class FriendUI extends Window {
     private JFrame frame;
     private JTextField friendNameField;
     private JButton sendRequestButton;
-    private JLabel[] friends_action = new JLabel[3];
+    private JLabel[] friends_action = new JLabel[4];
 
     private JPanel topPanel;
     private JPanel friendsrequestPanel;
+    private JPanel friendsrequestContentPanel; // content of scroll panel
     private JPanel friendsPanel;
+    private JPanel friendsContentPanel;
     private User current_user;
     private DatabaseDiscussion disc_db;
     private DatabaseUsers users_db;
 
-    private String[] images_icon = new String[]{"images/call_button.png","images/camera_button.png","images/message_button.png"};
+    private String[] images_icon = new String[]{"images/call_button.png","images/camera_button.png","images/message_button.png","images/block_user.png"};
 
     public FriendUI(DatabaseUsers users_db,DatabaseDiscussion disc_db,User current_user) {
         super("Friend UI"); // Vous pouvez ajuster la taille du cadre selon vos besoins
@@ -38,6 +40,7 @@ public class FriendUI extends Window {
         this.disc_db = disc_db;
         this.current_user = current_user;
         this.frame = super.getFrame();
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         initializeUI();
     }
     private void createTopPanel(){
@@ -100,15 +103,15 @@ public class FriendUI extends Window {
         friendsrequestPanel.add(friendRequestsLabel);
     
         // Ajouter un JScrollPane en dessous pour contenir les demandes d'amis
-        JPanel contentPanel = new JPanel();
-        contentPanel.setBackground(getblackColor());
-        JScrollPane scrollPane = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        friendsrequestContentPanel = new JPanel();
+        friendsrequestContentPanel.setBackground(getblackColor());
+        JScrollPane scrollPane = new JScrollPane(friendsrequestContentPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setPreferredSize(new Dimension(frame.getWidth(), 175));  // Ajustez la taille selon vos besoins
         friendsrequestPanel.add(scrollPane);
-        show_friend_request(contentPanel);
+        show_friend_request();
     }
     //display all friend request
-    private void show_friend_request(JPanel contentPanel){
+    private void show_friend_request(){
         for (int i=0;i< current_user.get_friendrequest().size();i++){
             //get username friend 
             String friend_user=users_db.get_user("id", String.valueOf(current_user.get_friendrequest().get(i))).get_username();
@@ -129,7 +132,9 @@ public class FriendUI extends Window {
                     current_user.accept_friend_request(friend_user, users_db);
                     //display message
                     new WindowError("Request Succeed",friend_user + " was successfully added to your friends list !","images/noerror.png");
-                    contentPanel.remove(demande);
+                    friendsrequestContentPanel.remove(demande);
+                    show_all_friends(); //update friend list
+                    updateUI();
                 }
             });
             JButton declineButton = new JButton("Decline");
@@ -139,14 +144,50 @@ public class FriendUI extends Window {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     current_user.get_friendrequest().remove(current_user.get_friendrequest().get(index));
-                    contentPanel.remove(demande);
+                    friendsrequestContentPanel.remove(demande);
+                    updateUI();
                 }
             });
             demande.add(user_txt);
             demande.add(acceptButton);
             demande.add(declineButton);
-            contentPanel.add(demande);
+            friendsrequestContentPanel.add(demande);
         }
+    }
+    private void show_all_friends(){
+        for (int i=0;i < current_user.get_liste_contact().size();i++){
+            User friend_user=users_db.get_user("id", String.valueOf(current_user.get_liste_contact().get(i)));
+            JPanel currentfriendPanel = new JPanel(null); // Utiliser null pour aucun gestionnaire de disposition
+            currentfriendPanel.setBackground(getblackColor());
+            currentfriendPanel.setPreferredSize(new Dimension(frame.getWidth(), 300/3));
+            JLabel user_txt = new JLabel(friend_user.get_username());
+            user_txt.setForeground(Color.WHITE);
+            user_txt.setFont(new Font("SansSerif", Font.PLAIN, 24));
+            user_txt.setBounds(10,5, 200, 300/4); 
+            currentfriendPanel.add(user_txt);
+            currentfriendPanel.add(Box.createHorizontalStrut(8));
+            // add images to current friend panel
+            for (int j=0;j<images_icon.length;j++){
+                final int index = j; 
+                Image img = new ImageIcon(images_icon[j]).getImage().getScaledInstance(50,50, Image.SCALE_DEFAULT);
+                friends_action[j] = new JLabel(new ImageIcon(img));
+                friends_action[j].setBounds(600 + 75 * j,20,50,50);
+                friends_action[j].addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        super.mouseClicked(e);
+                        // Action à effectuer lorsqu'on clique sur l'image
+                        System.out.println("Hello World" + index);
+                    }
+                });
+                currentfriendPanel.add(friends_action[j]);
+                currentfriendPanel.add(Box.createHorizontalStrut(8));
+            }
+            friendsContentPanel.add(currentfriendPanel);
+        }
+
+            
+        
     }
     //display current friends status 
     private void createCurrentFriendsPanel(){
@@ -161,41 +202,13 @@ public class FriendUI extends Window {
         friendsLabel.setHorizontalAlignment(JLabel.CENTER);
         friendsPanel.add(friendsLabel);
         //scroll panel
-        JPanel contentPanel = new JPanel();
-        contentPanel.setBackground(getblackColor());
-        JScrollPane scrollPane = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        friendsContentPanel = new JPanel();
+        friendsContentPanel.setBackground(getblackColor());
+        JScrollPane scrollPane = new JScrollPane(friendsContentPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setPreferredSize(new Dimension(frame.getWidth(), 300));  // Ajustez la taille selon vos besoins
         friendsPanel.add(scrollPane);
         // cree x friends pour les mettre dans le panel 
-        JPanel currentfriendPanel = new JPanel(null); // Utiliser null pour aucun gestionnaire de disposition
-        currentfriendPanel.setBackground(getblackColor());
-        currentfriendPanel.setPreferredSize(new Dimension(frame.getWidth(), 300/3));
-        JLabel user_txt = new JLabel("Je suis un ami");
-        user_txt.setForeground(Color.WHITE);
-        newFont = new Font("SansSerif", Font.PLAIN, 24);
-        user_txt.setFont(newFont);
-        user_txt.setBounds(10,5, 200, 300/4); 
-        currentfriendPanel.add(user_txt);
-        currentfriendPanel.add(Box.createHorizontalStrut(8));
-        // add images to current friend panel
-        for (int i=0;i<3;i++){
-            final int index = i; 
-            Image img = new ImageIcon(images_icon[i]).getImage().getScaledInstance(50,50, Image.SCALE_DEFAULT);
-            friends_action[i] = new JLabel(new ImageIcon(img));
-            friends_action[i].setBounds(675 + 75 * i,20,50,50);
-            friends_action[i].addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    super.mouseClicked(e);
-                    // Action à effectuer lorsqu'on clique sur l'image
-                    System.out.println("Hello World" + index);
-                }
-            });
-            currentfriendPanel.add(friends_action[i]);
-            currentfriendPanel.add(Box.createHorizontalStrut(8));
-        }
-    
-        contentPanel.add(currentfriendPanel);
+        show_all_friends();
     }
     private void initializeUI() {
         createTopPanel();
