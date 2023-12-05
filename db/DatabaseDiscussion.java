@@ -12,6 +12,7 @@ import message.Message;
 import ui.WindowError;
 import user.User;
 import ui.NewDiscussionUI;
+import ui.UserMainUI;
 public class DatabaseDiscussion {
     private ArrayList<Discussion> users_discussions;
 
@@ -28,14 +29,30 @@ public class DatabaseDiscussion {
     
         return db_disc_singleton;
     } 
-    public void create_discussion(String framename,int sizex,int sizey,User current_user,DatabaseUsers users_db){
+    public void create_discussion(UserMainUI userMainUI,String framename,int sizex,int sizey,User current_user,DatabaseUsers users_db){
         if (current_user.get_liste_contact().isEmpty()){
             new WindowError("Error", "you need friends if you want to create a discussion",null);
             return;
         }
-        NewDiscussionUI disc_ui = new NewDiscussionUI("New Discussion",650,350,current_user,this,users_db);
-        // pop new AddDiscussion Window
+        NewDiscussionUI disc_ui = new NewDiscussionUI(userMainUI,"New Discussion",650,350,current_user,this,users_db);
         
+    }
+    //return list of all username with current user inside
+    public ArrayList<String> find_all_disc(User current_user,DatabaseUsers users_db){
+        ArrayList<String> discs= new ArrayList<>();
+        for (Discussion discussion:users_discussions){
+            if (discussion.getmembers_id().contains(current_user.get_userid())){
+                String members="";
+                for (Integer id: discussion.getmembers_id()){
+                    if (id != current_user.get_userid()){
+                        members = members + users_db.get_user("id",String.valueOf(id)).get_username() + ",";
+                    }
+                }
+                discs.add(members.substring(0, members.length() - 1)); // remove last ","
+
+            }
+        }
+        return discs;
     }
     //returns true if a discussion can be create
     public boolean verify_disc_creation(String messageinitial,String list_users,User current_user,DatabaseUsers users_db){
@@ -54,6 +71,10 @@ public class DatabaseDiscussion {
             return false;
         }
         // try to find if a current_discussion exist
+        if (get_discussion(users_id)!= null){
+            new WindowError("Error","The discussion already exist", null);
+            return false;
+        }
         Discussion current_discussion;
         for (int user_id:users_id){
             if (user_id == current_user.get_userid()){
@@ -183,5 +204,6 @@ public class DatabaseDiscussion {
         }
         return null;
     }
+
 
 }

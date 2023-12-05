@@ -11,12 +11,12 @@ import ui.LoginInterface;
 public class MainUI{
     private static DatabaseUsers users_db;
     private static DatabaseDiscussion disc_db;
-    private static String[] users_emails = {"Flopi_Flo@gmail.com","Louis@gmail.com","Sarah@gmail.com","Julien@gmail.com","Dupont@gmail.com"};
+    private static String[] users_emails = {"a@gmail.com","Flopi_Flo@gmail.com","Louis@gmail.com","Sarah@gmail.com","Julien@gmail.com","Dupont@gmail.com"};
     public static void main(String[] args){
         init_database();
         //LaunchGif app = new LaunchGif("Application",users_db,disc_db);
-        User u = new User("Flopi_Flo@gmail.com","Flopi_Flo","Flopi_Flo",0);
-        u.get_liste_contact().add(Integer.valueOf(1));
+        User u = new User("Flopi_Flo@gmail.com","Flopi_Flo","Flopi_Flo",1);
+        u.get_liste_contact().add(users_db.get_user("username", "a").get_userid());
         new UserMainUI("app",u,disc_db,users_db);
     }
 

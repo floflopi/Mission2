@@ -6,7 +6,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
+import java.util.ArrayList;
+import java.util.Arrays;
 import user.User;
+import discussion.*;
 import db.*;
 public class UserMainUI extends Window {
 
@@ -17,8 +20,10 @@ public class UserMainUI extends Window {
     private JPanel rightPanel;
     private JPanel userPanel;
 
+    private JPanel members_discPanel;
+    private JScrollPane discs_scrolls; // all discussion
+
     private JFrame frame;
-    private String no_friend_img = "images/bocchi_sad.png";
     private String deactivated = "images/deactivated.png";
     private String[] features_img_name = new String[]{"images/micro_logo.png","images/camera_logo.png","images/safe_logo.png","images/adulte_logo.png"};
     private JLabel[] features_img = new JLabel[4];
@@ -27,12 +32,19 @@ public class UserMainUI extends Window {
     private JButton newdiscussion_btn;
     private JButton disconnect_btn;
 
+    private DiscussionPanel discussionPanel;
     private User current_user;
     private DatabaseDiscussion disc_db;
     private DatabaseUsers users_db;
     private int status =0;
+
+    private ArrayList<Discussion> available_discussions=new ArrayList<>();
+
+    public User getcurrentUser(){
+        return current_user;
+    }
     public UserMainUI(String frameName,User current_user,DatabaseDiscussion disc_db,DatabaseUsers users_db) {
-        super(frameName);
+        super(frameName,true);
         this.frame = super.getFrame();
         this.current_user = current_user;
         this.disc_db = disc_db;
@@ -41,13 +53,13 @@ public class UserMainUI extends Window {
         initializeUI();
         
     }
-
     private void initializeUI() {
         createLeftPanel();
-        createRightPanel();
+        discussionPanel = new DiscussionPanel(this,disc_db.find_all_disc(current_user,users_db).isEmpty()); // create right panel
         //split right and left part 
-        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
+        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, discussionPanel.getCurrentPanel());
         splitPane.setDividerLocation(350); // Set the initial divider location
+        //splitPane.setRightComponent(buttonPanel); // set right componen
         frame.add(splitPane);
         updateUI();
     }
@@ -55,15 +67,22 @@ public class UserMainUI extends Window {
     private void createLeftPanel() {
         leftPanel = new JPanel(new BorderLayout());
         createButtons();
+    
         // scrollable discussion
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.getViewport().setBackground(new Color(64, 68, 75));
+        members_discPanel = new JPanel();
+        members_discPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        members_discPanel.setBackground(getblackColor());
+        members_discPanel.setPreferredSize(new Dimension(350,100));
+        discs_scrolls = new JScrollPane(members_discPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        discs_scrolls.getViewport().setBackground(getblackColor());
         createUserPanel();
+    
         // Add components to the left panel
         leftPanel.add(buttonPanel, BorderLayout.NORTH); 
-        leftPanel.add(scrollPane, BorderLayout.CENTER);
+        leftPanel.add(discs_scrolls, BorderLayout.CENTER);
         leftPanel.add(userPanel, BorderLayout.SOUTH);
     }
+    
 
     private void createButtons(){
         buttonPanel = new JPanel(); // JPanel pour contenir les boutons
@@ -88,10 +107,9 @@ public class UserMainUI extends Window {
         newdiscussion_btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                disc_db.create_discussion("New Discussion",400,300,current_user,users_db);
+                disc_db.create_discussion(UserMainUI.this,"New Discussion",400,300,current_user,users_db);
             }
         });
-
         Dimension buttonSize = new Dimension(350,40);
         disconnect_btn.setMaximumSize(buttonSize);
         friends_btn.setMaximumSize(buttonSize);
@@ -138,7 +156,7 @@ public class UserMainUI extends Window {
             }
         };
         circlePanel.setPreferredSize(new Dimension(20, 20)); 
-        circlePanel.setBackground(new Color(64, 68, 75)); 
+        circlePanel.setBackground(getblackColor()); 
         //change color when clicked
         circlePanel.addMouseListener(new MouseAdapter() {
             @Override
@@ -162,7 +180,8 @@ public class UserMainUI extends Window {
                 public void mouseClicked(MouseEvent e) {
                     super.mouseClicked(e);
                     // Action à effectuer lorsqu'on clique sur l'image
-                    System.out.println("Hello World" + index);
+
+                    //System.out.println("Hello World" + index);
                 }
             });
             userPanel.add(features_img[i]);
@@ -171,27 +190,29 @@ public class UserMainUI extends Window {
         userPanel.setPreferredSize(new Dimension(350, 80));
         userPanel.setBackground(new Color(64, 68, 75));
     }
-    // panel for discussion
-    private void createRightPanel() {
-        rightPanel = new JPanel(new BorderLayout());
-        JLabel noDiscussionLabel = new JLabel("No Discussion : ( try to make friends !");
-        Font newFont = new Font("SansSerif", Font.PLAIN,28); // Ajuster la taille de la police
-        noDiscussionLabel.setFont(newFont);
-        noDiscussionLabel.setForeground(Color.WHITE);
-        noDiscussionLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        noDiscussionLabel.setBorder(BorderFactory.createEmptyBorder(60, 0, 0, 0)); // pose le texte plus bas 
+    //seek all discussions available
+    public void update_discussions(){
+        ArrayList<String> discs = disc_db.find_all_disc(current_user,users_db);
+        if (!discs.isEmpty()){
+            for (String discussion:discs){
 
-        Image resizedImage = new ImageIcon(no_friend_img).getImage().getScaledInstance((int) (1920/2.7), (int) (1080/2.7), Image.SCALE_DEFAULT);
-        JLabel imageLabel = new JLabel(new ImageIcon(resizedImage));
+                JButton currentdisc_btn= new JButton(discussion);
+                currentdisc_btn.setPreferredSize(new Dimension(members_discPanel.getWidth(),50));
+                currentdisc_btn.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (discussionPanel.getCurrentIntPanel() == 0){
+                            discussionPanel.initDiscussionPanel(discussion);
+                            splitPane.setRightComponent(discussionPanel.getCurrentPanel());
+                        }
+                        //discussionPanel.updateCurrentdiscussion(); // 
+                    }
+                });
+                members_discPanel.add(currentdisc_btn);
 
-        // Créer un panneau pour contenir le texte et l'image
-        JPanel rightContentPanel = new JPanel(new BorderLayout());
-        rightContentPanel.add(noDiscussionLabel, BorderLayout.NORTH);
-        rightContentPanel.add(imageLabel, BorderLayout.CENTER);
-
-        rightContentPanel.setBackground(new Color(64,68,75));
-        // Ajouter le panneau au panneau de droite
-        rightPanel.add(rightContentPanel, BorderLayout.CENTER);
-
+            }
+        }
+        updateUI();
+        return;
     }
 }

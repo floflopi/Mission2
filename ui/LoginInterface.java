@@ -24,7 +24,7 @@ public class LoginInterface extends Window {
     private DatabaseDiscussion disc_db;
 
     public LoginInterface(String framename,DatabaseUsers users_db,DatabaseDiscussion disc_db) {
-        super(framename);
+        super(framename,800,600,false);
         this.frame = super.getFrame();
         this.disc_db = disc_db;
         //set background to pink

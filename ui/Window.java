@@ -13,22 +13,23 @@ import java.awt.event.ActionListener;
 public class Window{
 
     private JFrame frame;
-    private Color black_color=new Color(64, 68, 75);
-    public Window(String framename) {
-        this(framename, 960, 720);
+    public Window(String framename,boolean fullscreen) {
+        this(framename, 1200, 720,fullscreen);
     }
-    public Window(String framename, int frameX, int frameY) {
+    public Window(String framename, int frameX, int frameY,boolean fullscreen) {
         frame = new JFrame(framename);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(frameX, frameY);
+        if (fullscreen)
+            frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         frame.setVisible(true);
         frame.setLocationRelativeTo(null);
     }
     public JFrame getFrame(){
         return frame;
     }
-    public Color getblackColor(){
-        return black_color;
+    public static Color getblackColor(){
+        return new Color(64, 68, 75);
     }
     public void updateUI(){
         frame.repaint();

@@ -7,6 +7,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import user.User;
+import ui.UserMainUI;
 import db.*;
 public class NewDiscussionUI extends Window {
     private JFrame frame;
@@ -19,13 +20,15 @@ public class NewDiscussionUI extends Window {
     private CustomInputField inputfield;
     private String select_username = "Select all the usernames you want to add to the discussion (separated by a ',')";
 
-    public NewDiscussionUI(String frameName, int sizex, int sizey, User current_user, DatabaseDiscussion disc_db, DatabaseUsers users_db) {
-        super(frameName, sizex, sizey);
+    private UserMainUI UserMainUI;
+    public NewDiscussionUI(UserMainUI UserMainUI,String frameName, int sizex, int sizey, User current_user, DatabaseDiscussion disc_db, DatabaseUsers users_db) {
+        super(frameName, sizex, sizey,false);
         this.frame = super.getFrame();
+        this.frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.current_user = current_user;
         this.disc_db = disc_db;
         this.users_db = users_db;
-
+        this.UserMainUI = UserMainUI; 
         initializeUI();
     }
 
@@ -39,7 +42,9 @@ public class NewDiscussionUI extends Window {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (disc_db.verify_disc_creation(select_username,inputfield.getinput().getText(),current_user, users_db)){
+                    UserMainUI.update_discussions();
                     frame.dispose();
+                   
                 }
             }
         });

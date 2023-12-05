@@ -16,7 +16,7 @@ public class WindowError extends Window{
     private String error_img="images/error_cross.png";
 
     public WindowError(String framename,String MessageError,String newimage) {
-        super(framename,700,400);
+        super(framename,700,400,false);
         if (newimage != null){
             this.error_img=newimage;
         }

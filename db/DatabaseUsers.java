@@ -15,6 +15,14 @@ public class DatabaseUsers{
             id_user++;
         }
     }
+    // util function for finding discussion
+    public ArrayList<Integer> username_to_id(ArrayList<String> usernames){
+        ArrayList<Integer> array = new ArrayList<>();
+        for (String username:usernames){
+            array.add(get_user("username",username).get_userid());
+        }
+        return array;
+    }
     //écrit un message d'erreur si les deux utilisateurs ont le même username
     public boolean IsSameuser(String user1,String user2,String messageError){
         boolean issame = user1.equals(user2);

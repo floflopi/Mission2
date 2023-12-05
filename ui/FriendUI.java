@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import db.*;
 import user.*;
 
+// en fullscreen ne marche pas !
 public class FriendUI extends Window {
 
     private String friend_name="write the username of the friend you want to add...";
@@ -35,7 +36,7 @@ public class FriendUI extends Window {
     private String[] images_icon = new String[]{"images/call_button.png","images/camera_button.png","images/message_button.png","images/block_user.png"};
 
     public FriendUI(DatabaseUsers users_db,DatabaseDiscussion disc_db,User current_user) {
-        super("Friend UI"); // Vous pouvez ajuster la taille du cadre selon vos besoins
+        super("Friend UI",true); // Vous pouvez ajuster la taille du cadre selon vos besoins
         this.users_db = users_db;
         this.disc_db = disc_db;
         this.current_user = current_user;

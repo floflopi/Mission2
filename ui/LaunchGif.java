@@ -15,14 +15,14 @@ public class LaunchGif extends Window{
     private String gif_name="images/login.gif";
     
     public LaunchGif(String framename,DatabaseUsers users_db,DatabaseDiscussion disc_db) {
-        super(framename);
+        super(framename,800,600,false);
         this.frame = super.getFrame();
         launch_gif(users_db,disc_db);
     }
     private void launch_gif(DatabaseUsers users_db,DatabaseDiscussion disc_db) {
 
         // Redimensionner gif 
-        Image resizedImage = new ImageIcon(gif_name).getImage().getScaledInstance(960, 720, Image.SCALE_DEFAULT);
+        Image resizedImage = new ImageIcon(gif_name).getImage().getScaledInstance(this.frame.getWidth(),this.frame.getHeight(), Image.SCALE_DEFAULT);
         JLabel gifLabel = new JLabel(new ImageIcon(resizedImage));
 
         frame.getContentPane().add(gifLabel, BorderLayout.CENTER);
