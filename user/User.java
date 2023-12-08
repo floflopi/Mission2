@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.Date;
 import db.DatabaseUsers;
 import ui.WindowError;
+import message.*;
+import discussion.*;
+import db.*;
 public class User {
 
     private String email;
@@ -131,46 +134,9 @@ public class User {
         user.get_liste_contact().add(Integer.valueOf(user_id));
         user.get_friendrequest().remove(Integer.valueOf(user_id));
     }
-    /* 
-    public void send_message(String users,Message current_message,DatabaseUsers users_db,DatabaseDiscussion discussion_db){
-        users= users + "," + get_username();
-        String[] users_array = users.split(",");
-        ArrayList<Integer> users_id = discussion_db.get_members_id(users_db, users_array);
-        if (users_id == null)
-            return;
-        // si il y a 2 ou get_userid() dans users_id c que user a essayé de se message lui meme
-        if (users_id.stream().filter(x->x.equals(get_userid())).count() > 1){
-            System.out.println("you can't send message to yourself");
-            return;
-        }
-        // try to find if a current_discussion exist
-        Discussion current_discussion = discussion_db.get_discussion(users_id);
-        if (current_discussion == null){
-            for (int user_id:users_id){
-                if (user_id == get_userid()){
-                    continue;
-                }
-                if (!liste_contact.contains(user_id)){
-                    System.out.println(users_db.get_user("id", String.valueOf(user_id)).get_username() 
-                    + " is not your friend so you can't message him");
-                    return;
-                }
-            }
-            if (users_id.size() > 2){
-                current_discussion = new DiscussionGroupe(users_id,get_userid());
-            }
-            else{
-                current_discussion = new Discussion(users_id,true);
-            }
-            discussion_db.add_discussions(current_discussion);
-        }
-        // si discussion est privé alors 
-        if (current_discussion.isprivate() && !liste_contact.contains(users_db.get_user("username",users_array[0]).get_userid())){
-            System.out.println(users_array[0] + " is not your friend so you can't message him");
-            return;
-        }
+    
+    public void send_message(String message,DatabaseUsers users_db,Discussion current_discussion,DatabaseDiscussion discussion_db){
+        Message current_message = new Message(message, new Date(), get_userid());
         current_discussion.add_message(current_message);
-        current_message.send();
     }
-    */
 }

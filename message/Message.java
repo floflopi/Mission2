@@ -8,7 +8,7 @@ public class Message {
     private Date date;
     private int from_user_id;
     public Message(String contenu,Date date,int from_user_id){
-        this.contenu = contenu;
+        this.contenu = send(contenu);
         this.date = date;
         this.from_user_id = from_user_id;
     }
@@ -26,7 +26,8 @@ public class Message {
         + db.get_all_users().get(Integer.valueOf(get_from_user_id())).get_username();
         return details;
     }
-    public void send(){
-        System.out.println("message sent !");
+    //send message to discussion
+    public String send(String contenu){
+        return contenu;
     }
 }

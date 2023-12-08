@@ -33,6 +33,7 @@ public class UserMainUI extends Window {
     private JButton disconnect_btn;
 
     private DiscussionPanel discussionPanel;
+
     private User current_user;
     private DatabaseDiscussion disc_db;
     private DatabaseUsers users_db;
@@ -43,6 +44,13 @@ public class UserMainUI extends Window {
     public User getcurrentUser(){
         return current_user;
     }
+    public DatabaseDiscussion getDiscDb(){
+        return disc_db;
+    }
+    public DatabaseUsers getUsersDb(){
+        return users_db;
+    }
+
     public UserMainUI(String frameName,User current_user,DatabaseDiscussion disc_db,DatabaseUsers users_db) {
         super(frameName,true);
         this.frame = super.getFrame();
@@ -55,12 +63,19 @@ public class UserMainUI extends Window {
     }
     private void initializeUI() {
         createLeftPanel();
-        discussionPanel = new DiscussionPanel(this,disc_db.find_all_disc(current_user,users_db).isEmpty()); // create right panel
+        update_discussions();
+        String[] usernames = null;
+        Discussion first_disc = null;
+        if (!disc_db.find_all_disc(current_user,users_db).isEmpty()){
+            usernames = disc_db.find_all_disc(current_user,users_db).get(0).split(",");
+            first_disc = disc_db.get_discussion(users_db,usernames);
+        }
+        discussionPanel = new DiscussionPanel(this,first_disc,usernames); // create right panel
         //split right and left part 
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, discussionPanel.getCurrentPanel());
         splitPane.setDividerLocation(350); // Set the initial divider location
-        //splitPane.setRightComponent(buttonPanel); // set right componen
         frame.add(splitPane);
+        
         updateUI();
     }
     
@@ -193,19 +208,22 @@ public class UserMainUI extends Window {
     //seek all discussions available
     public void update_discussions(){
         ArrayList<String> discs = disc_db.find_all_disc(current_user,users_db);
+        System.out.println(discs);
         if (!discs.isEmpty()){
             for (String discussion:discs){
-
                 JButton currentdisc_btn= new JButton(discussion);
-                currentdisc_btn.setPreferredSize(new Dimension(members_discPanel.getWidth(),50));
+                System.out.println("new button created");
+                currentdisc_btn.setPreferredSize(new Dimension(350,50));
                 currentdisc_btn.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         if (discussionPanel.getCurrentIntPanel() == 0){
-                            discussionPanel.initDiscussionPanel(discussion);
+                            String[] usernames = (disc_db.find_all_disc(current_user,users_db).get(0) + "," + current_user.get_username()).split(",");
+                            Discussion first_disc = disc_db.get_discussion(users_db,usernames);
+                            discussionPanel.initDiscussionPanel(first_disc,usernames);
                             splitPane.setRightComponent(discussionPanel.getCurrentPanel());
                         }
-                        //discussionPanel.updateCurrentdiscussion(); // 
+                        
                     }
                 });
                 members_discPanel.add(currentdisc_btn);

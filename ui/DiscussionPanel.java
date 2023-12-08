@@ -1,5 +1,8 @@
 package ui;
 import javax.swing.*;
+
+import commands.SendMessageCommand;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,28 +14,35 @@ import java.util.ArrayList;
 import user.User;
 import discussion.*;
 import db.*;
+import message.*;
 //right panel of main ui
 public class DiscussionPanel{
     private UserMainUI UserMainUI; // get functions of usermainui
     private JPanel NoFriendPanel; // case of no discussion yet
+    
     private JPanel discussionPanel;
-
-    private JPanel searchPanel;
+    private JPanel sendMessagePanel;
+    private JPanel[] searchPanels;
     private JPanel actiondiscPanel;
+    private JPanel messagesPanel;
 
     private CustomInputField searchFromUserfield;
     private CustomInputField searchFromDatefield;
-
+    private CustomInputField sendMessagefield;
 
     private int current_panel = 0;
+
+    private String file_img="images/file_button.png";
     private String no_friend_img="images/bocchi_sad.png";
-    public DiscussionPanel(UserMainUI UserMainUI,boolean nofriend){
+    private String[] members;
+    private Discussion current_discussion;
+    public DiscussionPanel(UserMainUI UserMainUI,Discussion current_disc,String[] members){
         this.UserMainUI = UserMainUI;
-        if (nofriend){
+        if (current_disc == null){
             initNoFriendPanel();
         }
         else{
-            initDiscussionPanel(null);
+            initDiscussionPanel(current_disc,members);
         }
     }
     public int getCurrentIntPanel(){
@@ -44,7 +54,10 @@ public class DiscussionPanel{
         }
         return discussionPanel;
     }
-
+    public void find_current_discussion(String members_username){
+        String[] all_members = (members_username+ "," + UserMainUI.getcurrentUser().get_username()).split(",");
+        current_discussion = UserMainUI.getDiscDb().get_discussion(UserMainUI.getDiscDb().get_members_id(UserMainUI.getUsersDb(), all_members));
+    }
     public void initNoFriendPanel(){
         NoFriendPanel = new JPanel(new BorderLayout());
         JLabel noDiscussionLabel = new JLabel("No Discussion : ( try to make friends !");
@@ -60,48 +73,43 @@ public class DiscussionPanel{
         JPanel ContentPanel = new JPanel(new BorderLayout());
         ContentPanel.add(noDiscussionLabel, BorderLayout.NORTH);
         ContentPanel.add(imageLabel, BorderLayout.CENTER);
-        ContentPanel.setBackground(UserMainUI.getblackColor());
+        ContentPanel.setBackground(Window.getblackColor());
         // Ajouter le panneau au panneau de droite
         NoFriendPanel.add(ContentPanel, BorderLayout.CENTER);
         NoFriendPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, 620)); 
     }
-
-    public void createSearchPanel(){
-         
-        searchPanel = new JPanel();
-        searchPanel.setLayout(new FlowLayout(FlowLayout.CENTER)); // Alignez les composants à gauche
-        searchPanel.setBackground(Window.getblackColor());
-        searchPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
-
-        searchFromDatefield = new CustomInputField("Write a valid date (JJ/MM/YYYY)", 350, 40);
-        searchFromUserfield = new CustomInputField("Write the username you want to find messages", 350, 40);
-
-        JButton searchFromDate_btn = new JButton("Search");
-        JButton searchFromUser_btn = new JButton("Search");
-
+    // add searchfromdate and user panel
+    public void createsearchPanel(){
+        searchPanels = new JPanel[2];
+        JButton[] search_btn = new JButton[2];
+        CustomInputField[] searchfields = new CustomInputField[2];
+        String[] search_txt = new String[]{"Write a valid date (JJ/MM/YYYY)","Write the username you want to find messages"};
         Dimension dim_btn = new Dimension(100,40);
-        searchFromDate_btn.setPreferredSize(dim_btn);
-        searchFromUser_btn.setPreferredSize(dim_btn);
+        for (int i=0;i<2;i++){
+            FlowLayout searchLayout = new FlowLayout(FlowLayout.CENTER);
+            searchPanels[i] = new JPanel(searchLayout);
+            searchPanels[i].setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
+            searchPanels[i].setBackground(Window.getblackColor());
+            searchLayout.setHgap(20);
 
-        ((FlowLayout) searchPanel.getLayout()).setHgap(20);
-        //searchPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-        searchPanel.add(searchFromDatefield.getinput());
-        searchPanel.add(searchFromDate_btn);
+            searchfields[i] = new CustomInputField(search_txt[i], 550, 40,20);
+            search_btn[i] = new JButton("Search");
+            search_btn[i].setPreferredSize(dim_btn);
 
-        //searchPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-        ((FlowLayout) searchPanel.getLayout()).setVgap(20);
-        searchPanel.add(searchFromUserfield.getinput());
-        searchPanel.add(searchFromUser_btn);
+            searchPanels[i].add(searchfields[i].getinput());
+            searchPanels[i].add(search_btn[i]);
 
+            discussionPanel.add(searchPanels[i]);
+        }
     }
-    public void createActionDiscussionPanel(String members_username){
+    public void createActionDiscussionPanel(){
         actiondiscPanel = new JPanel();
         actiondiscPanel.setBackground(Window.getblackColor());
         actiondiscPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
         actiondiscPanel.setLayout(new FlowLayout(FlowLayout.CENTER,10,10)); // Alignez les composants à gauche
 
-        
-        JLabel Membres_txt = new JLabel("Member(s) : " + UserMainUI.getcurrentUser().get_username() + "," + members_username);
+      
+        JLabel Membres_txt = new JLabel("Members : "  + String.join(",",members));
         Membres_txt.setFont(new Font("SansSerif", Font.PLAIN,27));
         Membres_txt.setForeground(Color.WHITE);
         actiondiscPanel.add(Membres_txt);
@@ -122,36 +130,98 @@ public class DiscussionPanel{
     }
     // affiche les discussions tel que : 
     // Username : message + date + bouton reaction (simple coeur image qu on peut appuyer dessus) + répondre (permet d envoyer une notif a l user)
-    public void createDiscussionPanel(){
+    public void createMessagesPanel(){
+        FlowLayout sendLayout = new FlowLayout(FlowLayout.CENTER);
+        messagesPanel = new JPanel();
+        messagesPanel.setBackground(Window.getblackColor());
+        messagesPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE,620));
+        messagesPanel.setLayout(new BoxLayout(messagesPanel, BoxLayout.Y_AXIS));
 
-    }
-    //inputfield + send bouton + image épingle pour fichier qui va ouvrir une window avec les choix différent (pour l instant appuyer sur image envoie juste un message Image.png)
-    // 
+        JScrollPane scrollPane = new JScrollPane(messagesPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        //scrollPane.setPreferredSize(new Dimension(Integer.MAX_VALUE, 620));  // Ajustez la taille selon vos besoins
+        discussionPanel.add(scrollPane);
+        updateMessagesPanel();
+    } 
     public void createSendMessagePanel(){
+        FlowLayout sendLayout = new FlowLayout(FlowLayout.CENTER);
+        sendLayout.setVgap(25);
+        sendLayout.setHgap(15);
+        sendMessagePanel = new JPanel(sendLayout);
+        sendMessagePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE,100));
+        sendMessagePanel.setBackground(Window.getblackColor());
+        sendMessagefield = new CustomInputField("Write the message you want to send ",600,50,30);
+
+
+        Image resizedImage = new ImageIcon(file_img).getImage().getScaledInstance(40,40, Image.SCALE_DEFAULT);
+        JButton file_btn = new JButton();
+        file_btn.setPreferredSize(new Dimension(50,50));
+        file_btn.setIcon(new ImageIcon(resizedImage));
+
+        JButton send_btn =  new JButton("Send");
+        send_btn.setPreferredSize(new Dimension(100,50));
+        send_btn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(sendMessagefield.getinput().getText());
+                System.out.println(current_discussion);
+                new SendMessageCommand().execute(sendMessagefield.getinput().getText(),UserMainUI.getUsersDb(),current_discussion,UserMainUI.getDiscDb(),UserMainUI.getcurrentUser());
+                updateMessagesPanel(); // reupload messages
+            }
+        });
+
+        sendMessagePanel.add(sendMessagefield.getinput());
+        sendMessagePanel.add(file_btn);
+        sendMessagePanel.add(send_btn);
+        discussionPanel.add(sendMessagePanel);
+    }
+    public void updateMessagesPanel(){
+        messagesPanel.removeAll(); // reupload messages
+        ArrayList<Message> messages = current_discussion.getmessages();
+        for (int i=0;i < messages.size();i++){
+            Message current_message = messages.get(i);
+
+            FlowLayout messageLayout = new FlowLayout(FlowLayout.LEFT);
+            messageLayout.setVgap(15);
+            messageLayout.setHgap(25);
+            JPanel currentPanel = new JPanel(messageLayout);
+            currentPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE,80));
+            currentPanel.setBackground(Window.getblackColor());
+
+            JLabel username = new JLabel(UserMainUI.getUsersDb().get_user("id",String.valueOf(current_message.get_from_user_id())).get_username() + " : ");
+            username.setFont(new Font("SansSerif", Font.PLAIN,28));
+            username.setForeground(Color.WHITE);
+            JLabel message_txt = new JLabel(current_message.get_contenu());
+            message_txt.setFont(new Font("SansSerif", Font.PLAIN,28));
+            message_txt.setForeground(Color.WHITE);
+            System.out.println(current_message.get_contenu());
+            currentPanel.add(username);
+            currentPanel.add(message_txt);
+            messagesPanel.add(currentPanel);
+        }
+        UserMainUI.updateUI();
 
     }
-    public void initDiscussionPanel(String members_username) {
+
+    public void addEmptyPanel(int sizey){
+        JPanel emptyPanel = new JPanel();
+        emptyPanel.setBackground(Window.getblackColor());
+        emptyPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE,sizey));
+        discussionPanel.add(emptyPanel);
+    }
+
+    public void initDiscussionPanel(Discussion current_disc,String[] members_username) {
+        this.current_discussion = current_disc;
+        this.members = members_username;
         current_panel = 1;
         discussionPanel = new JPanel(new BorderLayout());
         discussionPanel.setLayout(new BoxLayout(discussionPanel, BoxLayout.Y_AXIS));
 
-        createSearchPanel();
-        createActionDiscussionPanel(members_username);
-        // Panel 3
-        JPanel discPanel = new JPanel();
-        discPanel.setBackground(Color.BLUE);
-        discPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 820));
+        addEmptyPanel(10);
+        createsearchPanel();
+        addEmptyPanel(10);
+        createActionDiscussionPanel();
+        createMessagesPanel();
+        createSendMessagePanel();
 
-        // Panel 4
-        JPanel sendmessagePanel = new JPanel();
-        sendmessagePanel.setBackground(Color.YELLOW);
-        sendmessagePanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
-
-        // Ajouter les panneaux dans l'ordre que vous voulez
-        discussionPanel.add(searchPanel);
-        discussionPanel.add(actiondiscPanel);
-        discussionPanel.add(discPanel); // no yet made
-        discussionPanel.add(sendmessagePanel);
-        // Set the preferred size after adding to discussionPanel
     }
 }

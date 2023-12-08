@@ -42,6 +42,7 @@ public class DatabaseDiscussion {
         ArrayList<String> discs= new ArrayList<>();
         for (Discussion discussion:users_discussions){
             if (discussion.getmembers_id().contains(current_user.get_userid())){
+                System.out.println("discussion contains the id of user");
                 String members="";
                 for (Integer id: discussion.getmembers_id()){
                     if (id != current_user.get_userid()){
@@ -158,6 +159,7 @@ public class DatabaseDiscussion {
                            cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
     }
 
+    // conversion username->id
     public ArrayList<Integer> get_members_id(DatabaseUsers users_db,String[] members_username){
         ArrayList<Integer> members_id = new ArrayList<Integer>();
         for (String member:members_username){
@@ -204,6 +206,14 @@ public class DatabaseDiscussion {
         }
         return null;
     }
-
+    public Discussion get_discussion(DatabaseUsers users_db,String[] usernames){
+        ArrayList<Integer> users_id = get_members_id(users_db,usernames);
+        for (Discussion discussion:users_discussions){
+            if (discussion.getmembers_id().equals(users_id)){
+                return discussion;
+            }
+        }
+        return null;
+    }
 
 }

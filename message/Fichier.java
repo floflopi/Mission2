@@ -13,13 +13,15 @@ public class Fichier extends Message{
     }
     
     @Override
-    public void send(){
+    public String send(String contenu_txt){
+        // contenu == null for file
         if (type_fichier.equals("image")){
-            System.out.println("image sent !");
+            return "image sent !";
         }
         else if (type_fichier.equals("video")){
-            System.out.println("video sent !");
+            return "video sent !";
         }
+        return null;
     }
 
     @Override

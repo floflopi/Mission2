@@ -34,7 +34,7 @@ public class NewDiscussionUI extends Window {
 
     private void initializeUI() {
         frame.getContentPane().setBackground(getblackColor());
-        inputfield = new CustomInputField(select_username, 600, 50);
+        inputfield = new CustomInputField(select_username, 600, 50,45);
         inputfield.getinput().setFont(new Font("SansSerif", Font.PLAIN,15));
         confirm_btn = new JButton("Confirm");
         confirm_btn.setPreferredSize(new Dimension(150, 40));

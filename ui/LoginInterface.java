@@ -48,8 +48,8 @@ public class LoginInterface extends Window {
         //image appli
         JLabel appImageLabel = new JLabel(new ImageIcon(logo_name));
         //barre d'entree pour username/password
-        usernameField = new CustomInputField(select_username,200,30);
-        passwordField = new CustomInputField(select_password, 200,30,true);
+        usernameField = new CustomInputField(select_username,200,30,20);
+        passwordField = new CustomInputField(select_password, 200,30,20,true);
         
         // Ajouter un bouton "Connect"
         JButton connectButton = new JButton("Connect");

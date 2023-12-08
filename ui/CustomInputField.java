@@ -29,13 +29,15 @@ public class CustomInputField{
     }
 
 
-    public CustomInputField(String texte_defaut,int size_x, int size_y,boolean ispassword){
+    public CustomInputField(String texte_defaut,int size_x, int size_y,int font_size,boolean ispassword){
         passwordField = new JPasswordField(texte_defaut);
+        passwordField.setFont(new Font("SansSerif", Font.PLAIN,font_size));
         passwordField.setPreferredSize(new Dimension(size_x,size_y));
         define_behavior_password(texte_defaut);
     }
-    public CustomInputField(String texte_defaut,int size_x, int size_y){
+    public CustomInputField(String texte_defaut,int size_x, int size_y,int font_size){
         inputfield =new JTextField(texte_defaut);
+        inputfield.setFont(new Font("SansSerif", Font.PLAIN,font_size));
         inputfield.setPreferredSize(new Dimension(size_x,size_y));
         define_behavior_input(texte_defaut);
 
