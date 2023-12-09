@@ -5,23 +5,31 @@ import db.DatabaseUsers;
 public class Fichier extends Message{
     private String type_fichier;
     public Fichier(String type_fichier,Date date,int from_user_id){
-        super(null,date,from_user_id);
-        this.type_fichier = type_fichier;
+        super(type_fichier,date,from_user_id);
+        
     }
     public String get_type_fichier(){
         return type_fichier;
     }
     
     @Override
-    public String send(String contenu_txt){
-        // contenu == null for file
-        if (type_fichier.equals("image")){
-            return "image sent !";
+    public String send(String type_fichier) {
+        System.out.println("type fichier");
+        System.out.println(type_fichier);
+        switch (type_fichier) {
+            case "Image":
+                return "image sent !";
+            case "Video":
+                return "video sent !";
+            case "Gif":
+                return "gif sent !";
+            case "Vocaux":
+                return "vocal sent !";
+            case "Autres fichiers":
+                return "other files sent !";
+            default:
+                return null;
         }
-        else if (type_fichier.equals("video")){
-            return "video sent !";
-        }
-        return null;
     }
 
     @Override

@@ -134,9 +134,4 @@ public class User {
         user.get_liste_contact().add(Integer.valueOf(user_id));
         user.get_friendrequest().remove(Integer.valueOf(user_id));
     }
-    
-    public void send_message(String message,DatabaseUsers users_db,Discussion current_discussion,DatabaseDiscussion discussion_db){
-        Message current_message = new Message(message, new Date(), get_userid());
-        current_discussion.add_message(current_message);
-    }
 }

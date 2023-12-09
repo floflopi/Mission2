@@ -155,7 +155,6 @@ public class UserMainUI extends Window {
                 super.paintComponent(g);
                 Graphics2D g2d = (Graphics2D) g;
                 int circleSize = 20;
-                
                 if (status == 0) {
                     g2d.setColor(Color.GREEN);
                 } else if (status == 1){

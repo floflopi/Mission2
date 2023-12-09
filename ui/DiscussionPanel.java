@@ -154,6 +154,12 @@ public class DiscussionPanel{
         JButton file_btn = new JButton();
         file_btn.setPreferredSize(new Dimension(50,50));
         file_btn.setIcon(new ImageIcon(resizedImage));
+        file_btn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new MediaUI(UserMainUI.getUsersDb(), UserMainUI.getDiscDb(), UserMainUI.getcurrentUser(), current_discussion,DiscussionPanel.this);
+            }
+        });
 
         JButton send_btn =  new JButton("Send");
         send_btn.setPreferredSize(new Dimension(100,50));

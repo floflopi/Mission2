@@ -10,8 +10,8 @@ import message.Message;
 import reader.Reader;
 import user.User;
 
-@CommandInfo(name = "sendimage", optionnal = true)
-public class SendImageCommand implements Command{
+@CommandInfo(name = "sendautresfichiers", optionnal = true)
+public class SendAutresFichiersCommand implements Command{
     @Override
     public void execute(String message, DatabaseUsers users_db,Discussion current_discussion, DatabaseDiscussion discussions_db, User current_user) {
         Message current_message = new Fichier(message, new Date(), current_user.get_userid());

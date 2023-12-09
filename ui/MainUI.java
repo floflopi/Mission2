@@ -14,7 +14,12 @@ public class MainUI{
     private static String[] users_emails = {"a@gmail.com","b@gmail.com","c@gmail.com","Sarah@gmail.com","Julien@gmail.com","Dupont@gmail.com"};
     public static void main(String[] args){
         init_database();
-        LaunchGif app = new LaunchGif("Application",users_db,disc_db);
+        //LaunchGif app = new LaunchGif("Application",users_db,disc_db);
+        User a =  users_db.get_user("username", "a");
+        User b =  users_db.get_user("username", "b");
+        a.get_liste_contact().add(b.get_userid());
+        b.get_liste_contact().add(a.get_userid());
+        UserMainUI mainui = new UserMainUI("Main UI", users_db.get_user("username", "a"),disc_db,users_db);
         //User u = new User("a@gmail.com","a","a",1);
     //u.get_liste_contact().add(users_db.get_user("username", "a").get_userid());
         //new UserMainUI("app",u,disc_db,users_db);
