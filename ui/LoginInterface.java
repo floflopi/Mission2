@@ -13,13 +13,13 @@ import db.DatabaseDiscussion;
 import db.DatabaseUsers;
 public class LoginInterface extends Window {
 
-    private JFrame frame;
+    protected JFrame frame;
     private String logo_name="images/logo.png";
     private String select_username="select username...";
     private String select_password="select password...";
     private JPanel panel;
-    private CustomInputField usernameField;
-    private CustomInputField passwordField;
+    protected CustomInputField usernameField;
+    protected CustomInputField passwordField;
 
     private DatabaseDiscussion disc_db;
 

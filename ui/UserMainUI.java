@@ -18,7 +18,7 @@ public class UserMainUI extends Window {
     private JPanel buttonPanel;
     private JPanel leftPanel;
     private JPanel rightPanel;
-    private JPanel userPanel;
+    protected JPanel userPanel;
 
     private JPanel members_discPanel;
     private JScrollPane discs_scrolls; // all discussion
@@ -37,7 +37,7 @@ public class UserMainUI extends Window {
     private User current_user;
     private DatabaseDiscussion disc_db;
     private DatabaseUsers users_db;
-    private int status =0;
+    protected int status =0;
 
     public User getcurrentUser(){
         return current_user;
