@@ -1,5 +1,7 @@
 package testui;
 
+import javax.swing.JSplitPane;
+
 import db.DatabaseDiscussion;
 import db.DatabaseUsers;
 import ui.UserMainUI;
@@ -16,4 +18,9 @@ public class TestUserMainUI extends UserMainUI {
          this.status =  status;
          userPanel.repaint(); 
     }
+
+    public JSplitPane getSplitPane() {
+        return splitPane;
+    }
+
 }

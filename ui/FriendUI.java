@@ -19,7 +19,7 @@ import user.*;
 public class FriendUI extends Window {
 
     private String friend_name="write the username of the friend you want to add...";
-    private JFrame frame;
+    protected JFrame frame;
     private CustomInputField friendNameField;
     private JButton sendRequestButton;
     private JLabel[] friends_action = new JLabel[4];

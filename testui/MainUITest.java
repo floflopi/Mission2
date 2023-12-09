@@ -1,8 +1,11 @@
 package testui;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 import db.*;
+import discussion.Discussion;
 import ui.*;
 import user.User;
 
@@ -20,6 +23,8 @@ public class MainUITest {
     static TestLoginInterface login;
     static TestUserMainUI usermainui;
     static TestFriendUI friendui;
+
+    private static Discussion current_disc;
 
     // Ouverture de l'app + login
     public static void scenario0() throws InterruptedException {
@@ -47,11 +52,28 @@ public class MainUITest {
         u.get_liste_contact().add(users_db.get_user("username", "Louis").get_userid());
         Thread.sleep(2500);
         friendui = new TestFriendUI(users_db, disc_db, u);
+        Thread.sleep(2500);
+        friendui.closeWindow();
+
+        if (disc_db.verify_disc_creation("test","Louis,Sarah",u, users_db)){
+            usermainui.update_discussions();           
+        }
+
+        /*
+        String[] members = new String[]{"Louis", "Sarah"};
+        String[] usernames = disc_db.find_all_disc(u,users_db).get(0).split(",");
+        Discussion first_disc = disc_db.get_discussion(users_db,usernames);
+        DiscussionPanel discussionPanel = new DiscussionPanel(usermainui,first_disc,usernames);
+
+        discussionPanel.initDiscussionPanel(first_disc, members);
+        usermainui.getSplitPane().setRightComponent(discussionPanel.getCurrentPanel());
+        */
+
         System.out.println("Scénario 2 exécuté");
     }
 
     public static void scenario3() throws InterruptedException {
-        friendui.closeWindow();
+        //friendui.closeWindow();
         System.out.println("Scénario 3 exécuté");
     }
 

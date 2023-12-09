@@ -13,7 +13,7 @@ import discussion.*;
 import db.*;
 public class UserMainUI extends Window {
 
-    private JSplitPane splitPane;
+    protected JSplitPane splitPane;
 
     private JPanel buttonPanel;
     private JPanel leftPanel;
