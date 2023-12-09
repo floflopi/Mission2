@@ -39,8 +39,6 @@ public class UserMainUI extends Window {
     private DatabaseUsers users_db;
     private int status =0;
 
-    private ArrayList<Discussion> available_discussions=new ArrayList<>();
-
     public User getcurrentUser(){
         return current_user;
     }
@@ -212,7 +210,6 @@ public class UserMainUI extends Window {
         if (!discs.isEmpty()){
             for (String discussion:discs){
                 JButton currentdisc_btn= new JButton(discussion);
-                System.out.println("new button created");
                 currentdisc_btn.setPreferredSize(new Dimension(350,50));
                 currentdisc_btn.addActionListener(new ActionListener() {
                     @Override

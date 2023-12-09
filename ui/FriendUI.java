@@ -20,7 +20,7 @@ public class FriendUI extends Window {
 
     private String friend_name="write the username of the friend you want to add...";
     private JFrame frame;
-    private JTextField friendNameField;
+    private CustomInputField friendNameField;
     private JButton sendRequestButton;
     private JLabel[] friends_action = new JLabel[4];
 
@@ -29,6 +29,7 @@ public class FriendUI extends Window {
     private JPanel friendsrequestContentPanel; // content of scroll panel
     private JPanel friendsPanel;
     private JPanel friendsContentPanel;
+    private JPanel MainPanel;
     private User current_user;
     private DatabaseDiscussion disc_db;
     private DatabaseUsers users_db;
@@ -45,71 +46,45 @@ public class FriendUI extends Window {
         initializeUI();
     }
     private void createTopPanel(){
-        topPanel = new JPanel();
+        FlowLayout topLayout = new FlowLayout(FlowLayout.CENTER);
+        topLayout.setHgap(20);
+
+        topPanel = new JPanel(topLayout);
         topPanel.setBackground(getblackColor());
-        topPanel.setPreferredSize(new Dimension(frame.getWidth(),100));
+        topPanel.setMaximumSize(new Dimension(frame.getWidth(),100));
         
-        friendNameField = new JTextField(friend_name);
-        friendNameField.setPreferredSize(new Dimension(frame.getWidth() * 3/4,40));
-        Font newFont = new Font("SansSerif", Font.PLAIN,27); // Ajuster la taille de la police
-        friendNameField.setFont(newFont);
-        friendNameField.setForeground(Color.GRAY);
-        friendNameField.setCaretPosition(0); // position curseur
-        friendNameField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (friendNameField.getText().equals(friend_name)) {
-                    friendNameField.setText("");
-                    friendNameField.setForeground(Color.BLACK);
-                }
-            }
-        });
-        friendNameField.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                // curseur au début si aucun mot de passe
-                if (friendNameField.getText().equals(friend_name)){
-                    friendNameField.setCaretPosition(0);
-                }
-            }
-            @Override
-            public void focusLost(FocusEvent e) {
-            }
-        });
+        friendNameField = new CustomInputField(friend_name, frame.getWidth() * 6/10, 40, 27);
 
         sendRequestButton = new JButton("Send Friend Request");
-        sendRequestButton.setPreferredSize(new Dimension(frame.getWidth()/5,40));
+        sendRequestButton.setPreferredSize(new Dimension(frame.getWidth()/6,40));
         sendRequestButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new AddFriendCommand().execute(friendNameField.getText(),users_db,disc_db,current_user);
+                new AddFriendCommand().execute(friendNameField.getinput().getText(),users_db,disc_db,current_user);
             }
         });
-        topPanel.add(friendNameField);
+        topPanel.add(friendNameField.getinput());
         topPanel.add(sendRequestButton);
-
         topPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+        MainPanel.add(topPanel);
     }
-  
     private void createFriendRequestPanel() {
-        friendsrequestPanel = new JPanel();
-        friendsrequestPanel.setBackground(getblackColor());
-    
+        MainPanel.add(Window.getEmptyPanel(1920, 20));
         // texte friend request
-        JLabel friendRequestsLabel = new JLabel("Number of Friend Requests : "+ current_user.get_friendrequest().size());
-        Font newFont = new Font("SansSerif", Font.PLAIN, 24);
-        friendRequestsLabel.setFont(newFont);
-        friendRequestsLabel.setForeground(Color.WHITE);
-        friendRequestsLabel.setHorizontalAlignment(JLabel.CENTER);
-        friendsrequestPanel.add(friendRequestsLabel);
-    
+        CustomLabel friendRequestsLabel = new CustomLabel("Number of Friend Requests : "+ current_user.get_friendrequest().size(), 24,Color.white,FlowLayout.CENTER,
+        getblackColor(),1920,50);
+        MainPanel.add(friendRequestsLabel.getPanel());  
+        MainPanel.add(Window.getEmptyPanel(1920, 20));  
         // Ajouter un JScrollPane en dessous pour contenir les demandes d'amis
         friendsrequestContentPanel = new JPanel();
         friendsrequestContentPanel.setBackground(getblackColor());
+        friendsrequestContentPanel.setMaximumSize(new Dimension(700,175));
+        friendsrequestContentPanel.setLayout(new BoxLayout(friendsrequestContentPanel, BoxLayout.Y_AXIS));
         JScrollPane scrollPane = new JScrollPane(friendsrequestContentPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setPreferredSize(new Dimension(frame.getWidth(), 175));  // Ajustez la taille selon vos besoins
-        friendsrequestPanel.add(scrollPane);
+        //friendsrequestPanel.add(scrollPane);
         show_friend_request();
+        MainPanel.add(scrollPane);
+
     }
     //display all friend request
     private void show_friend_request(){
@@ -196,31 +171,29 @@ public class FriendUI extends Window {
         friendsPanel.setBackground(getblackColor());
         friendsPanel.setPreferredSize(new Dimension(frame.getWidth(),350));
         // texte friend
-        JLabel friendsLabel = new JLabel("Friends List");
-        Font newFont = new Font("SansSerif", Font.PLAIN, 24);
-        friendsLabel.setFont(newFont);
-        friendsLabel.setForeground(Color.WHITE);
-        friendsLabel.setHorizontalAlignment(JLabel.CENTER);
-        friendsPanel.add(friendsLabel);
+        MainPanel.add(Window.getEmptyPanel(1920, 20));
+        CustomLabel friends_label = new CustomLabel("Friends List", 24,Color.white,FlowLayout.CENTER,getblackColor(),1920,50);
+        MainPanel.add(friends_label.getPanel());
+        MainPanel.add(Window.getEmptyPanel(1920, 20));
+
         //scroll panel
         friendsContentPanel = new JPanel();
         friendsContentPanel.setBackground(getblackColor());
+        friendsContentPanel.setMaximumSize(new Dimension(800,250));
         JScrollPane scrollPane = new JScrollPane(friendsContentPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setPreferredSize(new Dimension(frame.getWidth(), 300));  // Ajustez la taille selon vos besoins
-        friendsPanel.add(scrollPane);
         // cree x friends pour les mettre dans le panel 
         show_all_friends();
+        MainPanel.add(scrollPane);
+        MainPanel.add(Window.getEmptyPanel(1920, 80));
     }
     private void initializeUI() {
+        MainPanel = new JPanel(new BorderLayout());
+        MainPanel.setLayout(new BoxLayout(MainPanel, BoxLayout.Y_AXIS));
+        MainPanel.setBackground(getblackColor());
+        frame.add(MainPanel);
         createTopPanel();
         createFriendRequestPanel();
         createCurrentFriendsPanel();        
-        // Ajouter les composants au panneau principal
-        frame.add(topPanel, BorderLayout.NORTH);
-        frame.add(friendsrequestPanel, BorderLayout.CENTER);
-        frame.add(friendsPanel, BorderLayout.SOUTH);
-
-        // Mettre à jour l'interface utilisateur
         updateUI();
     }
 }

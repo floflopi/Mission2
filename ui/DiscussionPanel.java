@@ -26,8 +26,6 @@ public class DiscussionPanel{
     private JPanel actiondiscPanel;
     private JPanel messagesPanel;
 
-    private CustomInputField searchFromUserfield;
-    private CustomInputField searchFromDatefield;
     private CustomInputField sendMessagefield;
 
     private int current_panel = 0;

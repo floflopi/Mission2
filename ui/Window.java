@@ -31,6 +31,12 @@ public class Window{
     public static Color getblackColor(){
         return new Color(64, 68, 75);
     }
+    public static JPanel getEmptyPanel(int sizex,int sizey){
+        JPanel emptyPanel = new JPanel();
+        emptyPanel.setBackground(getblackColor());
+        emptyPanel.setMaximumSize(new Dimension(sizex,sizey));
+        return emptyPanel;
+    }
     public void updateUI(){
         frame.repaint();
         frame.revalidate();
