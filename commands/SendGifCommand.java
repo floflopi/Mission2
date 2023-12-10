@@ -20,4 +20,9 @@ public class SendGifCommand implements Command{
     @Override
     public void execute(String input, DatabaseUsers users_db, DatabaseDiscussion discussions_db, User currentuser) {
     }
+    @Override
+    public void execute(Reader reader, DatabaseUsers users_db, DatabaseDiscussion discussions_db, User currentuser) {
+        // TODO Auto-generated method stub
+        
+    }
 }

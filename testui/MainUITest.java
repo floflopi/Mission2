@@ -1,15 +1,10 @@
 package testui;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
-
 import javax.swing.JButton;
-import javax.swing.JPanel;
 
 import db.*;
-import discussion.Discussion;
-import ui.*;
+import ui.NewDiscussionUI;
 import user.User;
 
 public class MainUITest {
@@ -26,8 +21,6 @@ public class MainUITest {
     static TestLoginInterface login;
     static TestUserMainUI usermainui;
     static TestFriendUI friendui;
-
-    private static Discussion current_disc;
 
     // Ouverture de l'app + login
     public static void scenario0() throws InterruptedException {
@@ -62,11 +55,14 @@ public class MainUITest {
         Thread.sleep(2500);
         // Close the friend window
         friendui.closeWindow();
-
+        
+        //Thread.sleep(2500);
+        //new NewDiscussionUI(usermainui, "New Discussion !", 0, 0, u, disc_db, users_db);
+        //disc_db.create_discussion(usermainui, "New Discussion", 400, 300, u, users_db);
+        //Thread.sleep(2500);
 
         // Create and open a new discussion
         String members = "Louis,Sarah";
-        // Creation 
         if (disc_db.verify_disc_creation("test",members,u, users_db)){
             usermainui.update_discussions(); 
             // Simulation of clicking on the button to open the discussion 

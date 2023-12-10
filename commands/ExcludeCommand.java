@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import db.DatabaseDiscussion;
 import db.DatabaseUsers;
+import discussion.Discussion;
 import reader.Reader;
 import user.User;
 
@@ -17,5 +18,18 @@ public class ExcludeCommand implements Command{
         reader.readinput("Write the username you want to exclude from the conversation :");
         discussions_db.exclude_member(reader.getinput(), new ArrayList<String>(Arrays.asList(discussion_membres.split(","))),
             users_db,currentuser);
+    }
+
+    @Override
+    public void execute(String input, DatabaseUsers users_db, DatabaseDiscussion discussions_db, User currentuser) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void execute(String message, DatabaseUsers users_db, Discussion current_discussion,
+            DatabaseDiscussion discussions_db, User currentuser) {
+        // TODO Auto-generated method stub
+        
     }
 }

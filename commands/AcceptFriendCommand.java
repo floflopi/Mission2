@@ -2,6 +2,7 @@ package commands;
 
 import db.DatabaseDiscussion;
 import db.DatabaseUsers;
+import discussion.Discussion;
 import reader.Reader;
 import user.User;
 
@@ -17,5 +18,18 @@ public class AcceptFriendCommand implements Command{
         reader.readinput("Write the username you want to accept as your friend :");
         currentuser.accept_friend_request(reader.getinput(),users_db);
         }
+    }
+
+    @Override
+    public void execute(String input, DatabaseUsers users_db, DatabaseDiscussion discussions_db, User currentuser) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void execute(String message, DatabaseUsers users_db, Discussion current_discussion,
+            DatabaseDiscussion discussions_db, User currentuser) {
+        // TODO Auto-generated method stub
+        
     }
 }

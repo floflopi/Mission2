@@ -40,5 +40,4 @@ public class TestUserMainUI extends UserMainUI {
         JButton currentdisc_btn = findButtonByText(members_discPanel, buttonText);
         return currentdisc_btn;
     }
-
 }
