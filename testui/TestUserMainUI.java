@@ -45,8 +45,18 @@ public class TestUserMainUI extends UserMainUI {
         return newdiscussion_btn;
     }
 
+    public void set_features_img(Integer index) {
+        if (features_img[index].isEnabled()) {
+            features_img[index].setEnabled(false);
+        }
+        else {
+            features_img[index].setEnabled(true);
+        }
+    }
+
     public void closeWindow() {
         this.frame = super.getFrame();
         frame.dispose();
     }
+
 }

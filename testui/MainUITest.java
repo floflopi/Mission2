@@ -26,6 +26,7 @@ public class MainUITest {
     static Boolean micro = true;
     static Boolean camera = true;
     static Boolean safemode = true;
+    static List<Boolean> contexts = List.of(micro, camera, safemode);
 
     // Ouverture de l'app + login
     public static void scenario0() throws InterruptedException {
@@ -56,7 +57,6 @@ public class MainUITest {
         u.get_liste_contact().add(users_db.get_user("username", "Louis").get_userid());
         Thread.sleep(2500);
         // Open the friends window
-        List<Boolean> contexts = List.of(micro, camera, safemode);
         friendui = new TestFriendUI(users_db, disc_db, u, contexts);
         Thread.sleep(2500);
         // Close the friend window
@@ -70,6 +70,7 @@ public class MainUITest {
         //JButton newdiscussion_btn = usermainui.get_newdiscussion_btn();
         //newdiscussion_btn.doClick();
 
+        Thread.sleep(2500);
         // Create and open a new discussion
         String members = "Louis,Sarah";
         if (disc_db.verify_disc_creation("test",members,u, users_db)){
@@ -81,27 +82,61 @@ public class MainUITest {
             }
         }
 
+        Thread.sleep(2500);
+        // Désactive le bouton du safemode
+        usermainui.set_features_img(2);
+        contexts = List.of(micro, camera, false);
+        Thread.sleep(2500);
+        friendui = new TestFriendUI(users_db, disc_db, u, contexts);
+
         System.out.println("Scénario 2 exécuté");
     }
 
     public static void scenario3() throws InterruptedException {
-        //friendui.closeWindow();
+        friendui.closeWindow();
+        Thread.sleep(2500);
+        // Active le safemode
+        usermainui.set_features_img(2);
+        contexts = List.of(micro, camera, safemode);
+        Thread.sleep(2500);
+        friendui = new TestFriendUI(users_db, disc_db, u, contexts);
+        
         System.out.println("Scénario 3 exécuté");
     }
 
     public static void scenario4() throws InterruptedException {
+        friendui.closeWindow();
+        Thread.sleep(2500);
+        // Désactive le  safemode
+        usermainui.set_features_img(2);
+        contexts = List.of(micro, camera, false);
+        Thread.sleep(2500);
+        friendui = new TestFriendUI(users_db, disc_db, u, contexts);
+
         System.out.println("Scénario 4 exécuté");
     }
 
     public static void scenario5() throws InterruptedException {
+        friendui.closeWindow();
+        Thread.sleep(2500);
+        // Active le safemode
+        usermainui.set_features_img(2);
+        contexts = List.of(micro, camera, safemode);
+        Thread.sleep(2500);
+        friendui = new TestFriendUI(users_db, disc_db, u, contexts);
+
+
         System.out.println("Scénario 5 exécuté");
     }
 
 
     public static void scenario6() throws InterruptedException {
+        friendui.closeWindow();
         // Remove Sarah from friends
         Integer Sarah = users_db.get_user("username", "Sarah").get_userid();
         u.get_liste_contact().remove(Sarah);
+
+
         System.out.println("Scénario 6 exécuté");
     }
 
@@ -110,14 +145,35 @@ public class MainUITest {
     }
 
     public static void scenario8() throws InterruptedException {
+        // Désactive le micro
+        usermainui.set_features_img(0);
+        contexts = List.of(false, camera, safemode);
+        Thread.sleep(2500);
+        friendui = new TestFriendUI(users_db, disc_db, u, contexts);
+
         System.out.println("Scénario 8 exécuté");
     }
 
     public static void scenario9() throws InterruptedException {
+        friendui.closeWindow();
+        // Active le micro
+        usermainui.set_features_img(0);
+        contexts = List.of(micro, camera, safemode);
+        Thread.sleep(2500);
+        friendui = new TestFriendUI(users_db, disc_db, u, contexts);
+
         System.out.println("Scénario 9 exécuté");
     }
 
     public static void scenario10() throws InterruptedException {
+        friendui.closeWindow();
+        Thread.sleep(2500);
+        // Désactive le safemode
+        usermainui.set_features_img(2);
+        contexts = List.of(micro, camera, false);
+        Thread.sleep(2500);
+        friendui = new TestFriendUI(users_db, disc_db, u, contexts);
+        
         System.out.println("Scénario 10 exécuté");
     }
     public static void main(String[] args) throws InterruptedException{
