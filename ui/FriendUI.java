@@ -80,32 +80,36 @@ public class FriendUI extends Window {
         MainPanel.add(friendRequestsLabel.getPanel());  
         MainPanel.add(Window.getEmptyPanel(1920, 20));  
         // Ajouter un JScrollPane en dessous pour contenir les demandes d'amis
+        Dimension scrollPanelDimension = new Dimension(1000,175);
         friendsrequestContentPanel = new JPanel();
         friendsrequestContentPanel.setBackground(getblackColor());
-        friendsrequestContentPanel.setMaximumSize(new Dimension(700,175));
+        
         friendsrequestContentPanel.setLayout(new BoxLayout(friendsrequestContentPanel, BoxLayout.Y_AXIS));
         JScrollPane scrollPane = new JScrollPane(friendsrequestContentPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        //friendsrequestPanel.add(scrollPane);
+
+        friendsrequestContentPanel.setPreferredSize(scrollPanelDimension);
+        scrollPane.setMaximumSize(scrollPanelDimension);
         show_friend_request();
         MainPanel.add(scrollPane);
 
     }
     //display all friend request
     private void show_friend_request(){
+        Color[] color = new Color[]{Color.RED,Color.BLACK};
         for (int i=0;i< current_user.get_friendrequest().size();i++){
             //get username friend 
             String friend_user=users_db.get_user("id", String.valueOf(current_user.get_friendrequest().get(i))).get_username();
-            JPanel demande = new JPanel(null); // Utiliser null pour aucun gestionnaire de disposition
-            demande.setBackground(getblackColor());
-            demande.setPreferredSize(new Dimension(frame.getWidth(), 175/3));
+
+            FlowLayout demandeLayout = new FlowLayout(FlowLayout.CENTER);
+            demandeLayout.setHgap(20);
+            JPanel demande = new JPanel(demandeLayout); // Utiliser null pour aucun gestionnaire de disposition
+            demande.setBackground(Window.getblackColor());
+            demande.setMaximumSize(new Dimension(1000, 60));
             
-            JLabel user_txt = new JLabel(friend_user);
-            user_txt.setForeground(Color.WHITE);
-            user_txt.setFont(new Font("SansSerif", Font.PLAIN, 24));
-            user_txt.setBounds(10,5, 200, 175/4);
-            
+            CustomLabel userLabel = new CustomLabel(friend_user, 24, Color.WHITE, FlowLayout.CENTER, getblackColor(), 100, 35);
+
             JButton acceptButton = new JButton("Accept");
-            acceptButton.setBounds(650, 10, 100, 175/5); // Définir la position et la taille du JButton
+            acceptButton.setPreferredSize(new Dimension(100,35));
             acceptButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -118,7 +122,7 @@ public class FriendUI extends Window {
                 }
             });
             JButton declineButton = new JButton("Decline");
-            declineButton.setBounds(780, 10, 100, 175/5); // Définir la position et la taille du JButton
+            declineButton.setPreferredSize(new Dimension(100,35));
             final int index = i;
             declineButton.addActionListener(new ActionListener() {
                 @Override
@@ -128,30 +132,33 @@ public class FriendUI extends Window {
                     updateUI();
                 }
             });
-            demande.add(user_txt);
+
+            demande.add(userLabel.getPanel());
             demande.add(acceptButton);
             demande.add(declineButton);
+
             friendsrequestContentPanel.add(demande);
         }
     }
     private void show_all_friends(){
+        friendsContentPanel.removeAll();
         for (int i=0;i < current_user.get_liste_contact().size();i++){
             User friend_user=users_db.get_user("id", String.valueOf(current_user.get_liste_contact().get(i)));
-            JPanel currentfriendPanel = new JPanel(null); // Utiliser null pour aucun gestionnaire de disposition
+            FlowLayout friendLayout = new FlowLayout(FlowLayout.CENTER);
+            friendLayout.setHgap(25);
+            JPanel currentfriendPanel = new JPanel(friendLayout); // Utiliser null pour aucun gestionnaire de disposition
             currentfriendPanel.setBackground(getblackColor());
-            currentfriendPanel.setPreferredSize(new Dimension(frame.getWidth(), 300/3));
-            JLabel user_txt = new JLabel(friend_user.get_username());
-            user_txt.setForeground(Color.WHITE);
-            user_txt.setFont(new Font("SansSerif", Font.PLAIN, 24));
-            user_txt.setBounds(10,5, 200, 300/4); 
-            currentfriendPanel.add(user_txt);
-            currentfriendPanel.add(Box.createHorizontalStrut(8));
+            currentfriendPanel.setPreferredSize(new Dimension(1000, 80));
+
+            CustomLabel userLabel = new CustomLabel(friend_user.get_username(), 24, Color.WHITE, FlowLayout.CENTER, getblackColor(), 100, 75);
+
+            currentfriendPanel.add(userLabel.getPanel());
             // add images to current friend panel
             for (int j=0;j<images_icon.length;j++){
                 final int index = j; 
                 Image img = new ImageIcon(images_icon[j]).getImage().getScaledInstance(50,50, Image.SCALE_DEFAULT);
                 friends_action[j] = new JLabel(new ImageIcon(img));
-                friends_action[j].setBounds(600 + 75 * j,20,50,50);
+                friends_action[j].setPreferredSize(new Dimension(50,50));
 
                 // permet de désac/act les features en fonction des contextes
                 if (j < contexts.size() && !contexts.get(j) && j != 2) {
@@ -177,7 +184,6 @@ public class FriendUI extends Window {
                     }
                 });
                 currentfriendPanel.add(friends_action[j]);
-                currentfriendPanel.add(Box.createHorizontalStrut(8));
             }
             friendsContentPanel.add(currentfriendPanel);
         }
@@ -199,8 +205,12 @@ public class FriendUI extends Window {
         //scroll panel
         friendsContentPanel = new JPanel();
         friendsContentPanel.setBackground(getblackColor());
-        friendsContentPanel.setMaximumSize(new Dimension(800,250));
+
         JScrollPane scrollPane = new JScrollPane(friendsContentPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        Dimension scrollPanelDimension = new Dimension(1000,600);
+        friendsContentPanel.setPreferredSize(scrollPanelDimension);
+        scrollPane.setMaximumSize(scrollPanelDimension);
         // cree x friends pour les mettre dans le panel 
         show_all_friends();
         MainPanel.add(scrollPane);
