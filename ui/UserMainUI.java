@@ -28,7 +28,7 @@ public class UserMainUI extends Window {
     protected JFrame frame;
     private String deactivated = "images/deactivated.png";
     private String[] features_img_name = new String[]{"images/micro_logo.png","images/camera_logo.png","images/safe_logo.png","images/adulte_logo.png"};
-    private JLabel[] features_img = new JLabel[4];
+    protected JLabel[] features_img = new JLabel[4];
 
     private JButton friends_btn;
     protected JButton newdiscussion_btn;
