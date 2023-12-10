@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
 import db.*;
 import discussion.Discussion;
 import ui.*;
@@ -29,45 +32,49 @@ public class MainUITest {
     // Ouverture de l'app + login
     public static void scenario0() throws InterruptedException {
         init_database();
+        // Open th login window
         login = new TestLoginInterface("Application",users_db,disc_db);
+        // Connect the default usze (Flopi_Flo)
         login.setDefaultValues(defaultUsername, defaultPassword);
         Thread.sleep(2500);
-        //login.try_connect(users_db);
+        // Add Sarah as a new friend
         u.get_liste_contact().add(users_db.get_user("username", "Sarah").get_userid());
-        //u.get_liste_contact().add(users_db.get_user("username", "Louis").get_userid());
-        //u = users_db.get_user("email", "Louis@gmail.com");
-        //u.send_friendrequest("Sarah", users_db);
+        // Open the MainUI window
         usermainui = new TestUserMainUI("Application",u,disc_db,users_db);
+        // Close the login window
         login.closeWindow();
     }
 
-    // Passage du statut connecté à absent
+    // Switch connected status to idle
     public static void scenario1() throws InterruptedException {
         Thread.sleep(2500);
+        // Set the status to idle
         usermainui.setUserStatus(1);
         System.out.println("Scénario 1 exécuté");
     }
 
     public static void scenario2() throws InterruptedException {
+        // Add Louis as a new friend
         u.get_liste_contact().add(users_db.get_user("username", "Louis").get_userid());
         Thread.sleep(2500);
+        // Open the friends window
         friendui = new TestFriendUI(users_db, disc_db, u);
         Thread.sleep(2500);
+        // Close the friend window
         friendui.closeWindow();
 
-        if (disc_db.verify_disc_creation("test","Louis,Sarah",u, users_db)){
-            usermainui.update_discussions();           
+
+        // Create and open a new discussion
+        String members = "Louis,Sarah";
+        // Creation 
+        if (disc_db.verify_disc_creation("test",members,u, users_db)){
+            usermainui.update_discussions(); 
+            // Simulation of clicking on the button to open the discussion 
+            JButton currentdisc_btn = usermainui.get_currentdisc_btn(members);
+            if (currentdisc_btn != null) {
+                currentdisc_btn.doClick();
+            }
         }
-
-        /*
-        String[] members = new String[]{"Louis", "Sarah"};
-        String[] usernames = disc_db.find_all_disc(u,users_db).get(0).split(",");
-        Discussion first_disc = disc_db.get_discussion(users_db,usernames);
-        DiscussionPanel discussionPanel = new DiscussionPanel(usermainui,first_disc,usernames);
-
-        discussionPanel.initDiscussionPanel(first_disc, members);
-        usermainui.getSplitPane().setRightComponent(discussionPanel.getCurrentPanel());
-        */
 
         System.out.println("Scénario 2 exécuté");
     }
@@ -87,9 +94,9 @@ public class MainUITest {
 
 
     public static void scenario6() throws InterruptedException {
+        // Remove Sarah from friends
         Integer Sarah = users_db.get_user("username", "Sarah").get_userid();
         u.get_liste_contact().remove(Sarah);
-        //u.get_liste_contact().remove(users_db.get_user("username", "Sarah").get_userid());
         System.out.println("Scénario 6 exécuté");
     }
 

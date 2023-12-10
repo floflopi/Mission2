@@ -1,6 +1,9 @@
 package testui;
 
-import javax.swing.JSplitPane;
+import javax.swing.JButton;
+
+import java.awt.Component;
+import java.awt.Container;
 
 import db.DatabaseDiscussion;
 import db.DatabaseUsers;
@@ -19,8 +22,23 @@ public class TestUserMainUI extends UserMainUI {
          userPanel.repaint(); 
     }
 
-    public JSplitPane getSplitPane() {
-        return splitPane;
+    public JButton findButtonByText(Container container, String buttonText) {
+        Component[] components = container.getComponents();
+        for (Component component : components) {
+            if (component instanceof JButton) {
+                JButton button = (JButton) component;
+                if (button.getText().equals(buttonText)) {
+                    return button;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public JButton get_currentdisc_btn(String buttonText) {
+        JButton currentdisc_btn = findButtonByText(members_discPanel, buttonText);
+        return currentdisc_btn;
     }
 
 }

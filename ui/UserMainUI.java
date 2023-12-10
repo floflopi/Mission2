@@ -20,7 +20,7 @@ public class UserMainUI extends Window {
     private JPanel rightPanel;
     protected JPanel userPanel;
 
-    private JPanel members_discPanel;
+    protected JPanel members_discPanel;
     private JScrollPane discs_scrolls; // all discussion
 
     private JFrame frame;
