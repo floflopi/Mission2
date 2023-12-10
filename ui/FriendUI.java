@@ -10,7 +10,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.MouseAdapter;  // Remove org.w3c.dom.events.MouseEvent import
 import commands.*;
 import java.awt.event.MouseEvent;
-
+import java.util.List;
 
 import db.*;
 import user.*;
@@ -22,7 +22,7 @@ public class FriendUI extends Window {
     protected JFrame frame;
     private CustomInputField friendNameField;
     private JButton sendRequestButton;
-    private JLabel[] friends_action = new JLabel[4];
+    protected JLabel[] friends_action = new JLabel[4];
 
     private JPanel topPanel;
     private JPanel friendsrequestPanel;
@@ -34,14 +34,18 @@ public class FriendUI extends Window {
     private DatabaseDiscussion disc_db;
     private DatabaseUsers users_db;
 
-    private String[] images_icon = new String[]{"images/call_button.png","images/camera_button.png","images/message_button.png","images/block_user.png"};
+    //List<Boolean> contexts = new ArrayList<>();
 
-    public FriendUI(DatabaseUsers users_db,DatabaseDiscussion disc_db,User current_user) {
+    private String[] images_icon = new String[]{"images/call_button.png","images/camera_button.png","images/block_user.png","images/message_button.png"};
+    private List<Boolean> contexts;
+
+    public FriendUI(DatabaseUsers users_db,DatabaseDiscussion disc_db,User current_user, List<Boolean> contexts) {
         super("Friend UI",true); // Vous pouvez ajuster la taille du cadre selon vos besoins
         this.users_db = users_db;
         this.disc_db = disc_db;
         this.current_user = current_user;
         this.frame = super.getFrame();
+        this.contexts = contexts;
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         initializeUI();
     }
@@ -148,12 +152,28 @@ public class FriendUI extends Window {
                 Image img = new ImageIcon(images_icon[j]).getImage().getScaledInstance(50,50, Image.SCALE_DEFAULT);
                 friends_action[j] = new JLabel(new ImageIcon(img));
                 friends_action[j].setBounds(600 + 75 * j,20,50,50);
+
+                // permet de désac/act les features en fonction des contextes
+                if (j < contexts.size() && !contexts.get(j) && j != 2) {
+                    //if (j == 2) friends_action[j].setEnabled(true);
+                    friends_action[j].setEnabled(false);
+                } else {
+                    //if (j == 2) friends_action[j].setEnabled(false);
+                    friends_action[j].setEnabled(true);
+                }
+
+                if (j == 2) {
+                    if (!contexts.get(j)) friends_action[j].setEnabled(true);
+                    else friends_action[j].setEnabled(false);
+                } 
+
                 friends_action[j].addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         super.mouseClicked(e);
                         // Action à effectuer lorsqu'on clique sur l'image
-                        System.out.println("Hello World" + index);
+                        //System.out.println("Hello World" + index);
+                        //if (!contexts.get(0)) friends_action[0].setEnabled(false);
                     }
                 });
                 currentfriendPanel.add(friends_action[j]);

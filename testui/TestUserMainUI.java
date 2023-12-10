@@ -40,4 +40,13 @@ public class TestUserMainUI extends UserMainUI {
         JButton currentdisc_btn = findButtonByText(members_discPanel, buttonText);
         return currentdisc_btn;
     }
+
+    public JButton get_newdiscussion_btn() {
+        return newdiscussion_btn;
+    }
+
+    public void closeWindow() {
+        this.frame = super.getFrame();
+        frame.dispose();
+    }
 }

@@ -2,6 +2,7 @@ package testui;
 
 import java.util.Scanner;
 import javax.swing.JButton;
+import java.util.List;
 
 import db.*;
 import ui.NewDiscussionUI;
@@ -21,6 +22,10 @@ public class MainUITest {
     static TestLoginInterface login;
     static TestUserMainUI usermainui;
     static TestFriendUI friendui;
+
+    static Boolean micro = true;
+    static Boolean camera = true;
+    static Boolean safemode = true;
 
     // Ouverture de l'app + login
     public static void scenario0() throws InterruptedException {
@@ -51,15 +56,19 @@ public class MainUITest {
         u.get_liste_contact().add(users_db.get_user("username", "Louis").get_userid());
         Thread.sleep(2500);
         // Open the friends window
-        friendui = new TestFriendUI(users_db, disc_db, u);
+        List<Boolean> contexts = List.of(micro, camera, safemode);
+        friendui = new TestFriendUI(users_db, disc_db, u, contexts);
         Thread.sleep(2500);
         // Close the friend window
         friendui.closeWindow();
         
         //Thread.sleep(2500);
-        //new NewDiscussionUI(usermainui, "New Discussion !", 0, 0, u, disc_db, users_db);
+        //new NewDiscussionUI(usermainui, "New Discussion !", 400, 300, u, disc_db, users_db);
         //disc_db.create_discussion(usermainui, "New Discussion", 400, 300, u, users_db);
         //Thread.sleep(2500);
+
+        //JButton newdiscussion_btn = usermainui.get_newdiscussion_btn();
+        //newdiscussion_btn.doClick();
 
         // Create and open a new discussion
         String members = "Louis,Sarah";

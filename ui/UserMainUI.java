@@ -11,6 +11,8 @@ import java.util.Arrays;
 import user.User;
 import discussion.*;
 import db.*;
+import java.util.List;
+
 public class UserMainUI extends Window {
 
     protected JSplitPane splitPane;
@@ -23,13 +25,13 @@ public class UserMainUI extends Window {
     protected JPanel members_discPanel;
     private JScrollPane discs_scrolls; // all discussion
 
-    private JFrame frame;
+    protected JFrame frame;
     private String deactivated = "images/deactivated.png";
     private String[] features_img_name = new String[]{"images/micro_logo.png","images/camera_logo.png","images/safe_logo.png","images/adulte_logo.png"};
     private JLabel[] features_img = new JLabel[4];
 
     private JButton friends_btn;
-    private JButton newdiscussion_btn;
+    protected JButton newdiscussion_btn;
     private JButton disconnect_btn;
 
     private DiscussionPanel discussionPanel;
@@ -49,13 +51,19 @@ public class UserMainUI extends Window {
         return users_db;
     }
 
+    private FriendUI friendui;
+
+    private Boolean micro = true;
+    private Boolean camera = true;
+    private Boolean safemode = true;
+
     public UserMainUI(String frameName,User current_user,DatabaseDiscussion disc_db,DatabaseUsers users_db) {
         super(frameName,true);
         this.frame = super.getFrame();
         this.current_user = current_user;
         this.disc_db = disc_db;
         this.users_db = users_db;
-
+        
         initializeUI();
         
     }
@@ -113,7 +121,8 @@ public class UserMainUI extends Window {
         friends_btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new FriendUI(users_db,disc_db,current_user);
+                List<Boolean> contexts = List.of(micro, camera, safemode);
+                friendui = new FriendUI(users_db,disc_db,current_user, contexts);
             }
         });
         newdiscussion_btn = new JButton("New Discussion");
@@ -192,8 +201,52 @@ public class UserMainUI extends Window {
                 public void mouseClicked(MouseEvent e) {
                     super.mouseClicked(e);
                     // Action à effectuer lorsqu'on clique sur l'image
-
                     //System.out.println("Hello World" + index);
+                    // Ferme la fenetre des friends si un contexte a changé
+                    if (friendui != null) {
+                        friendui.frame.dispose();
+                    }
+                    /*
+                    if (features_img[index].isEnabled()) {
+                        features_img[index].setEnabled(false);
+                        contexts.set(index, false);
+                    }
+                    else {
+                        features_img[index].setEnabled(true);
+                        contexts.set(index, true);
+                    }*/
+                    
+                    if (index == 0) {
+                        if (features_img[0].isEnabled()) {
+                            features_img[0].setEnabled(false);
+                            micro = false;
+                        }
+                        else {
+                            features_img[0].setEnabled(true);
+                            micro = true;
+                        }
+                    }
+                    if (index == 1) {
+                        if (features_img[1].isEnabled()) {
+                            features_img[1].setEnabled(false);
+                            camera = false;
+                        }
+                        else {
+                            features_img[1].setEnabled(true);
+                            camera = true;
+                        }
+                    }
+                    // Pour safemode (inversé)
+                    if (index == 2) {
+                        if (features_img[2].isEnabled()) {
+                            features_img[2].setEnabled(false);
+                            safemode = false;
+                        }
+                        else {
+                            features_img[2].setEnabled(true);
+                            safemode = true;
+                        }
+                    }
                 }
             });
             userPanel.add(features_img[i]);
