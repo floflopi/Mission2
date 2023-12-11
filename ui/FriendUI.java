@@ -24,13 +24,14 @@ public class FriendUI extends Window {
     private CustomInputField friendNameField;
     private JButton sendRequestButton;
     protected JLabel[] friends_action = new JLabel[4];
-
+    private JScrollPane scrollrequestPane;
     private JPanel topPanel;
-    private JPanel friendsrequestPanel;
     private JPanel friendsrequestContentPanel; // content of scroll panel
     private JPanel friendsPanel;
     private JPanel friendsContentPanel;
     private JPanel MainPanel;
+
+    
     private User current_user;
     private DatabaseDiscussion disc_db;
     private DatabaseUsers users_db;
@@ -38,12 +39,12 @@ public class FriendUI extends Window {
 
 
     private String[] btn_names =  new String[]{"removefriend","block","report"};
-    private ArrayList<JButton>[] buttons = new ArrayList[3];
+    private ArrayList<ArrayList<JButton>> buttons = new ArrayList<>(3);
 
     public FriendUI(DatabaseUsers users_db,DatabaseDiscussion disc_db,User current_user,Actions actions) {
         super("Friend UI",true); // Vous pouvez ajuster la taille du cadre selon vos besoins
         for (int i=0;i<3;i++){
-            buttons[i] = new ArrayList<JButton>();
+            buttons.add(new ArrayList<JButton>());
         }
         
         this.actions = actions;
@@ -56,11 +57,17 @@ public class FriendUI extends Window {
         initializeUI();
     }
     public void updateFeatures(){
-        for (int i=0;i< 3;i++){
-            for (int j=0;j< buttons[i].size();j++){
-                buttons[i].get(j).setVisible(actions.get_optional_features().get(btn_names[i]));
+        for (int i=0;i< btn_names.length;i++){
+            for (int j=0;j< buttons.get(i).size();j++){
+                buttons.get(i).get(j).setVisible(actions.get_optional_features().get(btn_names[i]));
             }
         }
+        if (friendsrequestContentPanel != null){
+            scrollrequestPane.setVisible(actions.get_optional_features().get("addfriend"));
+            friendsrequestContentPanel.setVisible(actions.get_optional_features().get("addfriend"));
+        }
+        if (topPanel != null)
+            topPanel.setVisible(actions.get_optional_features().get("addfriend"));
     }
     private void createTopPanel(){
         FlowLayout topLayout = new FlowLayout(FlowLayout.CENTER);
@@ -98,12 +105,12 @@ public class FriendUI extends Window {
         friendsrequestContentPanel.setBackground(getblackColor());
         
         friendsrequestContentPanel.setLayout(new BoxLayout(friendsrequestContentPanel, BoxLayout.Y_AXIS));
-        JScrollPane scrollPane = new JScrollPane(friendsrequestContentPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollrequestPane = new JScrollPane(friendsrequestContentPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         friendsrequestContentPanel.setPreferredSize(scrollPanelDimension);
-        scrollPane.setMaximumSize(scrollPanelDimension);
+        scrollrequestPane.setMaximumSize(scrollPanelDimension);
         show_friend_request();
-        MainPanel.add(scrollPane);
+        MainPanel.add(scrollrequestPane);
 
     }
     //display all friend request
@@ -188,7 +195,7 @@ public class FriendUI extends Window {
                     }
                 });
                 currentfriendPanel.add(current_btn);
-                buttons[j].add(current_btn);
+                buttons.get(j).add(current_btn);
             }
             friendsContentPanel.add(currentfriendPanel);
         }
@@ -230,7 +237,8 @@ public class FriendUI extends Window {
         frame.add(MainPanel);
         createTopPanel();
         createFriendRequestPanel();
-        createCurrentFriendsPanel();        
+        createCurrentFriendsPanel();   
+        updateFeatures();     
         updateUI();
     }
 }

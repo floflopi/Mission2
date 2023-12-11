@@ -32,6 +32,8 @@ public class DiscussionPanel{
 
     private int current_panel = 0;
 
+    ImageButton[] call_buttons = new ImageButton[2];
+    JButton ExcludeButton;
     private String file_img="images/file_button.png";
     private String no_friend_img="images/bocchi_sad.png";
     private String[] members;
@@ -39,6 +41,7 @@ public class DiscussionPanel{
     private Actions actions;
     public DiscussionPanel(UserMainUI UserMainUI,Discussion current_disc,String[] members,Actions actions){
         this.actions = actions;
+        this.actions.setDiscussionPanel(this);
         this.UserMainUI = UserMainUI;
         if (current_disc == null){
             initNoFriendPanel();
@@ -57,7 +60,15 @@ public class DiscussionPanel{
         return discussionPanel;
     }
     public void updateFeatures(){
+        String[] call_actions = new String[]{"micro","camera"};
+        for (int i=0;i<call_buttons.length;i++){
+            if (call_buttons[i] != null)
+                call_buttons[i].getButton().setVisible(actions.get_optional_features().get(call_actions[i]));
+        }
+        if (ExcludeButton != null){
+            ExcludeButton.setVisible(actions.get_optional_features().get("exclude"));
 
+        }
     }
     public void find_current_discussion(String members_username){
         String[] all_members = (members_username+ "," + UserMainUI.getcurrentUser().get_username()).split(",");
@@ -126,13 +137,24 @@ public class DiscussionPanel{
             () -> new CameraCommand().execute(null,UserMainUI.getUsersDb(),current_discussion,UserMainUI.getDiscDb(),UserMainUI.getcurrentUser())};
         for (int i=0;i<2;i++){
             // remplacer par les actions disponible 
-            ImageButton action_btn = new ImageButton(nom_images[i], 40, 40,fonction[i]);
-            actiondiscPanel.add(action_btn.getButton());
+            call_buttons[i] = new ImageButton(nom_images[i], 40, 40,fonction[i]);
+            actiondiscPanel.add(call_buttons[i].getButton());
         }
         String[] buttons_name = new String[]{"Add","Exclude","Quit"};
+        
         for (int i=0;i<3;i++){
             JButton current_button = new JButton(buttons_name[i]);
             current_button.setPreferredSize(new Dimension(90,40));
+            if (i == 1){
+                Runnable exclude_fctn = () -> new ExcludeCommand().execute(null,UserMainUI.getUsersDb(),current_discussion,UserMainUI.getDiscDb(),UserMainUI.getcurrentUser());
+                ExcludeButton = current_button;
+                ExcludeButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        exclude_fctn.run();
+                    }
+                });
+            }   
             actiondiscPanel.add(current_button);
         }
         discussionPanel.add(actiondiscPanel);
@@ -228,6 +250,6 @@ public class DiscussionPanel{
         addEmptyPanel(10);
         createMessagesPanel();
         createSendMessagePanel();
-
+        updateFeatures();
     }
 }

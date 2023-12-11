@@ -48,7 +48,6 @@ public class Actions {
         optional_features = new HashMap<String,Boolean>();
         command_map_initialization();
         for (String feature : liste_features){
-            System.out.println(feature);
             optional_features.put(feature, true);
         }
         startListening();
@@ -95,9 +94,6 @@ public class Actions {
                     if (files != null) {
                         for (File commandFile : files) {
                             if (commandFile.isFile() && commandFile.getName().endsWith(".class")) {
-                                // Imprimer le nom de la classe
-                                System.out.println("Nom de la classe : " + commandFile.getName());
-                                
                                 String className = packageName + '.' + commandFile.getName().replace(".class", "");
                                 try {
                                     Class<?> commandClass = Class.forName(className);
