@@ -59,7 +59,8 @@ public class UserMainUI extends Window {
 
     private Boolean micro = true;
     private Boolean camera = true;
-    private Boolean safemode = true;
+    private Boolean safemode = false;
+    private Boolean adulte_mode = true;
 
     public UserMainUI(String frameName,User current_user,DatabaseDiscussion disc_db,DatabaseUsers users_db,Actions actions) {
         super(frameName,true);
@@ -200,64 +201,55 @@ public class UserMainUI extends Window {
             final int index = i; 
             Image img = new ImageIcon(features_img_name[i]).getImage().getScaledInstance(42,42, Image.SCALE_DEFAULT);
             features_img[i] = new JLabel(new ImageIcon(img));
+
+            Image img_deactivated = new ImageIcon(deactivated).getImage().getScaledInstance(42, 42, Image.SCALE_DEFAULT);
+            JLabel imgLabel2 = new JLabel(new ImageIcon(img_deactivated));
+            if (i!=2)
+                imgLabel2.setVisible(false); // features are by default activated except safe mode
+            JPanel imagePanel = new JPanel();
+            imagePanel.setLayout(new OverlayLayout(imagePanel));
+            imagePanel.setBackground(getblackColor());
+            imagePanel.add(imgLabel2);
+            imagePanel.add(features_img[i]);
+
             features_img[i].addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     super.mouseClicked(e);
-                    // Action à effectuer lorsqu'on clique sur l'image
-                    //System.out.println("Hello World" + index);
-                    // Ferme la fenetre des friends si un contexte a changé
-                    if (friendui != null) {
-                        friendui.frame.dispose();
+                    // micro camera safe adulte 
+                    if (index == 0){
+                        micro = !micro;
+                        imgLabel2.setVisible(!micro); // contraire de la feature
+                        actions.activate_features(micro,"micro");
                     }
-                    /*
-                    if (features_img[index].isEnabled()) {
-                        features_img[index].setEnabled(false);
-                        contexts.set(index, false);
+                    else if (index == 1){
+                        camera = !camera;
+                        imgLabel2.setVisible(!camera);
+                        actions.activate_features(camera,"camera");
                     }
-                    else {
-                        features_img[index].setEnabled(true);
-                        contexts.set(index, true);
-                    }*/
-                    
-                    if (index == 0) {
-                        if (features_img[0].isEnabled()) {
-                            features_img[0].setEnabled(false);
-                            micro = false;
-                        }
-                        else {
-                            features_img[0].setEnabled(true);
-                            micro = true;
+                    else if (index == 2){
+                        safemode = !safemode;
+                        imgLabel2.setVisible(!safemode);
+                        for (String feature:new String[]{"block","exclude","report"}){
+                            actions.activate_features(!safemode,feature);
                         }
                     }
-                    if (index == 1) {
-                        if (features_img[1].isEnabled()) {
-                            features_img[1].setEnabled(false);
-                            camera = false;
-                        }
-                        else {
-                            features_img[1].setEnabled(true);
-                            camera = true;
-                        }
-                    }
-                    // Pour safemode (inversé)
-                    if (index == 2) {
-                        if (features_img[2].isEnabled()) {
-                            features_img[2].setEnabled(false);
-                            safemode = false;
-                        }
-                        else {
-                            features_img[2].setEnabled(true);
-                            safemode = true;
+                    else{
+                        adulte_mode = !adulte_mode;
+                        imgLabel2.setVisible(!adulte_mode);
+                        for (String feature:new String[]{"sendimage","sendvocaux","sendgif","sendautresfichiers","addfriend","acceptfriend","sendvideo"}){
+                            actions.activate_features(adulte_mode,feature);
                         }
                     }
                 }
             });
-            userPanel.add(features_img[i]);
+
+
+            userPanel.add(imagePanel);
             userPanel.add(Box.createHorizontalStrut(8));
         }
         userPanel.setPreferredSize(new Dimension(350, 80));
-        userPanel.setBackground(new Color(64, 68, 75));
+        userPanel.setBackground(Window.getblackColor());
     }
     //seek all discussions available
     public void update_discussions(){

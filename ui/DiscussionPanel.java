@@ -1,7 +1,7 @@
 package ui;
 import javax.swing.*;
 
-import commands.SendMessageCommand;
+
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,6 +16,7 @@ import discussion.*;
 import db.*;
 import message.*;
 import actions.*;
+import commands.*;
 //right panel of main ui
 public class DiscussionPanel{
     private UserMainUI UserMainUI; // get functions of usermainui
@@ -121,11 +122,8 @@ public class DiscussionPanel{
         String[] nom_images = new String[]{"images/call_button.png","images/camera_button.png"};
         //appel micro, appel camera
         Runnable[] fonction = new Runnable[]{
-            () -> new MediaUI(UserMainUI.getUsersDb(), UserMainUI.getDiscDb(),
-            UserMainUI.getcurrentUser(), current_discussion, DiscussionPanel.this,actions),
-            () -> new MediaUI(UserMainUI.getUsersDb(), UserMainUI.getDiscDb(),
-            UserMainUI.getcurrentUser(), current_discussion, DiscussionPanel.this,actions)
-        };
+            () -> new MicroCommand().execute(null,UserMainUI.getUsersDb(),current_discussion,UserMainUI.getDiscDb(),UserMainUI.getcurrentUser()),
+            () -> new CameraCommand().execute(null,UserMainUI.getUsersDb(),current_discussion,UserMainUI.getDiscDb(),UserMainUI.getcurrentUser())};
         for (int i=0;i<2;i++){
             // remplacer par les actions disponible 
             ImageButton action_btn = new ImageButton(nom_images[i], 40, 40,fonction[i]);

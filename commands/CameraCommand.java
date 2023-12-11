@@ -7,18 +7,12 @@ import reader.Reader;
 import ui.WindowError;
 import user.User;
 
-@CommandInfo(name = "acceptfriend", optionnal = true)
-public class AcceptFriendCommand implements Command{
+@CommandInfo(name = "camera", optionnal = true)
+public class CameraCommand implements Command{
 
     @Override
     public void execute(String frienduser, DatabaseUsers users_db, Discussion current_discussion,
             DatabaseDiscussion discussions_db, User currentuser) {
-        if (currentuser.get_friendrequest().isEmpty()){
-            new WindowError("Error","Nobody sent you a friend request.",null);
-        }
-        else {
-        currentuser.accept_friend_request(frienduser,users_db);
-        }
-
+                //not implemented at the moment 
     }
 }

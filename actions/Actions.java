@@ -35,6 +35,7 @@ public class Actions {
 
     private DiscussionPanel disc_panel;
     private MediaUI mediaUI;
+    private FriendUI friendUI;
 
     public Actions(DatabaseDiscussion disc_db,DatabaseUsers users_db,Discussion curr_disc,User current_user){
         this.disc_db = disc_db;
@@ -57,6 +58,9 @@ public class Actions {
     }
     public void setDiscussion(Discussion discussion){
         current_discussion = discussion;
+    }
+    public void setFriendUI(FriendUI friendUI){
+        this.friendUI = friendUI;
     }
     public void setMediaUi(MediaUI mediaUI){
         this.mediaUI = mediaUI;
@@ -147,6 +151,9 @@ public class Actions {
         }
         if (mediaUI != null){
             mediaUI.updateFeatures();
+        }
+        if (friendUI != null){
+            friendUI.updateFeatures();
         }
     }
     // try to execute action 

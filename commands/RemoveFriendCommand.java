@@ -10,7 +10,7 @@ import message.Message;
 import reader.Reader;
 import user.User;
 
-@CommandInfo(name = "removefriend", optionnal = false)
+@CommandInfo(name = "removefriend", optionnal = true)
 public class RemoveFriendCommand implements Command{
     @Override
     public void execute(String user_deleted, DatabaseUsers users_db,Discussion current_discussion, DatabaseDiscussion discussions_db, User current_user) {

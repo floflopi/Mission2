@@ -10,6 +10,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.MouseAdapter;  // Remove org.w3c.dom.events.MouseEvent import
 import commands.*;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import db.*;
@@ -36,18 +37,30 @@ public class FriendUI extends Window {
     private Actions actions;
 
 
-    private String[] btn_names = new String[]{"Remove","Block","Report"};
-    private List<Boolean> contexts;
+    private String[] btn_names =  new String[]{"removefriend","block","report"};
+    private ArrayList<JButton>[] buttons = new ArrayList[3];
 
     public FriendUI(DatabaseUsers users_db,DatabaseDiscussion disc_db,User current_user,Actions actions) {
         super("Friend UI",true); // Vous pouvez ajuster la taille du cadre selon vos besoins
+        for (int i=0;i<3;i++){
+            buttons[i] = new ArrayList<JButton>();
+        }
+        
         this.actions = actions;
+        this.actions.setFriendUI(this);
         this.users_db = users_db;
         this.disc_db = disc_db;
         this.current_user = current_user;
         this.frame = super.getFrame();
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         initializeUI();
+    }
+    public void updateFeatures(){
+        for (int i=0;i< 3;i++){
+            for (int j=0;j< buttons[i].size();j++){
+                buttons[i].get(j).setVisible(actions.get_optional_features().get(btn_names[i]));
+            }
+        }
     }
     private void createTopPanel(){
         FlowLayout topLayout = new FlowLayout(FlowLayout.CENTER);
@@ -140,9 +153,13 @@ public class FriendUI extends Window {
             friendsrequestContentPanel.add(demande);
         }
     }
+
     private void show_all_friends(){
         friendsContentPanel.removeAll();
         friendsContentPanel.add(Window.getEmptyPanel(1000, 10));
+        for (ArrayList<JButton> array:buttons){
+            array.clear();
+        }
         for (int i=0;i < current_user.get_liste_contact().size();i++){
             User friend_user=users_db.get_user("id", String.valueOf(current_user.get_liste_contact().get(i)));
             FlowLayout friendLayout = new FlowLayout(FlowLayout.CENTER);
@@ -154,55 +171,29 @@ public class FriendUI extends Window {
             CustomLabel userLabel = new CustomLabel(friend_user.get_username(), 24, Color.WHITE, FlowLayout.CENTER, getblackColor(), 100, 60);
 
             currentfriendPanel.add(userLabel.getPanel());
-            // add images to current friend panel
+            Runnable[] fonction = new Runnable[]{
+                () -> new RemoveFriendCommand().execute(null,users_db,null,disc_db,current_user),
+                () -> new BlockCommand().execute(null,users_db,null,disc_db,current_user),
+                () -> new ReportCommand().execute(null,users_db,null,disc_db,current_user)};
+
             for (int j=0;j < btn_names.length;j++){
                 JButton current_btn = new JButton(btn_names[j]);
-                current_btn.setPreferredSize(new Dimension(100,40));
+                current_btn.setPreferredSize(new Dimension(150,40));
                 // remove block report
+                final int index=j;
                 current_btn.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-
-                }
-            });
-            currentfriendPanel.add(current_btn);
-            }
-            friendsContentPanel.add(currentfriendPanel);
-            /* 
-            for (int j=0;j<images_icon.length;j++){
-                final int index = j; 
-                Image img = new ImageIcon(images_icon[j]).getImage().getScaledInstance(50,50, Image.SCALE_DEFAULT);
-                friends_action[j] = new JLabel(new ImageIcon(img));
-                friends_action[j].setPreferredSize(new Dimension(50,50));
-
-                // permet de désac/act les features en fonction des contextes
-                if (j < contexts.size() && !contexts.get(j) && j != 2) {
-                    //if (j == 2) friends_action[j].setEnabled(true);
-                    friends_action[j].setEnabled(false);
-                } else {
-                    //if (j == 2) friends_action[j].setEnabled(false);
-                    friends_action[j].setEnabled(true);
-                }
-
-                if (j == 2) {
-                    if (!contexts.get(j)) friends_action[j].setEnabled(true);
-                    else friends_action[j].setEnabled(false);
-                } 
-
-                friends_action[j].addMouseListener(new MouseAdapter() {
                     @Override
-                    public void mouseClicked(MouseEvent e) {
-                        super.mouseClicked(e);
-                        // Action à effectuer lorsqu'on clique sur l'image
-                        //System.out.println("Hello World" + index);
-                        //if (!contexts.get(0)) friends_action[0].setEnabled(false);
+                    public void actionPerformed(ActionEvent e) {
+                        fonction[index].run();
                     }
                 });
-                currentfriendPanel.add(friends_action[j]);
+                currentfriendPanel.add(current_btn);
+                buttons[j].add(current_btn);
             }
-            */
-            //friendsContentPanel.add(currentfriendPanel);
+            friendsContentPanel.add(currentfriendPanel);
         }
+
+        updateFeatures();
 
             
         
