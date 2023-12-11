@@ -30,7 +30,7 @@ public class MediaUI extends Window{
     private DiscussionPanel disc_panel;
 
     private User current_user;
-    private JFrame frame;
+    protected JFrame frame;
     private JPanel MainPanel;
     private String[] file_btns_img = new String[]{"image","vocaux","gif","video","autresfichiers"};
     private JButton[] file_btns = new JButton[file_btns_img.length];

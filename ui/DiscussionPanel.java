@@ -32,12 +32,14 @@ public class DiscussionPanel{
 
     private int current_panel = 0;
 
+    protected ImageButton file_btn;
+
     ImageButton[] call_buttons = new ImageButton[2];
     JButton ExcludeButton;
     private String file_img="images/file_button.png";
     private String no_friend_img="images/bocchi_sad.png";
     private String[] members;
-    private Discussion current_discussion;
+    protected Discussion current_discussion;
     private Actions actions;
     public DiscussionPanel(UserMainUI UserMainUI,Discussion current_disc,String[] members,Actions actions){
         this.actions = actions;
@@ -184,7 +186,7 @@ public class DiscussionPanel{
         sendMessagefield = new CustomInputField("Write the message you want to send ",600,50,30);
 
 
-        ImageButton file_btn = new ImageButton(file_img, 50, 50,() -> new MediaUI(UserMainUI.getUsersDb(), UserMainUI.getDiscDb(),
+        file_btn = new ImageButton(file_img, 50, 50,() -> new MediaUI(UserMainUI.getUsersDb(), UserMainUI.getDiscDb(),
         UserMainUI.getcurrentUser(), current_discussion, DiscussionPanel.this,actions));
         JButton send_btn =  new JButton("Send");
         send_btn.setPreferredSize(new Dimension(100,50));

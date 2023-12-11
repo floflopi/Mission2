@@ -29,7 +29,7 @@ public class UserMainUI extends Window {
     private JScrollPane discs_scrolls; // all discussion
 
     protected JFrame frame;
-    private String deactivated = "images/deactivated.png";
+    protected String deactivated = "images/deactivated.png";
     private String[] features_img_name = new String[]{"images/micro_logo.png","images/camera_logo.png","images/safe_logo.png","images/adulte_logo.png"};
     protected JLabel[] features_img = new JLabel[4];
 
@@ -42,7 +42,7 @@ public class UserMainUI extends Window {
     private User current_user;
     private DatabaseDiscussion disc_db;
     private DatabaseUsers users_db;
-    private Actions actions;
+    protected Actions actions;
     protected int status =0;
 
     public User getcurrentUser(){
@@ -57,13 +57,10 @@ public class UserMainUI extends Window {
 
     private FriendUI friendui;
 
-    private Boolean micro = true;
-    private Boolean camera = true;
-    private Boolean safemode = false;
-    private Boolean adulte_mode = true;
-
-    protected Image img_deactivated = new ImageIcon(deactivated).getImage().getScaledInstance(42, 42, Image.SCALE_DEFAULT);
-    protected JLabel imgLabel2 = new JLabel(new ImageIcon(img_deactivated));
+    protected Boolean micro = true;
+    protected Boolean camera = true;
+    protected Boolean safemode = false;
+    protected Boolean adulte_mode = true;
 
     public UserMainUI(String frameName,User current_user,DatabaseDiscussion disc_db,DatabaseUsers users_db,Actions actions) {
         super(frameName,true);

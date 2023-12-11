@@ -6,6 +6,8 @@ import actions.Actions;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import db.DatabaseDiscussion;
 import db.DatabaseUsers;
@@ -56,12 +58,28 @@ public class TestUserMainUI extends UserMainUI {
         }
     }
     
-    public void active_imgLabel2() {
-        imgLabel2.setVisible(true);
-    }
-
-    public void desactive_imgLabel2() {
-        imgLabel2.setVisible(false);
+    public void click_simulation(Integer index) {
+        if (index == 0) {
+            micro = !micro;
+            //imgLabel2.setVisible(!micro);
+            actions.activate_features(micro, "micro");
+        } else if (index == 1) {
+            camera = !camera;
+            //imgLabel2.setVisible(!camera);
+            actions.activate_features(camera, "camera");
+        } else if (index == 2) {
+            safemode = !safemode;
+            //imgLabel2.setVisible(!safemode);
+            for (String feature : new String[]{"block", "exclude", "report"}) {
+                actions.activate_features(!safemode, feature);
+            }
+        } else {
+            adulte_mode = !adulte_mode;
+            //imgLabel2.setVisible(!adulte_mode);
+            for (String feature : new String[]{"sendimage", "sendvocaux", "sendgif", "sendautresfichiers", "addfriend", "acceptfriend", "sendvideo"}) {
+                actions.activate_features(adulte_mode, feature);
+            }
+        }
     }
 
 

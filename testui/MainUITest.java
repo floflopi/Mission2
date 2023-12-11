@@ -11,6 +11,8 @@ import java.util.List;
 
 import db.*;
 import discussion.Discussion;
+import ui.DiscussionPanel;
+import ui.MediaUI;
 import ui.NewDiscussionUI;
 import user.User;
 
@@ -29,13 +31,13 @@ public class MainUITest {
     static TestUserMainUI usermainui;
     static TestFriendUI friendui;
     private static Actions actions;
+    private static TestMediaUI mediaui;
 
     static Boolean micro = true;
     static Boolean camera = true;
     static Boolean safemode = true;
-    static List<Boolean> contexts = List.of(micro, camera, safemode);
 
-    static Integer cooldown = 2500;
+    static Integer cooldown = 3000;
 
     // Ouverture de l'app + login
     public static void scenario0() throws InterruptedException {
@@ -58,27 +60,11 @@ public class MainUITest {
         Thread.sleep(cooldown);
         // Set the status to idle
         usermainui.setUserStatus(1);
-        System.out.println("Scénario 1 exécuté");
-    }
-
-    public static void scenario2() throws InterruptedException {
+        Thread.sleep(cooldown);
         // Add Louis as a new friend
         u.get_liste_contact().add(users_db.get_user("username", "Louis").get_userid());
         // Open the friends window
-        friendui = new TestFriendUI(users_db, disc_db, u, new Actions(disc_db, users_db, null, u));
-        Thread.sleep(cooldown);
-        // Close the friend window
-        friendui.closeWindow();
-        
-        Thread.sleep(cooldown);
-        // Désactive le bouton du safemode
-        usermainui.desactive_imgLabel2();
-        //usermainui.set_features_img(2);
-        //contexts = List.of(micro, camera, false);
-        Thread.sleep(cooldown);
-
-        // Open the friends window
-        friendui = new TestFriendUI(users_db, disc_db, u, new Actions(disc_db, users_db, null, u));
+        friendui = new TestFriendUI(users_db, disc_db, u, actions);
         Thread.sleep(cooldown);
         // Close the friend window
         friendui.closeWindow();
@@ -94,6 +80,29 @@ public class MainUITest {
                 currentdisc_btn.doClick();
             }
         }
+        
+        /*
+        Thread.sleep(cooldown);
+        // Open the media 
+        String[] membersList = {"Louis,Sarah"};
+        ArrayList<Integer> members_id = new ArrayList<Integer>(Arrays.asList(users_db.get_user("username", "Louis").get_userid(), users_db.get_user("username", "Sarah").get_userid()));
+        Discussion current_discussion = new Discussion(members_id, false);
+        DiscussionPanel testdiscussionpanel =  new DiscussionPanel(usermainui, current_discussion, membersList, actions);
+        mediaui =  new TestMediaUI(users_db, disc_db, u, current_discussion, testdiscussionpanel, actions);
+        */
+
+        System.out.println("Scénario 1 exécuté");
+    }
+
+    public static void scenario2() throws InterruptedException {
+        if (mediaui != null) mediaui.closeWindow();
+        Thread.sleep(cooldown);
+
+        // Open the friends window
+        friendui = new TestFriendUI(users_db, disc_db, u, actions);
+        Thread.sleep(cooldown);
+        // Close the friend window
+        friendui.closeWindow();
 
         System.out.println("Scénario 2 exécuté");
     }
@@ -101,21 +110,36 @@ public class MainUITest {
     public static void scenario3() throws InterruptedException {
         Thread.sleep(cooldown);
         // Active le safemode
-        usermainui.set_features_img(2);
-        contexts = List.of(micro, camera, safemode);
+        usermainui.click_simulation(2);
+        Thread.sleep(cooldown);
+        // Désactive le mode adulte
+        usermainui.click_simulation(3);
         Thread.sleep(cooldown);
         friendui = new TestFriendUI(users_db, disc_db, u, actions);
         Thread.sleep(cooldown);
         friendui.closeWindow();
+
+        /*
+        Thread.sleep(cooldown);
+        String[] membersList = {"Louis,Sarah"};
+        ArrayList<Integer> members_id = new ArrayList<Integer>(Arrays.asList(users_db.get_user("username", "Louis").get_userid(), users_db.get_user("username", "Sarah").get_userid()));
+        Discussion current_discussion = new Discussion(members_id, false);
+        DiscussionPanel testdiscussionpanel =  new DiscussionPanel(usermainui, current_discussion, membersList, actions);
+        mediaui =  new TestMediaUI(users_db, disc_db, u, current_discussion, testdiscussionpanel, actions);
+        */
         
         System.out.println("Scénario 3 exécuté");
     }
 
     public static void scenario4() throws InterruptedException {
+        if (mediaui != null) mediaui.closeWindow();
         Thread.sleep(cooldown);
-        // Désactive le  safemode
-        usermainui.set_features_img(2);
-        contexts = List.of(micro, camera, false);
+        // Set le status à ne pas déranger
+        usermainui.setUserStatus(2);
+        Thread.sleep(cooldown);
+
+        // Désactive le safemode
+        usermainui.click_simulation(2);
         Thread.sleep(cooldown);
         friendui = new TestFriendUI(users_db, disc_db, u, actions);
 
@@ -124,11 +148,11 @@ public class MainUITest {
 
     public static void scenario5() throws InterruptedException {
         friendui.closeWindow();
-        Thread.sleep(cooldown);
         // Active le safemode
-        usermainui.set_features_img(2);
-        contexts = List.of(micro, camera, safemode);
         Thread.sleep(cooldown);
+        usermainui.click_simulation(2);
+        Thread.sleep(cooldown);
+
         friendui = new TestFriendUI(users_db, disc_db, u, actions);
 
 
@@ -140,32 +164,76 @@ public class MainUITest {
         friendui.closeWindow();
         //usermainui.closeWindow();
 
+        Thread.sleep(cooldown);
+        // Active le mode adulte
+        usermainui.click_simulation(3);
+
         Integer sarah = users_db.get_user("username", "Sarah").get_userid();
         u.get_liste_contact().remove(sarah);
+
+        friendui = new TestFriendUI(users_db, disc_db, u, actions);
+        Thread.sleep(cooldown);
+        friendui.closeWindow();
+        
+        /*
+        Thread.sleep(cooldown);
+        String[] membersList = {"Louis,Sarah"};
+        ArrayList<Integer> members_id = new ArrayList<Integer>(Arrays.asList(users_db.get_user("username", "Louis").get_userid(), users_db.get_user("username", "Sarah").get_userid()));
+        Discussion current_discussion = new Discussion(members_id, false);
+        DiscussionPanel testdiscussionpanel =  new DiscussionPanel(usermainui, current_discussion, membersList, actions);
+        mediaui =  new TestMediaUI(users_db, disc_db, u, current_discussion, testdiscussionpanel, actions);
+        */
 
         System.out.println("Scénario 6 exécuté");
     }
 
     public static void scenario7() throws InterruptedException {
+        if (mediaui != null) mediaui.closeWindow();
+        Thread.sleep(cooldown);
+        // Set le status à en ligne
+        usermainui.setUserStatus(0);
+        Thread.sleep(cooldown);
+
+        // Désactive le mode adulte
+        usermainui.click_simulation(3);
+        Thread.sleep(cooldown);
+
+        friendui = new TestFriendUI(users_db, disc_db, u, actions);
+        Thread.sleep(cooldown);
+        friendui.closeWindow();
+        
+        /*
+        Thread.sleep(cooldown);
+        String[] membersList = {"Louis,Sarah"};
+        ArrayList<Integer> members_id = new ArrayList<Integer>(Arrays.asList(users_db.get_user("username", "Louis").get_userid(), users_db.get_user("username", "Sarah").get_userid()));
+        Discussion current_discussion = new Discussion(members_id, false);
+        DiscussionPanel testdiscussionpanel =  new DiscussionPanel(usermainui, current_discussion, membersList, actions);
+        mediaui =  new TestMediaUI(users_db, disc_db, u, current_discussion, testdiscussionpanel, actions);
+        */
+
         System.out.println("Scénario 7 exécuté");
     }
 
     public static void scenario8() throws InterruptedException {
+        if (mediaui != null) mediaui.closeWindow();
+        Thread.sleep(cooldown);
         // Désactive le micro
-        usermainui.set_features_img(0);
-        contexts = List.of(false, camera, safemode);
-        Thread.sleep(2500);
-        friendui = new TestFriendUI(users_db, disc_db, u, actions);
+        usermainui.click_simulation(0);
+        Thread.sleep(cooldown);
 
         System.out.println("Scénario 8 exécuté");
     }
 
     public static void scenario9() throws InterruptedException {
         friendui.closeWindow();
+        Thread.sleep(cooldown);
         // Active le micro
-        usermainui.set_features_img(0);
-        contexts = List.of(micro, camera, safemode);
-        Thread.sleep(2500);
+        usermainui.click_simulation(0);
+        Thread.sleep(cooldown);
+
+        // Active le mode adulte
+        usermainui.click_simulation(3);
+        Thread.sleep(cooldown);
         friendui = new TestFriendUI(users_db, disc_db, u, actions);
 
         System.out.println("Scénario 9 exécuté");
@@ -173,11 +241,15 @@ public class MainUITest {
 
     public static void scenario10() throws InterruptedException {
         friendui.closeWindow();
-        Thread.sleep(2500);
+        Thread.sleep(cooldown);
+
+        // Désactive le mode adulte
+        usermainui.click_simulation(3);
+        Thread.sleep(cooldown);
+
         // Désactive le safemode
-        usermainui.set_features_img(2);
-        contexts = List.of(micro, camera, false);
-        Thread.sleep(2500);
+        usermainui.click_simulation(2);
+        Thread.sleep(cooldown);
         friendui = new TestFriendUI(users_db, disc_db, u, actions);
         
         System.out.println("Scénario 10 exécuté");
