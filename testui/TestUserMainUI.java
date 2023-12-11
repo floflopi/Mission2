@@ -2,6 +2,8 @@ package testui;
 
 import javax.swing.JButton;
 
+import actions.Actions;
+
 import java.awt.Component;
 import java.awt.Container;
 
@@ -12,8 +14,8 @@ import user.User;
 
 public class TestUserMainUI extends UserMainUI {
     
-    public TestUserMainUI(String frameName, User current_user, DatabaseDiscussion disc_db, DatabaseUsers users_db) {
-        super(frameName, current_user, disc_db, users_db);
+    public TestUserMainUI(String frameName, User current_user, DatabaseDiscussion disc_db, DatabaseUsers users_db, Actions actions) {
+        super(frameName, current_user, disc_db, users_db, actions);
         
     }
 
@@ -53,6 +55,15 @@ public class TestUserMainUI extends UserMainUI {
             features_img[index].setEnabled(true);
         }
     }
+    
+    public void active_imgLabel2() {
+        imgLabel2.setVisible(true);
+    }
+
+    public void desactive_imgLabel2() {
+        imgLabel2.setVisible(false);
+    }
+
 
     public void closeWindow() {
         this.frame = super.getFrame();

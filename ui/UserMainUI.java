@@ -62,6 +62,9 @@ public class UserMainUI extends Window {
     private Boolean safemode = false;
     private Boolean adulte_mode = true;
 
+    protected Image img_deactivated = new ImageIcon(deactivated).getImage().getScaledInstance(42, 42, Image.SCALE_DEFAULT);
+    protected JLabel imgLabel2 = new JLabel(new ImageIcon(img_deactivated));
+
     public UserMainUI(String frameName,User current_user,DatabaseDiscussion disc_db,DatabaseUsers users_db,Actions actions) {
         super(frameName,true);
         this.actions = actions;

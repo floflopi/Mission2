@@ -37,6 +37,12 @@ public class Actions {
     private MediaUI mediaUI;
     private FriendUI friendUI;
 
+    private boolean scenarioMode = false;
+
+    public void setScenarioMode(boolean scenarioMode) {
+        this.scenarioMode = scenarioMode;
+    }
+
     public Actions(DatabaseDiscussion disc_db,DatabaseUsers users_db,Discussion curr_disc,User current_user){
         this.disc_db = disc_db;
         this.users_db = users_db;
@@ -154,6 +160,10 @@ public class Actions {
     }
     // try to execute action 
     public void execute_action(DatabaseUsers users_db,DatabaseDiscussion discussions_db,Discussion current_discussion,User currentuser){
+        if (scenarioMode) {
+            return;
+        }
+
         String input = scanner.nextLine();//reader.getinput().toLowerCase();
 
         if (commandMap.containsKey(input)) {
@@ -194,7 +204,7 @@ public class Actions {
                 break;         
             case "changeuser":
                 //Main.select_user(reader);
-                break;           
+                break;      
             case "quit":
                 break;
             // case deactivate/activate
