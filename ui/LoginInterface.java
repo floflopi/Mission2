@@ -11,6 +11,7 @@ import java.awt.event.KeyAdapter;
 
 import db.DatabaseDiscussion;
 import db.DatabaseUsers;
+import actions.Actions;
 public class LoginInterface extends Window {
 
     protected JFrame frame;
@@ -22,11 +23,13 @@ public class LoginInterface extends Window {
     protected CustomInputField passwordField;
 
     private DatabaseDiscussion disc_db;
+    private Actions actions;
 
-    public LoginInterface(String framename,DatabaseUsers users_db,DatabaseDiscussion disc_db) {
+    public LoginInterface(String framename,DatabaseUsers users_db,DatabaseDiscussion disc_db,Actions actions) {
         super(framename,800,600,false);
         this.frame = super.getFrame();
         this.disc_db = disc_db;
+        this.actions = actions;
         //set background to pink
         panel = new JPanel(new GridBagLayout());
         panel.setBackground(new Color(221,149,221,255));
@@ -39,7 +42,7 @@ public class LoginInterface extends Window {
         // check if we can connect 
         if (users_db.IsUserinDb(username,username + " is not in the UsersDatabase, please register if you don't have an account.") != null
         && users_db.good_password(username, password)){
-            UserMainUI mainui = new UserMainUI("Main UI", users_db.get_user("username", username),disc_db,users_db);
+            UserMainUI mainui = new UserMainUI("Main UI", users_db.get_user("username", username),disc_db,users_db,actions);
             frame.dispose(); // close current frame
         }
     }

@@ -14,20 +14,22 @@ public class Fichier extends Message{
     
     @Override
     public String send(String type_fichier) {
-        System.out.println("type fichier");
         System.out.println(type_fichier);
+        System.out.println("type");
         switch (type_fichier) {
-            case "Image":
+            case "image":
+                System.out.println("image will be send");
                 return "image sent !";
-            case "Video":
+            case "video":
                 return "video sent !";
-            case "Gif":
+            case "gif":
                 return "gif sent !";
-            case "Vocaux":
+            case "vocaux":
                 return "vocal sent !";
-            case "Autres fichiers":
+            case "autresfichiers":
                 return "other files sent !";
             default:
+                
                 return null;
         }
     }

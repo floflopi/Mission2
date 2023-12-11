@@ -15,6 +15,7 @@ import user.User;
 import discussion.*;
 import db.*;
 import message.*;
+import actions.*;
 //right panel of main ui
 public class DiscussionPanel{
     private UserMainUI UserMainUI; // get functions of usermainui
@@ -34,7 +35,9 @@ public class DiscussionPanel{
     private String no_friend_img="images/bocchi_sad.png";
     private String[] members;
     private Discussion current_discussion;
-    public DiscussionPanel(UserMainUI UserMainUI,Discussion current_disc,String[] members){
+    private Actions actions;
+    public DiscussionPanel(UserMainUI UserMainUI,Discussion current_disc,String[] members,Actions actions){
+        this.actions = actions;
         this.UserMainUI = UserMainUI;
         if (current_disc == null){
             initNoFriendPanel();
@@ -51,6 +54,9 @@ public class DiscussionPanel{
             return NoFriendPanel;
         }
         return discussionPanel;
+    }
+    public void updateFeatures(){
+
     }
     public void find_current_discussion(String members_username){
         String[] all_members = (members_username+ "," + UserMainUI.getcurrentUser().get_username()).split(",");
@@ -101,11 +107,11 @@ public class DiscussionPanel{
         }
     }
     public void createActionDiscussionPanel(){
-        actiondiscPanel = new JPanel();
+        FlowLayout actionLayout = new FlowLayout(FlowLayout.CENTER);
+        actionLayout.setHgap(20);
+        actiondiscPanel = new JPanel(actionLayout);
         actiondiscPanel.setBackground(Window.getblackColor());
         actiondiscPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
-        actiondiscPanel.setLayout(new FlowLayout(FlowLayout.CENTER,10,10)); // Alignez les composants à gauche
-
       
         JLabel Membres_txt = new JLabel("Members : "  + String.join(",",members));
         Membres_txt.setFont(new Font("SansSerif", Font.PLAIN,27));
@@ -113,10 +119,17 @@ public class DiscussionPanel{
         actiondiscPanel.add(Membres_txt);
 
         String[] nom_images = new String[]{"images/call_button.png","images/camera_button.png"};
+        //appel micro, appel camera
+        Runnable[] fonction = new Runnable[]{
+            () -> new MediaUI(UserMainUI.getUsersDb(), UserMainUI.getDiscDb(),
+            UserMainUI.getcurrentUser(), current_discussion, DiscussionPanel.this,actions),
+            () -> new MediaUI(UserMainUI.getUsersDb(), UserMainUI.getDiscDb(),
+            UserMainUI.getcurrentUser(), current_discussion, DiscussionPanel.this,actions)
+        };
         for (int i=0;i<2;i++){
-            Image resizedImage = new ImageIcon(nom_images[i]).getImage().getScaledInstance(40,40, Image.SCALE_DEFAULT);
-            JLabel imageLabel = new JLabel(new ImageIcon(resizedImage));
-            actiondiscPanel.add(imageLabel);
+            // remplacer par les actions disponible 
+            ImageButton action_btn = new ImageButton(nom_images[i], 40, 40,fonction[i]);
+            actiondiscPanel.add(action_btn.getButton());
         }
         String[] buttons_name = new String[]{"Add","Exclude","Quit"};
         for (int i=0;i<3;i++){
@@ -124,6 +137,7 @@ public class DiscussionPanel{
             current_button.setPreferredSize(new Dimension(90,40));
             actiondiscPanel.add(current_button);
         }
+        discussionPanel.add(actiondiscPanel);
 
     }
     // affiche les discussions tel que : 
@@ -150,31 +164,20 @@ public class DiscussionPanel{
         sendMessagefield = new CustomInputField("Write the message you want to send ",600,50,30);
 
 
-        Image resizedImage = new ImageIcon(file_img).getImage().getScaledInstance(40,40, Image.SCALE_DEFAULT);
-        JButton file_btn = new JButton();
-        file_btn.setPreferredSize(new Dimension(50,50));
-        file_btn.setIcon(new ImageIcon(resizedImage));
-        file_btn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new MediaUI(UserMainUI.getUsersDb(), UserMainUI.getDiscDb(), UserMainUI.getcurrentUser(), current_discussion,DiscussionPanel.this);
-            }
-        });
-
+        ImageButton file_btn = new ImageButton(file_img, 50, 50,() -> new MediaUI(UserMainUI.getUsersDb(), UserMainUI.getDiscDb(),
+        UserMainUI.getcurrentUser(), current_discussion, DiscussionPanel.this,actions));
         JButton send_btn =  new JButton("Send");
         send_btn.setPreferredSize(new Dimension(100,50));
         send_btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(sendMessagefield.getinput().getText());
-                System.out.println(current_discussion);
                 new SendMessageCommand().execute(sendMessagefield.getinput().getText(),UserMainUI.getUsersDb(),current_discussion,UserMainUI.getDiscDb(),UserMainUI.getcurrentUser());
                 updateMessagesPanel(); // reupload messages
             }
         });
 
         sendMessagePanel.add(sendMessagefield.getinput());
-        sendMessagePanel.add(file_btn);
+        sendMessagePanel.add(file_btn.getButton());
         sendMessagePanel.add(send_btn);
         discussionPanel.add(sendMessagePanel);
     }
@@ -224,6 +227,7 @@ public class DiscussionPanel{
         createsearchPanel();
         addEmptyPanel(10);
         createActionDiscussionPanel();
+        addEmptyPanel(10);
         createMessagesPanel();
         createSendMessagePanel();
 

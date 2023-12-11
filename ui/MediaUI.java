@@ -15,11 +15,13 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.awt.event.KeyAdapter;
 
 import db.*;
 import user.*;
 import commands.*;
+import actions.*;
 public class MediaUI extends Window{
 
     private Discussion current_discussion;
@@ -30,7 +32,9 @@ public class MediaUI extends Window{
     private User current_user;
     private JFrame frame;
     private JPanel MainPanel;
-    private String[] file_btns = new String[]{"Image","Vocaux","Gif","Video","Autres fichiers"};
+    private String[] file_btns_img = new String[]{"image","vocaux","gif","video","autresfichiers"};
+    private JButton[] file_btns = new JButton[file_btns_img.length];
+    private Actions actions;
     Command[] commands = {
         new SendImageCommand(),
         new SendVocauxCommand(),
@@ -39,8 +43,10 @@ public class MediaUI extends Window{
         new SendAutresFichiersCommand()
     };
 
-    public MediaUI(DatabaseUsers users_db,DatabaseDiscussion disc_db,User current_user,Discussion current_disc,DiscussionPanel disc_panel){
+    public MediaUI(DatabaseUsers users_db,DatabaseDiscussion disc_db,User current_user,Discussion current_disc,DiscussionPanel disc_panel,Actions actions){
         super("Media UI",600,600,false); // Vous pouvez ajuster la taille du cadre selon vos besoins
+        this.actions = actions;
+        this.actions.setMediaUi(this);
         this.users_db = users_db;
         this.disc_db = disc_db;
         this.current_user = current_user;
@@ -49,9 +55,14 @@ public class MediaUI extends Window{
         this.frame = super.getFrame();
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         initializeUI();
+        updateFeatures();
         frame.add(MainPanel);
     }
-
+    public void updateFeatures(){
+        for (int i=0;i< file_btns_img.length;i++){
+            file_btns[i].setVisible(actions.get_optional_features().get("send" + file_btns_img[i]));
+        }
+    }
     private void initializeUI() {
         MainPanel = new JPanel();
         MainPanel.setLayout(new BoxLayout(MainPanel, BoxLayout.Y_AXIS));
@@ -62,21 +73,21 @@ public class MediaUI extends Window{
         CustomLabel texte = new CustomLabel("Select the type of file you want to send", 25, Color.white, FlowLayout.CENTER, getblackColor(), 600, 40);
         MainPanel.add(texte.getPanel());
         MainPanel.add(Box.createRigidArea(new Dimension(0, 30)));
-        for (int i = 0; i < file_btns.length; i++) {
+        for (int i = 0; i < file_btns_img.length; i++) {
             int finalI=i;
-            JButton file_btn = new JButton(file_btns[i]);
-            file_btn.setMaximumSize(new Dimension(150, 75));
-            file_btn.setAlignmentX(Component.CENTER_ALIGNMENT);  // Centrer le bouton horizontalement
-            file_btn.addActionListener(new ActionListener() {
+            file_btns[i] = new JButton(file_btns_img[i]);
+            file_btns[i].setMaximumSize(new Dimension(150, 75));
+            file_btns[i].setAlignmentX(Component.CENTER_ALIGNMENT);  // Centrer le bouton horizontalement
+            file_btns[i].addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     // do something
-                    commands[finalI].execute(file_btns[finalI], users_db, current_discussion, disc_db, current_user);
+                    commands[finalI].execute(file_btns_img[finalI], users_db, current_discussion, disc_db, current_user);
                     disc_panel.updateMessagesPanel(); // reupload messages
                     frame.dispose();
                 }
             });
-            MainPanel.add(file_btn);
+            MainPanel.add(file_btns[i]);
             MainPanel.add(Box.createRigidArea(new Dimension(0, 40)));  // Espacement entre les boutons
         }
     

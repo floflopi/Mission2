@@ -16,6 +16,7 @@ public class User {
     private ArrayList<Integer> liste_contact; // contient les user_id des autres
     private ArrayList<Integer> blacklist; // blocked users
     private ArrayList<Integer> friend_request; // request from user waiting to be accepted
+    private String noerror = "images/noerror.png";
     public User(String email,String name,String password,int user_id){
         this.email = email;
         this.name = name;
@@ -103,11 +104,11 @@ public class User {
         }
         friend_user.receive_friend_request(get_userid(),users_db);
         // create window error sauf qu on remplace la croix par un ok ! 
-        new WindowError("Request Succeed","friend request to "+friend_user.get_username() + " sent !" , "images/noerror.png");
+        new WindowError("Request Succeed","friend request to "+friend_user.get_username() + " sent !" , noerror);
         return true;
     }
     public void remove_friend(String user,DatabaseUsers users_db){
-        if (users_db.IsSameuser(user, get_username(),"you can't remove yourself as a friend" )){
+        if (users_db.IsSameuser(user, get_username(),"you can't remove yourself as a friend")){
             return;
         }
         User friend_user = users_db.IsUserinDb(user,null);
@@ -118,10 +119,10 @@ public class User {
         if (liste_contact.contains(friend_id)){
             liste_contact.remove(Integer.valueOf(friend_id));
             friend_user.get_liste_contact().remove(Integer.valueOf(user_id));
-            System.out.println(friend_user.get_username() + " was deleted from your contact list !");
+            new WindowError("Request succeed",friend_user.get_username() + " was deleted from your contact list !", noerror);
         }
         else{
-            System.out.println(friend_user.get_username() + " is not in contact list");
+            new WindowError("Error",friend_user.get_username() + " is not in contact list", null);
         }
         return;
     }

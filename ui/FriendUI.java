@@ -14,7 +14,7 @@ import java.util.List;
 
 import db.*;
 import user.*;
-
+import actions.Actions;
 // en fullscreen ne marche pas !
 public class FriendUI extends Window {
 
@@ -33,19 +33,19 @@ public class FriendUI extends Window {
     private User current_user;
     private DatabaseDiscussion disc_db;
     private DatabaseUsers users_db;
+    private Actions actions;
 
-    //List<Boolean> contexts = new ArrayList<>();
 
-    private String[] images_icon = new String[]{"images/call_button.png","images/camera_button.png","images/block_user.png","images/message_button.png"};
+    private String[] btn_names = new String[]{"Remove","Block","Report"};
     private List<Boolean> contexts;
 
-    public FriendUI(DatabaseUsers users_db,DatabaseDiscussion disc_db,User current_user, List<Boolean> contexts) {
+    public FriendUI(DatabaseUsers users_db,DatabaseDiscussion disc_db,User current_user,Actions actions) {
         super("Friend UI",true); // Vous pouvez ajuster la taille du cadre selon vos besoins
+        this.actions = actions;
         this.users_db = users_db;
         this.disc_db = disc_db;
         this.current_user = current_user;
         this.frame = super.getFrame();
-        this.contexts = contexts;
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         initializeUI();
     }
@@ -64,7 +64,7 @@ public class FriendUI extends Window {
         sendRequestButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new AddFriendCommand().execute(friendNameField.getinput().getText(),users_db,disc_db,current_user);
+                new AddFriendCommand().execute(friendNameField.getinput().getText(),users_db,null,disc_db,current_user);
             }
         });
         topPanel.add(friendNameField.getinput());
@@ -113,7 +113,7 @@ public class FriendUI extends Window {
             acceptButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    current_user.accept_friend_request(friend_user, users_db);
+                    new AcceptFriendCommand().execute(friend_user, users_db, null, disc_db, current_user);
                     //display message
                     new WindowError("Request Succeed",friend_user + " was successfully added to your friends list !","images/noerror.png");
                     friendsrequestContentPanel.remove(demande);
@@ -142,18 +142,33 @@ public class FriendUI extends Window {
     }
     private void show_all_friends(){
         friendsContentPanel.removeAll();
+        friendsContentPanel.add(Window.getEmptyPanel(1000, 10));
         for (int i=0;i < current_user.get_liste_contact().size();i++){
             User friend_user=users_db.get_user("id", String.valueOf(current_user.get_liste_contact().get(i)));
             FlowLayout friendLayout = new FlowLayout(FlowLayout.CENTER);
             friendLayout.setHgap(25);
             JPanel currentfriendPanel = new JPanel(friendLayout); // Utiliser null pour aucun gestionnaire de disposition
             currentfriendPanel.setBackground(getblackColor());
-            currentfriendPanel.setPreferredSize(new Dimension(1000, 80));
+            currentfriendPanel.setPreferredSize(new Dimension(1000, 60));
 
-            CustomLabel userLabel = new CustomLabel(friend_user.get_username(), 24, Color.WHITE, FlowLayout.CENTER, getblackColor(), 100, 75);
+            CustomLabel userLabel = new CustomLabel(friend_user.get_username(), 24, Color.WHITE, FlowLayout.CENTER, getblackColor(), 100, 60);
 
             currentfriendPanel.add(userLabel.getPanel());
             // add images to current friend panel
+            for (int j=0;j < btn_names.length;j++){
+                JButton current_btn = new JButton(btn_names[j]);
+                current_btn.setPreferredSize(new Dimension(100,40));
+                // remove block report
+                current_btn.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                }
+            });
+            currentfriendPanel.add(current_btn);
+            }
+            friendsContentPanel.add(currentfriendPanel);
+            /* 
             for (int j=0;j<images_icon.length;j++){
                 final int index = j; 
                 Image img = new ImageIcon(images_icon[j]).getImage().getScaledInstance(50,50, Image.SCALE_DEFAULT);
@@ -185,7 +200,8 @@ public class FriendUI extends Window {
                 });
                 currentfriendPanel.add(friends_action[j]);
             }
-            friendsContentPanel.add(currentfriendPanel);
+            */
+            //friendsContentPanel.add(currentfriendPanel);
         }
 
             

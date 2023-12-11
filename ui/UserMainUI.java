@@ -1,5 +1,8 @@
 package ui;
 import javax.swing.*;
+
+import actions.Actions;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,6 +42,7 @@ public class UserMainUI extends Window {
     private User current_user;
     private DatabaseDiscussion disc_db;
     private DatabaseUsers users_db;
+    private Actions actions;
     protected int status =0;
 
     public User getcurrentUser(){
@@ -57,8 +61,9 @@ public class UserMainUI extends Window {
     private Boolean camera = true;
     private Boolean safemode = true;
 
-    public UserMainUI(String frameName,User current_user,DatabaseDiscussion disc_db,DatabaseUsers users_db) {
+    public UserMainUI(String frameName,User current_user,DatabaseDiscussion disc_db,DatabaseUsers users_db,Actions actions) {
         super(frameName,true);
+        this.actions = actions;
         this.frame = super.getFrame();
         this.current_user = current_user;
         this.disc_db = disc_db;
@@ -76,7 +81,7 @@ public class UserMainUI extends Window {
             usernames = disc_db.find_all_disc(current_user,users_db).get(0).split(",");
             first_disc = disc_db.get_discussion(users_db,usernames);
         }
-        discussionPanel = new DiscussionPanel(this,first_disc,usernames); // create right panel
+        discussionPanel = new DiscussionPanel(this,first_disc,usernames,actions); // create right panel
         //split right and left part 
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, discussionPanel.getCurrentPanel());
         splitPane.setDividerLocation(350); // Set the initial divider location
@@ -114,15 +119,14 @@ public class UserMainUI extends Window {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
-                new LoginInterface("Login Interface", users_db, disc_db);
+                new LoginInterface("Login Interface", users_db, disc_db,actions);
             }
         });       
         friends_btn = new JButton("Friends");
         friends_btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                List<Boolean> contexts = List.of(micro, camera, safemode);
-                friendui = new FriendUI(users_db,disc_db,current_user, contexts);
+                friendui = new FriendUI(users_db,disc_db,current_user, actions);
             }
         });
         newdiscussion_btn = new JButton("New Discussion");

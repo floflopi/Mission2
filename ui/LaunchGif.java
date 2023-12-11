@@ -9,14 +9,17 @@ import java.awt.event.ActionListener;
 import db.DatabaseDiscussion;
 import db.DatabaseUsers;
 import ui.LoginInterface;
+import actions.Actions;
 public class LaunchGif extends Window{
 
     private JFrame frame;
     private String gif_name="images/login.gif";
+    private Actions actions;
     
-    public LaunchGif(String framename,DatabaseUsers users_db,DatabaseDiscussion disc_db) {
+    public LaunchGif(String framename,DatabaseUsers users_db,DatabaseDiscussion disc_db,Actions actions) {
         super(framename,800,600,false);
         this.frame = super.getFrame();
+        this.actions = actions;
         launch_gif(users_db,disc_db);
     }
     private void launch_gif(DatabaseUsers users_db,DatabaseDiscussion disc_db) {
@@ -34,7 +37,7 @@ public class LaunchGif extends Window{
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
                 // affiche login interface 
-                LoginInterface loginInterface = new LoginInterface("Login Interface",users_db,disc_db);
+                LoginInterface loginInterface = new LoginInterface("Login Interface",users_db,disc_db,actions);
             }
         });
         timer.setRepeats(false); // lance le timer une seule fois
