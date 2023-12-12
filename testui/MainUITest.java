@@ -35,7 +35,7 @@ public class MainUITest {
     static Boolean camera = true;
     static Boolean safemode = true;
 
-    static Integer cooldown = 300;
+    static Integer cooldown = 1;
 
     // Ouverture de l'app + login
     public static void scenario0() throws InterruptedException {
@@ -102,23 +102,21 @@ public class MainUITest {
 
     public static void scenario3() throws InterruptedException {
         Thread.sleep(cooldown);
+        // Active le safemode
         usermainui.click_img("safe");
         Thread.sleep(cooldown);
-        // Active le safemode
         // Désactive le mode adulte
         usermainui.click_img("adulte");
         Thread.sleep(cooldown);
         friendui = new FriendUI(users_db, disc_db, u, actions);
         Thread.sleep(cooldown);
         friendui.closeWindow();
-        /*
+
+        
         Thread.sleep(cooldown);
-        String[] membersList = {"Louis,Sarah"};
-        ArrayList<Integer> members_id = new ArrayList<Integer>(Arrays.asList(users_db.get_user("username", "Louis").get_userid(), users_db.get_user("username", "Sarah").get_userid()));
-        Discussion current_discussion = new Discussion(members_id, false);
-        DiscussionPanel testdiscussionpanel =  new DiscussionPanel(usermainui, current_discussion, membersList, actions);
-        mediaui =  new TestMediaUI(users_db, disc_db, u, current_discussion, testdiscussionpanel, actions);
-        */
+        DiscussionPanel discussionPanel = usermainui.getDiscussionPanel();
+        discussionPanel.getFileButton().getButton().doClick();
+        mediaui = discussionPanel.getMediaUI();
         
         System.out.println("Scénario 3 exécuté");
     }
@@ -131,7 +129,7 @@ public class MainUITest {
         Thread.sleep(cooldown);
 
         // Désactive le safemode
-        //usermainui.click_simulation(2);
+        usermainui.click_img("safe");
         Thread.sleep(cooldown);
         friendui = new FriendUI(users_db, disc_db, u, actions);
 
@@ -141,8 +139,8 @@ public class MainUITest {
     public static void scenario5() throws InterruptedException {
         friendui.closeWindow();
         // Active le safemode
+        usermainui.click_img("safe");
         Thread.sleep(cooldown);
-        //usermainui.click_simulation(2);
         Thread.sleep(cooldown);
 
         friendui = new FriendUI(users_db, disc_db, u, actions);
@@ -158,7 +156,7 @@ public class MainUITest {
 
         Thread.sleep(cooldown);
         // Active le mode adulte
-        //usermainui.click_simulation(3);
+        usermainui.click_img("adulte");
 
         Integer sarah = users_db.get_user("username", "Sarah").get_userid();
         u.get_liste_contact().remove(sarah);
@@ -167,14 +165,12 @@ public class MainUITest {
         Thread.sleep(cooldown);
         friendui.closeWindow();
         
-        /*
         Thread.sleep(cooldown);
-        String[] membersList = {"Louis,Sarah"};
-        ArrayList<Integer> members_id = new ArrayList<Integer>(Arrays.asList(users_db.get_user("username", "Louis").get_userid(), users_db.get_user("username", "Sarah").get_userid()));
-        Discussion current_discussion = new Discussion(members_id, false);
-        DiscussionPanel testdiscussionpanel =  new DiscussionPanel(usermainui, current_discussion, membersList, actions);
-        mediaui =  new TestMediaUI(users_db, disc_db, u, current_discussion, testdiscussionpanel, actions);
-        */
+        DiscussionPanel discussionPanel = usermainui.getDiscussionPanel();
+        discussionPanel.getFileButton().getButton().doClick();
+        mediaui = discussionPanel.getMediaUI();
+        Thread.sleep(cooldown);      
+        mediaui.getButtons()[0].doClick(); 
 
         System.out.println("Scénario 6 exécuté");
     }
@@ -187,21 +183,18 @@ public class MainUITest {
         Thread.sleep(cooldown);
 
         // Désactive le mode adulte
-        //usermainui.click_simulation(3);
+        usermainui.click_img("adulte");
         Thread.sleep(cooldown);
 
         friendui = new FriendUI(users_db, disc_db, u, actions);
         Thread.sleep(cooldown);
         friendui.closeWindow();
         
-        /*
         Thread.sleep(cooldown);
-        String[] membersList = {"Louis,Sarah"};
-        ArrayList<Integer> members_id = new ArrayList<Integer>(Arrays.asList(users_db.get_user("username", "Louis").get_userid(), users_db.get_user("username", "Sarah").get_userid()));
-        Discussion current_discussion = new Discussion(members_id, false);
-        DiscussionPanel testdiscussionpanel =  new DiscussionPanel(usermainui, current_discussion, membersList, actions);
-        mediaui =  new TestMediaUI(users_db, disc_db, u, current_discussion, testdiscussionpanel, actions);
-        */
+        DiscussionPanel discussionPanel = usermainui.getDiscussionPanel();
+        discussionPanel.getFileButton().getButton().doClick();
+        mediaui = discussionPanel.getMediaUI();
+        Thread.sleep(cooldown);      
 
         System.out.println("Scénario 7 exécuté");
     }
@@ -210,7 +203,7 @@ public class MainUITest {
         if (mediaui != null) mediaui.closeWindow();
         Thread.sleep(cooldown);
         // Désactive le micro
-        //usermainui.click_simulation(0);
+        usermainui.click_img("micro");
         Thread.sleep(cooldown);
 
         System.out.println("Scénario 8 exécuté");
@@ -220,11 +213,11 @@ public class MainUITest {
         friendui.closeWindow();
         Thread.sleep(cooldown);
         // Active le micro
-        //usermainui.click_simulation(0);
+        usermainui.click_img("micro");
         Thread.sleep(cooldown);
 
         // Active le mode adulte
-        //usermainui.click_simulation(3);
+        usermainui.click_img("adulte");
         Thread.sleep(cooldown);
         friendui = new FriendUI(users_db, disc_db, u, actions);
 
@@ -236,11 +229,19 @@ public class MainUITest {
         Thread.sleep(cooldown);
 
         // Désactive le mode adulte
-        //usermainui.click_simulation(3);
+        usermainui.click_img("adulte");
         Thread.sleep(cooldown);
 
+        Thread.sleep(cooldown);
+        DiscussionPanel discussionPanel = usermainui.getDiscussionPanel();
+        discussionPanel.getFileButton().getButton().doClick();
+        mediaui = discussionPanel.getMediaUI();
+        Thread.sleep(cooldown);      
+        if (mediaui != null) mediaui.closeWindow();
+        Thread.sleep(cooldown);      
+
         // Désactive le safemode
-        //usermainui.click_simulation(2);
+        usermainui.click_img("safe");
         Thread.sleep(cooldown);
         friendui = new FriendUI(users_db, disc_db, u, actions);
         
