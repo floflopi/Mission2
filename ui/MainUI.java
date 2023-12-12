@@ -17,9 +17,6 @@ public class MainUI{
         init_database();
         //LaunchGif app = new LaunchGif("Application",users_db,disc_db);
         User a =  users_db.get_user("username", "a");
-        User b =  users_db.get_user("username", "b");
-        a.get_liste_contact().add(b.get_userid());
-        b.get_liste_contact().add(a.get_userid());
         Actions actions = new Actions(disc_db,users_db,null,a);
         UserMainUI mainui = new UserMainUI("Main UI",a,disc_db,users_db,actions);
         //User u = new User("a@gmail.com","a","a",1);

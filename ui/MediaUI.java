@@ -42,7 +42,9 @@ public class MediaUI extends Window{
         new SendVideoCommand(),
         new SendAutresFichiersCommand()
     };
-
+    public JButton[] getButtons(){
+        return file_btns;
+    }
     public MediaUI(DatabaseUsers users_db,DatabaseDiscussion disc_db,User current_user,Discussion current_disc,DiscussionPanel disc_panel,Actions actions){
         super("Media UI",600,600,false); // Vous pouvez ajuster la taille du cadre selon vos besoins
         this.actions = actions;

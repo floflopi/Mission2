@@ -7,7 +7,6 @@ import db.DatabaseUsers;
 import discussion.Discussion;
 import message.Fichier;
 import message.Message;
-import reader.Reader;
 import user.User;
 
 @CommandInfo(name = "sendgif", optionnal = true)

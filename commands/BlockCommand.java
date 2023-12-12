@@ -3,7 +3,6 @@ package commands;
 import db.DatabaseDiscussion;
 import db.DatabaseUsers;
 import discussion.Discussion;
-import reader.Reader;
 import user.User;
 
 @CommandInfo(name = "block", optionnal = true)

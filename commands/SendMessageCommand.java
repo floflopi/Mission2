@@ -6,7 +6,6 @@ import db.DatabaseDiscussion;
 import db.DatabaseUsers;
 import message.Fichier;
 import message.Message;
-import reader.Reader;
 import user.User;
 import discussion.*;
 @CommandInfo(name = "sendmessage", optionnal = false)

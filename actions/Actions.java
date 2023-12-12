@@ -17,7 +17,6 @@ import commands.*;
 import db.DatabaseDiscussion;
 import db.DatabaseUsers;
 import discussion.*;
-import reader.Reader;
 import ui.DiscussionPanel;
 import user.User;
 import ui.*;

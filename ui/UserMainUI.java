@@ -73,6 +73,11 @@ public class UserMainUI extends Window {
         initializeUI();
         
     }
+
+    public DiscussionPanel getDiscussionPanel(){
+        return discussionPanel;
+    }
+
     private void initializeUI() {
         createLeftPanel();
         update_discussions();
@@ -254,7 +259,6 @@ public class UserMainUI extends Window {
     //seek all discussions available
     public void update_discussions(){
         ArrayList<String> discs = disc_db.find_all_disc(current_user,users_db);
-        System.out.println(discs);
         if (!discs.isEmpty()){
             for (String discussion:discs){
                 JButton currentdisc_btn= new JButton(discussion);

@@ -14,11 +14,8 @@ public class Fichier extends Message{
     
     @Override
     public String send(String type_fichier) {
-        System.out.println(type_fichier);
-        System.out.println("type");
         switch (type_fichier) {
             case "image":
-                System.out.println("image will be send");
                 return "image sent !";
             case "video":
                 return "video sent !";

@@ -25,6 +25,9 @@ public class Window{
         frame.setVisible(true);
         frame.setLocationRelativeTo(null);
     }
+    public void closeWindow(){
+        frame.dispose();
+    }
     public JFrame getFrame(){
         return frame;
     }

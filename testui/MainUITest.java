@@ -11,9 +11,7 @@ import java.util.List;
 
 import db.*;
 import discussion.Discussion;
-import ui.DiscussionPanel;
-import ui.MediaUI;
-import ui.NewDiscussionUI;
+import ui.*;
 import user.User;
 
 public class MainUITest {
@@ -27,11 +25,11 @@ public class MainUITest {
     static String defaultUsername = "Flopi_Flo";
     static String defaultPassword = "Flopi_Flo";
     static User u = new User(defaultEmail,defaultUsername,defaultPassword,1);
-    static TestLoginInterface login;
+    static LoginInterface login;
     static TestUserMainUI usermainui;
-    static TestFriendUI friendui;
+    static FriendUI friendui;
     private static Actions actions;
-    private static TestMediaUI mediaui;
+    private static MediaUI mediaui;
 
     static Boolean micro = true;
     static Boolean camera = true;
@@ -43,7 +41,7 @@ public class MainUITest {
     public static void scenario0() throws InterruptedException {
         init_database();
         // Open th login window
-        login = new TestLoginInterface("Application",users_db,disc_db, actions);
+        login = new LoginInterface("Application",users_db,disc_db, actions);
         // Connect the default usze (Flopi_Flo)
         login.setDefaultValues(defaultUsername, defaultPassword);
         Thread.sleep(cooldown);
@@ -64,7 +62,7 @@ public class MainUITest {
         // Add Louis as a new friend
         u.get_liste_contact().add(users_db.get_user("username", "Louis").get_userid());
         // Open the friends window
-        friendui = new TestFriendUI(users_db, disc_db, u, actions);
+        friendui = new FriendUI(users_db, disc_db, u, actions);
         Thread.sleep(cooldown);
         // Close the friend window
         friendui.closeWindow();
@@ -80,17 +78,12 @@ public class MainUITest {
                 currentdisc_btn.doClick();
             }
         }
-        
-        /*
         Thread.sleep(cooldown);
-        // Open the media 
-        String[] membersList = {"Louis,Sarah"};
-        ArrayList<Integer> members_id = new ArrayList<Integer>(Arrays.asList(users_db.get_user("username", "Louis").get_userid(), users_db.get_user("username", "Sarah").get_userid()));
-        Discussion current_discussion = new Discussion(members_id, false);
-        DiscussionPanel testdiscussionpanel =  new DiscussionPanel(usermainui, current_discussion, membersList, actions);
-        mediaui =  new TestMediaUI(users_db, disc_db, u, current_discussion, testdiscussionpanel, actions);
-        */
-
+        DiscussionPanel discussionPanel = usermainui.getDiscussionPanel();
+        discussionPanel.getFileButton().getButton().doClick();
+        mediaui = discussionPanel.getMediaUI();
+        Thread.sleep(cooldown);      
+        mediaui.getButtons()[0].doClick(); // random button 
         System.out.println("Scénario 1 exécuté");
     }
 
@@ -99,7 +92,7 @@ public class MainUITest {
         Thread.sleep(cooldown);
 
         // Open the friends window
-        friendui = new TestFriendUI(users_db, disc_db, u, actions);
+        friendui = new FriendUI(users_db, disc_db, u, actions);
         Thread.sleep(cooldown);
         // Close the friend window
         friendui.closeWindow();
@@ -115,7 +108,7 @@ public class MainUITest {
         // Désactive le mode adulte
         usermainui.click_simulation(3);
         Thread.sleep(cooldown);
-        friendui = new TestFriendUI(users_db, disc_db, u, actions);
+        friendui = new FriendUI(users_db, disc_db, u, actions);
         Thread.sleep(cooldown);
         friendui.closeWindow();
 
@@ -141,7 +134,7 @@ public class MainUITest {
         // Désactive le safemode
         usermainui.click_simulation(2);
         Thread.sleep(cooldown);
-        friendui = new TestFriendUI(users_db, disc_db, u, actions);
+        friendui = new FriendUI(users_db, disc_db, u, actions);
 
         System.out.println("Scénario 4 exécuté");
     }
@@ -153,7 +146,7 @@ public class MainUITest {
         usermainui.click_simulation(2);
         Thread.sleep(cooldown);
 
-        friendui = new TestFriendUI(users_db, disc_db, u, actions);
+        friendui = new FriendUI(users_db, disc_db, u, actions);
 
 
         System.out.println("Scénario 5 exécuté");
@@ -171,7 +164,7 @@ public class MainUITest {
         Integer sarah = users_db.get_user("username", "Sarah").get_userid();
         u.get_liste_contact().remove(sarah);
 
-        friendui = new TestFriendUI(users_db, disc_db, u, actions);
+        friendui = new FriendUI(users_db, disc_db, u, actions);
         Thread.sleep(cooldown);
         friendui.closeWindow();
         
@@ -198,7 +191,7 @@ public class MainUITest {
         usermainui.click_simulation(3);
         Thread.sleep(cooldown);
 
-        friendui = new TestFriendUI(users_db, disc_db, u, actions);
+        friendui = new FriendUI(users_db, disc_db, u, actions);
         Thread.sleep(cooldown);
         friendui.closeWindow();
         
@@ -234,7 +227,7 @@ public class MainUITest {
         // Active le mode adulte
         usermainui.click_simulation(3);
         Thread.sleep(cooldown);
-        friendui = new TestFriendUI(users_db, disc_db, u, actions);
+        friendui = new FriendUI(users_db, disc_db, u, actions);
 
         System.out.println("Scénario 9 exécuté");
     }
@@ -250,7 +243,7 @@ public class MainUITest {
         // Désactive le safemode
         usermainui.click_simulation(2);
         Thread.sleep(cooldown);
-        friendui = new TestFriendUI(users_db, disc_db, u, actions);
+        friendui = new FriendUI(users_db, disc_db, u, actions);
         
         System.out.println("Scénario 10 exécuté");
     }

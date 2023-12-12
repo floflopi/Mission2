@@ -27,7 +27,7 @@ public class DiscussionPanel{
     private JPanel[] searchPanels;
     private JPanel actiondiscPanel;
     private JPanel messagesPanel;
-
+    private MediaUI mediaUI;
     private CustomInputField sendMessagefield;
 
     private int current_panel = 0;
@@ -51,6 +51,12 @@ public class DiscussionPanel{
         else{
             initDiscussionPanel(current_disc,members);
         }
+    }
+    public MediaUI getMediaUI(){
+        return mediaUI;
+    }
+    public ImageButton getFileButton(){
+        return file_btn;
     }
     public int getCurrentIntPanel(){
         return current_panel;
@@ -120,6 +126,7 @@ public class DiscussionPanel{
             discussionPanel.add(searchPanels[i]);
         }
     }
+
     public void createActionDiscussionPanel(){
         FlowLayout actionLayout = new FlowLayout(FlowLayout.CENTER);
         actionLayout.setHgap(20);
@@ -186,7 +193,7 @@ public class DiscussionPanel{
         sendMessagefield = new CustomInputField("Write the message you want to send ",600,50,30);
 
 
-        file_btn = new ImageButton(file_img, 50, 50,() -> new MediaUI(UserMainUI.getUsersDb(), UserMainUI.getDiscDb(),
+        file_btn = new ImageButton(file_img, 50, 50,() -> mediaUI = new MediaUI(UserMainUI.getUsersDb(), UserMainUI.getDiscDb(),
         UserMainUI.getcurrentUser(), current_discussion, DiscussionPanel.this,actions));
         JButton send_btn =  new JButton("Send");
         send_btn.setPreferredSize(new Dimension(100,50));
@@ -203,6 +210,7 @@ public class DiscussionPanel{
         sendMessagePanel.add(send_btn);
         discussionPanel.add(sendMessagePanel);
     }
+
     public void updateMessagesPanel(){
         messagesPanel.removeAll(); // reupload messages
         ArrayList<Message> messages = current_discussion.getmessages();
@@ -222,7 +230,7 @@ public class DiscussionPanel{
             JLabel message_txt = new JLabel(current_message.get_contenu());
             message_txt.setFont(new Font("SansSerif", Font.PLAIN,28));
             message_txt.setForeground(Color.WHITE);
-            System.out.println(current_message.get_contenu());
+
             currentPanel.add(username);
             currentPanel.add(message_txt);
             messagesPanel.add(currentPanel);

@@ -6,7 +6,6 @@ import java.util.Arrays;
 import db.DatabaseDiscussion;
 import db.DatabaseUsers;
 import discussion.Discussion;
-import reader.Reader;
 import user.User;
 
 @CommandInfo(name = "exclude", optionnal = true)

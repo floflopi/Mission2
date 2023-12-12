@@ -36,6 +36,11 @@ public class LoginInterface extends Window {
         frame.getContentPane().add(panel, BorderLayout.CENTER);
         createAndShowGUI(users_db);
     }
+    public void setDefaultValues(String defaultUsername, String defaultPassword) {
+        usernameField.getinput().setText(defaultUsername);
+        passwordField.getpassword().setText(defaultPassword);
+    }
+    
     public void try_connect(DatabaseUsers users_db){
         String username = usernameField.getinput().getText();
         String password = new String(passwordField.getpassword().getPassword());

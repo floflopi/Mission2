@@ -3,7 +3,6 @@ package commands;
 import db.DatabaseDiscussion;
 import db.DatabaseUsers;
 import discussion.Discussion;
-import reader.Reader;
 import user.User;
 
 @CommandInfo(name = "addfriend", optionnal = true)
@@ -11,7 +10,6 @@ public class AddFriendCommand implements Command{
     @Override
     public void execute(String message, DatabaseUsers users_db, Discussion current_discussion,
             DatabaseDiscussion discussions_db, User currentuser) {
-        // TODO Auto-generated method stub
-        
+        currentuser.send_friendrequest(message, users_db);
     }
 }
