@@ -35,7 +35,7 @@ public class MainUITest {
     static Boolean camera = true;
     static Boolean safemode = true;
 
-    static Integer cooldown = 1;
+    static Integer cooldown = 20;
 
     // Ouverture de l'app + login
     public static void scenario0() throws InterruptedException {
@@ -114,10 +114,6 @@ public class MainUITest {
 
         
         Thread.sleep(cooldown);
-        DiscussionPanel discussionPanel = usermainui.getDiscussionPanel();
-        discussionPanel.getFileButton().getButton().doClick();
-        mediaui = discussionPanel.getMediaUI();
-        
         System.out.println("Scénario 3 exécuté");
     }
 
@@ -189,13 +185,7 @@ public class MainUITest {
         friendui = new FriendUI(users_db, disc_db, u, actions);
         Thread.sleep(cooldown);
         friendui.closeWindow();
-        
-        Thread.sleep(cooldown);
-        DiscussionPanel discussionPanel = usermainui.getDiscussionPanel();
-        discussionPanel.getFileButton().getButton().doClick();
-        mediaui = discussionPanel.getMediaUI();
-        Thread.sleep(cooldown);      
-
+           
         System.out.println("Scénario 7 exécuté");
     }
 
@@ -230,14 +220,6 @@ public class MainUITest {
 
         // Désactive le mode adulte
         usermainui.click_img("adulte");
-        Thread.sleep(cooldown);
-
-        Thread.sleep(cooldown);
-        DiscussionPanel discussionPanel = usermainui.getDiscussionPanel();
-        discussionPanel.getFileButton().getButton().doClick();
-        mediaui = discussionPanel.getMediaUI();
-        Thread.sleep(cooldown);      
-        if (mediaui != null) mediaui.closeWindow();
         Thread.sleep(cooldown);      
 
         // Désactive le safemode

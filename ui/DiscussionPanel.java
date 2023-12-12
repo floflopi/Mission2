@@ -15,7 +15,7 @@ import user.User;
 import discussion.*;
 import db.*;
 import message.*;
-import actions.*;
+import actions.Actions;
 import commands.*;
 //right panel of main ui
 public class DiscussionPanel{
@@ -77,6 +77,7 @@ public class DiscussionPanel{
             ExcludeButton.setVisible(actions.get_optional_features().get("exclude"));
 
         }
+        file_btn.getButton().setVisible(!actions.mediaoff());
     }
     public void find_current_discussion(String members_username){
         String[] all_members = (members_username+ "," + UserMainUI.getcurrentUser().get_username()).split(",");
@@ -107,16 +108,20 @@ public class DiscussionPanel{
         searchPanels = new JPanel[2];
         JButton[] search_btn = new JButton[2];
         CustomInputField[] searchfields = new CustomInputField[2];
-        String[] search_txt = new String[]{"Write a valid date (JJ/MM/YYYY)","Write the username you want to find messages"};
+        ArrayList<String> search_txt = new ArrayList<>();
+        search_txt.add("Write a valid date (JJ/MM/YYYY)");
+        if (current_discussion instanceof DiscussionGroupe){
+            search_txt.add("Write the username you want to find messages");
+        }
         Dimension dim_btn = new Dimension(100,40);
-        for (int i=0;i<2;i++){
+        for (int i=0;i<search_txt.size();i++){
             FlowLayout searchLayout = new FlowLayout(FlowLayout.CENTER);
             searchPanels[i] = new JPanel(searchLayout);
             searchPanels[i].setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
             searchPanels[i].setBackground(Window.getblackColor());
             searchLayout.setHgap(20);
 
-            searchfields[i] = new CustomInputField(search_txt[i], 550, 40,20);
+            searchfields[i] = new CustomInputField(search_txt.get(i), 550, 40,20);
             search_btn[i] = new JButton("Search");
             search_btn[i].setPreferredSize(dim_btn);
 
@@ -150,23 +155,30 @@ public class DiscussionPanel{
             actiondiscPanel.add(call_buttons[i].getButton());
         }
         String[] buttons_name = new String[]{"Add","Exclude","Quit"};
-        
-        for (int i=0;i<3;i++){
-            JButton current_button = new JButton(buttons_name[i]);
+        if (!(current_discussion instanceof DiscussionGroupe)){
+            JButton current_button = new JButton(buttons_name[0]);
             current_button.setPreferredSize(new Dimension(90,40));
-            if (i == 1){
-                Runnable exclude_fctn = () -> new ExcludeCommand().execute(null,UserMainUI.getUsersDb(),current_discussion,UserMainUI.getDiscDb(),UserMainUI.getcurrentUser());
-                ExcludeButton = current_button;
-                ExcludeButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        exclude_fctn.run();
-                    }
-                });
-            }   
             actiondiscPanel.add(current_button);
+            discussionPanel.add(actiondiscPanel);
         }
-        discussionPanel.add(actiondiscPanel);
+        else{
+            for (int i=0;i<buttons_name.length;i++){
+                JButton current_button = new JButton(buttons_name[i]);
+                current_button.setPreferredSize(new Dimension(90,40));
+                if (i == 1){
+                    Runnable exclude_fctn = () -> new ExcludeCommand().execute(null,UserMainUI.getUsersDb(),current_discussion,UserMainUI.getDiscDb(),UserMainUI.getcurrentUser());
+                    ExcludeButton = current_button;
+                    ExcludeButton.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            exclude_fctn.run();
+                        }
+                    });
+                }   
+                actiondiscPanel.add(current_button);
+            }
+            discussionPanel.add(actiondiscPanel);
+        }
 
     }
     // affiche les discussions tel que : 
@@ -239,13 +251,6 @@ public class DiscussionPanel{
 
     }
 
-    public void addEmptyPanel(int sizey){
-        JPanel emptyPanel = new JPanel();
-        emptyPanel.setBackground(Window.getblackColor());
-        emptyPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE,sizey));
-        discussionPanel.add(emptyPanel);
-    }
-
     public void initDiscussionPanel(Discussion current_disc,String[] members_username) {
         this.current_discussion = current_disc;
         this.members = members_username;
@@ -253,11 +258,11 @@ public class DiscussionPanel{
         discussionPanel = new JPanel(new BorderLayout());
         discussionPanel.setLayout(new BoxLayout(discussionPanel, BoxLayout.Y_AXIS));
 
-        addEmptyPanel(10);
+        Window.getEmptyPanel(Integer.MAX_VALUE,10);
         createsearchPanel();
-        addEmptyPanel(10);
+        Window.getEmptyPanel(Integer.MAX_VALUE,10);
         createActionDiscussionPanel();
-        addEmptyPanel(10);
+        Window.getEmptyPanel(Integer.MAX_VALUE,10);
         createMessagesPanel();
         createSendMessagePanel();
         updateFeatures();

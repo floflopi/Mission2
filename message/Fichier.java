@@ -26,7 +26,6 @@ public class Fichier extends Message{
             case "autresfichiers":
                 return "other files sent !";
             default:
-                
                 return null;
         }
     }

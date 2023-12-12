@@ -57,6 +57,10 @@ public class Actions {
         }
         startListening();
     }
+    // if user can t send file
+    public boolean mediaoff(){
+        return !optional_features.get("sendvideo") && !optional_features.get("sendimage") && !optional_features.get("sendautresfichiers") && !optional_features.get("sendgif") && !optional_features.get("sendvocaux");
+    }
     public void setDiscussionPanel(DiscussionPanel disc_panel){
         this.disc_panel = disc_panel;
     }
