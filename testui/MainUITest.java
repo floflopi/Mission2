@@ -148,11 +148,31 @@ public class MainUITest {
 
     public static void scenario6() throws InterruptedException {
         friendui.closeWindow();
-        //usermainui.closeWindow();
+       
+        ///////////// Reset à l'état du 5 mais avec une discussion privée
+        usermainui.closeWindow();
+        disc_db.resetDatabase();
+        init_database();
+        usermainui = new TestUserMainUI("Application",u,disc_db,users_db, actions);
+        // Create and open a new discussion
+        String members = "Louis";
+        if (disc_db.verify_disc_creation("test",members, u, users_db)){
+            usermainui.update_discussions(); 
+            // Simulation of clicking on the button to open the discussion 
+            JButton currentdisc_btn = usermainui.get_currentdisc_btn(members);
+            if (currentdisc_btn != null) {
+                currentdisc_btn.doClick();
+            }
+        }
+        usermainui.setUserStatus(2);
+        usermainui.click_img("safe");
+        usermainui.click_img("adulte");
+        /////////////
 
         Thread.sleep(cooldown);
         // Active le mode adulte
         usermainui.click_img("adulte");
+        Thread.sleep(cooldown);
 
         Integer sarah = users_db.get_user("username", "Sarah").get_userid();
         u.get_liste_contact().remove(sarah);
@@ -216,8 +236,27 @@ public class MainUITest {
 
     public static void scenario10() throws InterruptedException {
         friendui.closeWindow();
-        Thread.sleep(cooldown);
+        
+        ///////////// Reset à l'état du 9 mais avec une discussion de groupe
+        usermainui.closeWindow();
+        disc_db.resetDatabase();
+        init_database();
+        usermainui = new TestUserMainUI("Application",u,disc_db,users_db, actions);
+        u.get_liste_contact().add(users_db.get_user("username", "Sarah").get_userid());
+        // Create and open a new discussion
+        String members = "Louis,Sarah";
+        if (disc_db.verify_disc_creation("test",members, u, users_db)){
+            usermainui.update_discussions(); 
+            // Simulation of clicking on the button to open the discussion 
+            JButton currentdisc_btn = usermainui.get_currentdisc_btn(members);
+            if (currentdisc_btn != null) {
+                currentdisc_btn.doClick();
+            }
+        }
+        usermainui.click_img("safe");
+        /////////////
 
+        Thread.sleep(cooldown);    
         // Désactive le mode adulte
         usermainui.click_img("adulte");
         Thread.sleep(cooldown);      

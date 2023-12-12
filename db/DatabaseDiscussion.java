@@ -215,4 +215,8 @@ public class DatabaseDiscussion {
         return null;
     }
 
+    public void resetDatabase() {
+        users_discussions.clear();
+    }
+
 }
