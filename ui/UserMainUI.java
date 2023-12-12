@@ -31,6 +31,7 @@ public class UserMainUI extends Window {
     protected JFrame frame;
     protected String deactivated = "images/deactivated.png";
     private String[] features_img_name = new String[]{"images/micro_logo.png","images/camera_logo.png","images/safe_logo.png","images/adulte_logo.png"};
+
     protected JLabel[] features_img = new JLabel[4];
 
     private JButton friends_btn;
@@ -73,7 +74,21 @@ public class UserMainUI extends Window {
         initializeUI();
         
     }
-
+    // for testing
+    public void click_img(String img){
+        if (img.equals("micro")){
+            features_img[0].dispatchEvent(new MouseEvent(features_img[0], MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(),0, 5, 5, 1, false));
+        }
+        if (img.equals("camera")){
+            features_img[1].dispatchEvent(new MouseEvent(features_img[1], MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(),0, 5, 5, 1, false));
+        }
+        if (img.equals("safe")){
+            features_img[2].dispatchEvent(new MouseEvent(features_img[2], MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(),0, 5, 5, 1, false));
+        }
+        if (img.equals("adulte")){
+            features_img[3].dispatchEvent(new MouseEvent(features_img[3], MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(),0, 5, 5, 1, false));
+        }
+    }
     public DiscussionPanel getDiscussionPanel(){
         return discussionPanel;
     }

@@ -57,32 +57,6 @@ public class TestUserMainUI extends UserMainUI {
             features_img[index].setEnabled(true);
         }
     }
-    
-    public void click_simulation(Integer index) {
-        if (index == 0) {
-            micro = !micro;
-            //imgLabel2.setVisible(!micro);
-            actions.activate_features(micro, "micro");
-        } else if (index == 1) {
-            camera = !camera;
-            //imgLabel2.setVisible(!camera);
-            actions.activate_features(camera, "camera");
-        } else if (index == 2) {
-            safemode = !safemode;
-            //imgLabel2.setVisible(!safemode);
-            for (String feature : new String[]{"block", "exclude", "report"}) {
-                actions.activate_features(!safemode, feature);
-            }
-        } else {
-            adulte_mode = !adulte_mode;
-            //imgLabel2.setVisible(!adulte_mode);
-            for (String feature : new String[]{"sendimage", "sendvocaux", "sendgif", "sendautresfichiers", "addfriend", "acceptfriend", "sendvideo"}) {
-                actions.activate_features(adulte_mode, feature);
-            }
-        }
-    }
-
-
     public void closeWindow() {
         this.frame = super.getFrame();
         frame.dispose();

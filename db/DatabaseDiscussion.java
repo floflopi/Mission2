@@ -42,7 +42,6 @@ public class DatabaseDiscussion {
         ArrayList<String> discs= new ArrayList<>();
         for (Discussion discussion:users_discussions){
             if (discussion.getmembers_id().contains(current_user.get_userid())){
-                System.out.println("discussion contains the id of user");
                 String members="";
                 for (Integer id: discussion.getmembers_id()){
                     if (id != current_user.get_userid()){

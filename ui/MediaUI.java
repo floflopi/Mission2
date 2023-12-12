@@ -46,7 +46,7 @@ public class MediaUI extends Window{
         return file_btns;
     }
     public MediaUI(DatabaseUsers users_db,DatabaseDiscussion disc_db,User current_user,Discussion current_disc,DiscussionPanel disc_panel,Actions actions){
-        super("Media UI",600,600,false); // Vous pouvez ajuster la taille du cadre selon vos besoins
+        super("Media UI",1000,800,false); // Vous pouvez ajuster la taille du cadre selon vos besoins
         this.actions = actions;
         this.actions.setMediaUi(this);
         this.users_db = users_db;
@@ -72,9 +72,9 @@ public class MediaUI extends Window{
         
         MainPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         //txt 
-        CustomLabel texte = new CustomLabel("Select the type of file you want to send", 25, Color.white, FlowLayout.CENTER, getblackColor(), 600, 40);
+        CustomLabel texte = new CustomLabel("Select the type of file you want to send", 25, Color.white, FlowLayout.CENTER, getblackColor(), 1000, 40);
         MainPanel.add(texte.getPanel());
-        MainPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+        MainPanel.add(Box.createRigidArea(new Dimension(0, 50)));
         for (int i = 0; i < file_btns_img.length; i++) {
             int finalI=i;
             file_btns[i] = new JButton(file_btns_img[i]);

@@ -35,7 +35,7 @@ public class MainUITest {
     static Boolean camera = true;
     static Boolean safemode = true;
 
-    static Integer cooldown = 3000;
+    static Integer cooldown = 300;
 
     // Ouverture de l'app + login
     public static void scenario0() throws InterruptedException {
@@ -102,16 +102,15 @@ public class MainUITest {
 
     public static void scenario3() throws InterruptedException {
         Thread.sleep(cooldown);
-        // Active le safemode
-        usermainui.click_simulation(2);
+        usermainui.click_img("safe");
         Thread.sleep(cooldown);
+        // Active le safemode
         // Désactive le mode adulte
-        usermainui.click_simulation(3);
+        usermainui.click_img("adulte");
         Thread.sleep(cooldown);
         friendui = new FriendUI(users_db, disc_db, u, actions);
         Thread.sleep(cooldown);
         friendui.closeWindow();
-
         /*
         Thread.sleep(cooldown);
         String[] membersList = {"Louis,Sarah"};
@@ -132,7 +131,7 @@ public class MainUITest {
         Thread.sleep(cooldown);
 
         // Désactive le safemode
-        usermainui.click_simulation(2);
+        //usermainui.click_simulation(2);
         Thread.sleep(cooldown);
         friendui = new FriendUI(users_db, disc_db, u, actions);
 
@@ -143,7 +142,7 @@ public class MainUITest {
         friendui.closeWindow();
         // Active le safemode
         Thread.sleep(cooldown);
-        usermainui.click_simulation(2);
+        //usermainui.click_simulation(2);
         Thread.sleep(cooldown);
 
         friendui = new FriendUI(users_db, disc_db, u, actions);
@@ -159,7 +158,7 @@ public class MainUITest {
 
         Thread.sleep(cooldown);
         // Active le mode adulte
-        usermainui.click_simulation(3);
+        //usermainui.click_simulation(3);
 
         Integer sarah = users_db.get_user("username", "Sarah").get_userid();
         u.get_liste_contact().remove(sarah);
@@ -188,7 +187,7 @@ public class MainUITest {
         Thread.sleep(cooldown);
 
         // Désactive le mode adulte
-        usermainui.click_simulation(3);
+        //usermainui.click_simulation(3);
         Thread.sleep(cooldown);
 
         friendui = new FriendUI(users_db, disc_db, u, actions);
@@ -211,7 +210,7 @@ public class MainUITest {
         if (mediaui != null) mediaui.closeWindow();
         Thread.sleep(cooldown);
         // Désactive le micro
-        usermainui.click_simulation(0);
+        //usermainui.click_simulation(0);
         Thread.sleep(cooldown);
 
         System.out.println("Scénario 8 exécuté");
@@ -221,11 +220,11 @@ public class MainUITest {
         friendui.closeWindow();
         Thread.sleep(cooldown);
         // Active le micro
-        usermainui.click_simulation(0);
+        //usermainui.click_simulation(0);
         Thread.sleep(cooldown);
 
         // Active le mode adulte
-        usermainui.click_simulation(3);
+        //usermainui.click_simulation(3);
         Thread.sleep(cooldown);
         friendui = new FriendUI(users_db, disc_db, u, actions);
 
@@ -237,11 +236,11 @@ public class MainUITest {
         Thread.sleep(cooldown);
 
         // Désactive le mode adulte
-        usermainui.click_simulation(3);
+        //usermainui.click_simulation(3);
         Thread.sleep(cooldown);
 
         // Désactive le safemode
-        usermainui.click_simulation(2);
+        //usermainui.click_simulation(2);
         Thread.sleep(cooldown);
         friendui = new FriendUI(users_db, disc_db, u, actions);
         
